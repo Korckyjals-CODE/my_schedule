@@ -1,0 +1,76 @@
+{
+    "weekdays": {
+        "Monday": [
+            {
+                "grade": "Grade 10",
+                "startTime": "08:00",
+                "endTime": "09:30",
+                "subject": "Mathematics"
+            },
+            {
+                "grade": "Grade 11",
+                "startTime": "09:45",
+                "endTime": "11:15",
+                "subject": "Physics"
+            },
+            {
+                "grade": "Grade 9",
+                "startTime": "13:00",
+                "endTime": "14:30",
+                "subject": "Chemistry"
+            }
+        ],
+        "Wednesday": [
+            {
+                "grade": "Grade 12",
+                "startTime": "08:00",
+                "endTime": "09:30",
+                "subject": "Biology"
+            },
+            {
+                "grade": "Grade 10",
+                "startTime": "09:45",
+                "endTime": "11:15",
+                "subject": "English"
+            }
+        ],
+        "Friday": [
+            {
+                "grade": "Grade 11",
+                "startTime": "10:00",
+                "endTime": "11:30",
+                "subject": "Computer Science"
+            },
+            {
+                "grade": "Grade 9",
+                "startTime": "13:30",
+                "endTime": "15:00",
+                "subject": "History"
+            }
+        ]
+    },
+    "specific_dates": {
+        "2024-01-15": [
+            {
+                "grade": "Grade 10",
+                "startTime": "08:00",
+                "endTime": "09:30",
+                "subject": "Special Math Review"
+            },
+            {
+                "grade": "Grade 11",
+                "startTime": "10:00",
+                "endTime": "11:30",
+                "subject": "Physics Lab"
+            }
+        ],
+        "2024-01-16": [
+            {
+                "grade": "Grade 12",
+                "startTime": "09:00",
+                "endTime": "10:30",
+                "subject": "Biology Final Prep"
+            }
+        ]
+    }
+}
