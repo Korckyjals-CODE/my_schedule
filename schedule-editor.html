@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedule Editor</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .editor-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .editor-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tab-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background: #f0f0f0;
+            cursor: pointer;
+        }
+
+        .tab-button.active {
+            background: #007bff;
+            color: white;
+        }
+
+        .editor-section {
+            display: none;
+        }
+
+        .editor-section.active {
+            display: block;
+        }
+
+        .schedule-form {
+            display: grid;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: grid;
+            gap: 10px;
+        }
+
+        .schedule-entries {
+            display: grid;
+            gap: 10px;
+        }
+
+        .schedule-entry {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            align-items: end;
+        }
+
+        .entry-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        select, input {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            background: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+
+        button.delete {
+            background: #dc3545;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .save-status {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            border-radius: 5px;
+            background: #28a745;
+            color: white;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .schedule-entry {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="editor-container">
+        <h1>Schedule Editor</h1>
+        <div class="editor-tabs">
+            <button class="tab-button active" data-tab="weekday">Weekday Schedule</button>
+            <button class="tab-button" data-tab="specific">Specific Dates</button>
+        </div>
+
+        <div id="weekdayEditor" class="editor-section active">
+            <div class="form-group">
+                <label for="weekday">Select Day:</label>
+                <select id="weekday">
+                    <option value="Monday">Monday</option>
+                    <option value="Tuesday">Tuesday</option>
+                    <option value="Wednesday">Wednesday</option>
+                    <option value="Thursday">Thursday</option>
+                    <option value="Friday">Friday</option>
+                </select>
+            </div>
+            <div id="weekdaySchedule" class="schedule-entries"></div>
+            <button onclick="addWeekdayEntry()">Add Entry</button>
+        </div>
+
+        <div id="specificEditor" class="editor-section">
+            <div class="form-group">
+                <label for="specificDate">Select Date:</label>
+                <input type="date" id="specificDate">
+            </div>
+            <div id="specificSchedule" class="schedule-entries"></div>
+            <button onclick="addSpecificEntry()">Add Entry</button>
+        </div>
+    </div>
+
+    <div id="saveStatus" class="save-status">Changes saved!</div>
+
+    <script>
+        let schedule = {
+            weekdays: {},
+            specific_dates: {}
+        };
+
+        // Load initial schedule
+        fetch('js/schedule.json')
+            .then(response => response.json())
+            .then(data => {
+                schedule = data;
+                updateWeekdaySchedule();
+            })
+            .catch(error => console.error('Error loading schedule:', error));
+
+        // Tab switching
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.addEventListener('click', () => {
+                document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.editor-section').forEach(s => s.classList.remove('active'));
+                button.classList.add('active');
+                document.getElementById(button.dataset.tab + 'Editor').classList.add('active');
+            });
+        });
+
+        // Weekday schedule handling
+        document.getElementById('weekday').addEventListener('change', updateWeekdaySchedule);
+
+        function updateWeekdaySchedule() {
+            const weekday = document.getElementById('weekday').value;
+            const container = document.getElementById('weekdaySchedule');
+            container.innerHTML = '';
+
+            if (schedule.weekdays[weekday]) {
+                schedule.weekdays[weekday].forEach((entry, index) => {
+                    container.appendChild(createEntryElement(entry, index, 'weekday'));
+                });
+            }
+        }
+
+        function addWeekdayEntry() {
+            const weekday = document.getElementById('weekday').value;
+            if (!schedule.weekdays[weekday]) {
+                schedule.weekdays[weekday] = [];
+            }
+            
+            const newEntry = {
+                grade: "None",
+                startTime: "8:00",
+                endTime: "8:45",
+                subject: "Class"
+            };
+            
+            schedule.weekdays[weekday].push(newEntry);
+            updateWeekdaySchedule();
+            saveSchedule();
+        }
+
+        // Specific date schedule handling
+        document.getElementById('specificDate').addEventListener('change', updateSpecificSchedule);
+
+        function updateSpecificSchedule() {
+            const date = document.getElementById('specificDate').value;
+            const container = document.getElementById('specificSchedule');
+            container.innerHTML = '';
+
+            if (schedule.specific_dates[date]) {
+                schedule.specific_dates[date].forEach((entry, index) => {
+                    container.appendChild(createEntryElement(entry, index, 'specific'));
+                });
+            }
+        }
+
+        function addSpecificEntry() {
+            const date = document.getElementById('specificDate').value;
+            if (!date) {
+                alert('Please select a date first');
+                return;
+            }
+
+            if (!schedule.specific_dates[date]) {
+                schedule.specific_dates[date] = [];
+            }
+            
+            const newEntry = {
+                grade: "None",
+                startTime: "8:00",
+                endTime: "8:45",
+                subject: "Class"
+            };
+            
+            schedule.specific_dates[date].push(newEntry);
+            updateSpecificSchedule();
+            saveSchedule();
+        }
+
+        function createEntryElement(entry, index, type) {
+            const div = document.createElement('div');
+            div.className = 'schedule-entry';
+            
+            // Grade selection
+            const gradeSelect = document.createElement('div');
+            gradeSelect.className = 'form-group';
+            gradeSelect.innerHTML = `
+                <label>Grade:</label>
+                <select onchange="updateEntry('${type}', ${index}, 'grade', this.value)">
+                    <option value="None" ${entry.grade === 'None' ? 'selected' : ''}>None</option>
+                    ${Array.from({length: 12}, (_, i) => i + 1).map(num => 
+                        `<option value="Grade ${num}" ${entry.grade === `Grade ${num}` ? 'selected' : ''}>Grade ${num}</option>`
+                    ).join('')}
+                </select>
+            `;
+
+            // Start time
+            const startTime = document.createElement('div');
+            startTime.className = 'form-group';
+            startTime.innerHTML = `
+                <label>Start Time:</label>
+                <input type="time" value="${entry.startTime}" 
+                       onchange="updateEntry('${type}', ${index}, 'startTime', this.value)">
+            `;
+
+            // End time
+            const endTime = document.createElement('div');
+            endTime.className = 'form-group';
+            endTime.innerHTML = `
+                <label>End Time:</label>
+                <input type="time" value="${entry.endTime}" 
+                       onchange="updateEntry('${type}', ${index}, 'endTime', this.value)">
+            `;
+
+            // Subject
+            const subject = document.createElement('div');
+            subject.className = 'form-group';
+            subject.innerHTML = `
+                <label>Subject:</label>
+                <select onchange="updateEntry('${type}', ${index}, 'subject', this.value)">
+                    <option value="Class" ${entry.subject.startsWith('Class') ? 'selected' : ''}>Class</option>
+                    <option value="Recess" ${entry.subject === 'Recess' ? 'selected' : ''}>Recess</option>
+                    <option value="Lunch" ${entry.subject === 'Lunch' ? 'selected' : ''}>Lunch</option>
+                </select>
+            `;
+
+            // Controls
+            const controls = document.createElement('div');
+            controls.className = 'entry-controls';
+            controls.innerHTML = `
+                <button class="delete" onclick="deleteEntry('${type}', ${index})">Delete</button>
+            `;
+
+            div.appendChild(gradeSelect);
+            div.appendChild(startTime);
+            div.appendChild(endTime);
+            div.appendChild(subject);
+            div.appendChild(controls);
+
+            return div;
+        }
+
+        function updateEntry(type, index, field, value) {
+            const day = type === 'weekday' ? document.getElementById('weekday').value 
+                                         : document.getElementById('specificDate').value;
+            const entries = type === 'weekday' ? schedule.weekdays[day] 
+                                             : schedule.specific_dates[day];
+            
+            if (entries && entries[index]) {
+                entries[index][field] = value;
+                if (field === 'subject' && value === 'Class') {
+                    entries[index].subject = `Class ${entries[index].grade.split(' ')[1]}`;
+                }
+                saveSchedule();
+            }
+        }
+
+        function deleteEntry(type, index) {
+            const day = type === 'weekday' ? document.getElementById('weekday').value 
+                                         : document.getElementById('specificDate').value;
+            const entries = type === 'weekday' ? schedule.weekdays[day] 
+                                             : schedule.specific_dates[day];
+            
+            if (entries && entries[index]) {
+                entries.splice(index, 1);
+                if (type === 'weekday') {
+                    updateWeekdaySchedule();
+                } else {
+                    updateSpecificSchedule();
+                }
+                saveSchedule();
+            }
+        }
+
+        function saveSchedule() {
+            // In a real application, this would make an API call to save the file
+            // For this demo, we'll just show a save status
+            const saveStatus = document.getElementById('saveStatus');
+            saveStatus.style.display = 'block';
+            setTimeout(() => {
+                saveStatus.style.display = 'none';
+            }, 2000);
+
+            // Log the schedule to console for demonstration
+            console.log('Schedule saved:', JSON.stringify(schedule, null, 2));
+        }
+    </script>
+</body>
+</html>
