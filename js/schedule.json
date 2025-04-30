@@ -20,7 +20,7 @@
                 "subject": ""
             },
             {
-                "grade": "None",
+                "grade": "",
                 "startTime": "10:00",
                 "endTime": "10:30",
                 "subject": "Recess"
@@ -38,7 +38,7 @@
                 "subject": ""
             },
             {
-                "grade": "None",
+                "grade": "",
                 "startTime": "12:45",
                 "endTime": "13:30",
                 "subject": "Lunch"
@@ -70,7 +70,7 @@
                 "subject": ""
             },
             {
-                "grade": "None",
+                "grade": "",
                 "startTime": "9:15",
                 "endTime": "9:45",
                 "subject": "Recess"
@@ -100,7 +100,7 @@
                 "subject": ""
             },
             {
-                "grade": "None",
+                "grade": "",
                 "startTime": "12:45",
                 "endTime": "13:30",
                 "subject": "Lunch"
@@ -132,7 +132,7 @@
                 "subject": ""
             },
             {
-                "grade": "None",
+                "grade": "",
                 "startTime": "9:15",
                 "endTime": "9:45",
                 "subject": "Recess"
@@ -150,7 +150,7 @@
                 "subject": ""
             },
             {
-                "grade": "None",
+                "grade": "",
                 "startTime": "12:45",
                 "endTime": "13:30",
                 "subject": "Lunch"
@@ -182,7 +182,7 @@
                 "subject": ""
             },
             {
-                "grade": "None",
+                "grade": "",
                 "startTime": "10:00",
                 "endTime": "10:30",
                 "subject": "Recess"
@@ -206,7 +206,7 @@
                 "subject": ""
             },
             {
-                "grade": "None",
+                "grade": "",
                 "startTime": "12:45",
                 "endTime": "13:30",
                 "subject": "Lunch"
@@ -244,7 +244,7 @@
                 "subject": ""
             },
             {
-                "grade": "None",
+                "grade": "",
                 "startTime": "10:00",
                 "endTime": "10:30",
                 "subject": "Recess"
@@ -262,7 +262,7 @@
                 "subject": ""
             },
             {
-                "grade": "None",
+                "grade": "",
                 "startTime": "12:45",
                 "endTime": "13:30",
                 "subject": "Lunch"
