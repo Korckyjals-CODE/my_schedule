@@ -2,22 +2,22 @@
     "weekdays": {
         "Monday": [
             {
-                "grade": "Grade 11",
+                "grade": "11",
                 "startTime": "7:45",
                 "endTime": "8:30",
-                "subject": "Class 11A"
+                "subject": ""
             },
             {
-                "grade": "Grade 6",
+                "grade": "6",
                 "startTime": "8:30",
                 "endTime": "9:15",
-                "subject": "Class 6A"
+                "subject": ""
             },
             {
-                "grade": "Grade 8",
+                "grade": "8",
                 "startTime": "9:15",
                 "endTime": "10:00",
-                "subject": "Class 8A"
+                "subject": ""
             },
             {
                 "grade": "None",
@@ -26,16 +26,16 @@
                 "subject": "Recess"
             },
             {
-                "grade": "Grade 5",
+                "grade": "5A",
                 "startTime": "10:30",
                 "endTime": "11:15",
-                "subject": "Class 5A"
+                "subject": ""
             },
             {
-                "grade": "Grade 3",
+                "grade": "3A",
                 "startTime": "11:15",
                 "endTime": "12:00",
-                "subject": "Class 3A"
+                "subject": ""
             },
             {
                 "grade": "None",
@@ -44,30 +44,30 @@
                 "subject": "Lunch"
             },
             {
-                "grade": "Grade 2",
+                "grade": "2B",
                 "startTime": "13:30",
                 "endTime": "14:00",
-                "subject": "Class 2B"
+                "subject": ""
             },
             {
-                "grade": "Grade 3",
+                "grade": "3B",
                 "startTime": "14:00",
                 "endTime": "14:30",
-                "subject": "Class 3B"
+                "subject": ""
             }
         ],
         "Tuesday": [
             {
-                "grade": "Grade 4",
+                "grade": "4A",
                 "startTime": "7:45",
                 "endTime": "8:30",
-                "subject": "Class 4A"
+                "subject": ""
             },
             {
-                "grade": "Grade 5",
+                "grade": "5B",
                 "startTime": "8:30",
                 "endTime": "9:15",
-                "subject": "Class 5B"
+                "subject": ""
             },
             {
                 "grade": "None",
@@ -76,28 +76,28 @@
                 "subject": "Recess"
             },
             {
-                "grade": "Grade 1",
+                "grade": "1A",
                 "startTime": "9:45",
                 "endTime": "10:30",
-                "subject": "Class 1A"
+                "subject": ""
             },
             {
-                "grade": "Grade 9",
+                "grade": "9A",
                 "startTime": "10:30",
                 "endTime": "11:15",
-                "subject": "Class 9A"
+                "subject": ""
             },
             {
-                "grade": "Grade 9",
+                "grade": "9A",
                 "startTime": "11:15",
                 "endTime": "12:00",
-                "subject": "Class 9A"
+                "subject": ""
             },
             {
-                "grade": "Grade 11",
+                "grade": "11A",
                 "startTime": "12:00",
                 "endTime": "12:45",
-                "subject": "Class 11A"
+                "subject": ""
             },
             {
                 "grade": "None",
@@ -106,30 +106,30 @@
                 "subject": "Lunch"
             },
             {
-                "grade": "Grade 1",
+                "grade": "1A",
                 "startTime": "13:30",
                 "endTime": "14:00",
-                "subject": "Class 1A"
+                "subject": ""
             },
             {
-                "grade": "Grade 2",
+                "grade": "2A",
                 "startTime": "14:00",
                 "endTime": "14:30",
-                "subject": "Class 2A"
+                "subject": ""
             }
         ],
         "Wednesday": [
             {
-                "grade": "Grade 1",
+                "grade": "1B",
                 "startTime": "7:45",
                 "endTime": "8:30",
-                "subject": "Class 1B"
+                "subject": ""
             },
             {
-                "grade": "Grade 1",
+                "grade": "1B",
                 "startTime": "8:30",
                 "endTime": "9:15",
-                "subject": "Class 1B"
+                "subject": ""
             },
             {
                 "grade": "None",
@@ -138,16 +138,16 @@
                 "subject": "Recess"
             },
             {
-                "grade": "Grade 2",
+                "grade": "2B",
                 "startTime": "10:30",
                 "endTime": "11:15",
-                "subject": "Class 2B"
+                "subject": ""
             },
             {
-                "grade": "Grade 10",
+                "grade": "10",
                 "startTime": "12:00",
                 "endTime": "12:45",
-                "subject": "Class 10A"
+                "subject": ""
             },
             {
                 "grade": "None",
@@ -156,30 +156,30 @@
                 "subject": "Lunch"
             },
             {
-                "grade": "Grade 12",
+                "grade": "12",
                 "startTime": "13:30",
                 "endTime": "14:00",
-                "subject": "Class 12A"
+                "subject": ""
             },
             {
-                "grade": "Grade 3",
+                "grade": "3B",
                 "startTime": "14:00",
                 "endTime": "14:30",
-                "subject": "Class 3B"
+                "subject": ""
             }
         ],
         "Thursday": [
             {
-                "grade": "Grade 7",
+                "grade": "7",
                 "startTime": "7:45",
                 "endTime": "8:30",
-                "subject": "Class 7A"
+                "subject": ""
             },
             {
-                "grade": "Grade 8",
+                "grade": "8",
                 "startTime": "8:30",
                 "endTime": "9:15",
-                "subject": "Class 8A"
+                "subject": ""
             },
             {
                 "grade": "None",
@@ -188,22 +188,22 @@
                 "subject": "Recess"
             },
             {
-                "grade": "Grade 2",
+                "grade": "2A",
                 "startTime": "10:30",
                 "endTime": "11:15",
-                "subject": "Class 2A"
+                "subject": ""
             },
             {
-                "grade": "Grade 4",
+                "grade": "4B",
                 "startTime": "11:15",
                 "endTime": "12:00",
-                "subject": "Class 4B"
+                "subject": ""
             },
             {
-                "grade": "Grade 7",
+                "grade": "7",
                 "startTime": "12:00",
                 "endTime": "12:45",
-                "subject": "Class 7A"
+                "subject": ""
             },
             {
                 "grade": "None",
@@ -212,36 +212,36 @@
                 "subject": "Lunch"
             },
             {
-                "grade": "Grade 10",
+                "grade": "10",
                 "startTime": "13:30",
                 "endTime": "14:00",
-                "subject": "Class 10A"
+                "subject": ""
             },
             {
-                "grade": "Grade 4",
+                "grade": "4A",
                 "startTime": "14:00",
                 "endTime": "14:30",
-                "subject": "Class 4A"
+                "subject": ""
             }
         ],
         "Friday": [
             {
-                "grade": "Grade 5",
+                "grade": "5B",
                 "startTime": "7:45",
                 "endTime": "8:30",
-                "subject": "Class 5B"
+                "subject": ""
             },
             {
-                "grade": "Grade 4",
+                "grade": "4B",
                 "startTime": "8:30",
                 "endTime": "9:15",
-                "subject": "Class 4B"
+                "subject": ""
             },
             {
-                "grade": "Grade 6",
+                "grade": "6",
                 "startTime": "9:15",
                 "endTime": "10:00",
-                "subject": "Class 6A"
+                "subject": ""
             },
             {
                 "grade": "None",
@@ -250,16 +250,16 @@
                 "subject": "Recess"
             },
             {
-                "grade": "Grade 3",
+                "grade": "3A",
                 "startTime": "10:30",
                 "endTime": "11:15",
-                "subject": "Class 3A"
+                "subject": ""
             },
             {
-                "grade": "Grade 12",
+                "grade": "12",
                 "startTime": "11:15",
                 "endTime": "11:45",
-                "subject": "Class 12A"
+                "subject": ""
             },
             {
                 "grade": "None",
