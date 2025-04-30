@@ -14,7 +14,18 @@
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
+        .editor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
 
+        .back-button {
+            background: #6c757d !important;
+        }
         .editor-tabs {
             display: flex;
             gap: 10px;
@@ -116,7 +127,13 @@
 </head>
 <body>
     <div class="editor-container">
-        <h1>Schedule Editor</h1>
+        <div class="editor-header">
+            <h1>Schedule Editor</h1>
+            <button onclick="window.location.href='index.html'" class="back-button">Back to Calendar</button>
+        </div>r">
+            <h1>Schedule Editor</h1>
+            <button onclick="window.location.href='index.html'" class="back-button">Back to Calendar</button>
+        </div>
         <div class="editor-tabs">
             <button class="tab-button active" data-tab="weekday">Weekday Schedule</button>
             <button class="tab-button" data-tab="specific">Specific Dates</button>
