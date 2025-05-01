@@ -70,12 +70,13 @@
 
         .schedule-entry {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            grid-template-columns: 1fr 1fr 1fr 2fr auto;
             gap: 10px;
+            margin-bottom: 10px;
             padding: 10px;
-            background: #f8f9fa;
-            border-radius: 5px;
-            align-items: end;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            align-items: center;
         }
 
         .entry-controls {
@@ -117,40 +118,11 @@
             color: white;
             display: none;
         }
-        .schedule-entry {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr 2fr auto;
-            gap: 10px;
-            margin-bottom: 10px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            align-items: center;
-        }
-
-        .schedule-entry input {
-            padding: 5px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 14px;
-        }
 
         .schedule-entry input[type="time"] {
             width: 100%;
         }
 
-        .schedule-entry button.delete {
-            padding: 5px 10px;
-            background: #dc3545;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .schedule-entry button.delete:hover {
-            background: #c82333;
-        }
         @media (max-width: 768px) {
             .schedule-entry {
                 grid-template-columns: 1fr;
@@ -251,105 +223,9 @@
         // Weekday schedule handling
         document.getElementById('weekday').addEventListener('change', updateWeekdaySchedule);
 
-        function addWeekdayEntry() {
-            const weekday = document.getElementById('weekday').value;
-            if (!schedule.weekdays[weekday]) {
-                schedule.weekdays[weekday] = [];
-            }
-            schedule.weekdays[weekday].push({
-                grade: "",
-                startTime: "09:00",
-                endTime: "09:45",
-                subject: ""
-            });
-                grade: "",
-                startTime: "09:00",
-                endTime: "09:45",
-                subject: ""
-            });
-            updateWeekdaySchedule();
-            saveSchedule();
-        }
-
-        function deleteWeekdayEntry(weekday, index) {
-            schedule.weekdays[weekday].splice(index, 1);
-            if (schedule.weekdays[weekday].length === 0) {
-                delete schedule.weekdays[weekday];
-            }
-            updateWeekdaySchedule();
-            saveSchedule();
-        }
-
-        function updateWeekdayEntry(weekday, index, field, value) {
-            schedule.weekdays[weekday][index][field] = value;
-            saveSchedule();
-        }
-
-        function addSpecificEntry() {
-            const date = document.getElementById('specificDate').value;
-            if (!date) return;
-            
-            if (!schedule.specific_dates[date]) {
-                schedule.specific_dates[date] = [];
-            }
-            schedule.specific_dates[date].push({ time: "09:00", description: "" });
-            updateSpecificSchedule(date);
-            saveSchedule();
-        }
-
-        function deleteSpecificEntry(date, index) {
-            schedule.specific_dates[date].splice(index, 1);
-            if (schedule.specific_dates[date].length === 0) {
-                delete schedule.specific_dates[date];
-            }
-            updateSpecificSchedule(date);
-            saveSchedule();
-        }
-
-        function updateSpecificEntry(date, index, field, value) {
-            schedule.specific_dates[date][index][field] = value;
-            saveSchedule();
-        }
-
         function updateWeekdaySchedule() {
             const weekday = document.getElementById('weekday').value;
-                    const entryDiv = document.createElement('div');
-                    entryDiv.className = 'schedule-entry';
-                    
-                    const gradeInput = document.createElement('input');
-                    gradeInput.type = 'text';
-                    gradeInput.value = entry.grade || '';
-                    gradeInput.placeholder = 'Grade';
-                    gradeInput.onchange = (e) => updateWeekdayEntry(weekday, index, 'grade', e.target.value);
-                    
-                    const startTimeInput = document.createElement('input');
-                    startTimeInput.type = 'time';
-                    startTimeInput.value = entry.startTime || '09:00';
-                    startTimeInput.onchange = (e) => updateWeekdayEntry(weekday, index, 'startTime', e.target.value);
-                    
-                    const endTimeInput = document.createElement('input');
-                    endTimeInput.type = 'time';
-                    endTimeInput.value = entry.endTime || '09:45';
-                    endTimeInput.onchange = (e) => updateWeekdayEntry(weekday, index, 'endTime', e.target.value);
-                    
-                    const subjectInput = document.createElement('input');
-                    subjectInput.type = 'text';
-                    subjectInput.value = entry.subject || '';
-                    subjectInput.placeholder = 'Subject';
-                    subjectInput.onchange = (e) => updateWeekdayEntry(weekday, index, 'subject', e.target.value);
-                    
-                    const deleteButton = document.createElement('button');
-                    deleteButton.textContent = 'Delete';
-                    deleteButton.className = 'delete';
-                    deleteButton.onclick = () => deleteWeekdayEntry(weekday, index);
-                    
-                    entryDiv.appendChild(gradeInput);
-                    entryDiv.appendChild(startTimeInput);
-                    entryDiv.appendChild(endTimeInput);
-                    entryDiv.appendChild(subjectInput);
-                    entryDiv.appendChild(deleteButton);
-                    
-                    container.appendChild(entryDiv);
+            const container = document.getElementById('weekdaySchedule');
             container.innerHTML = '';
 
             if (schedule.weekdays[weekday]) {
@@ -382,43 +258,7 @@
 
         function updateSpecificSchedule() {
             const date = document.getElementById('specificDate').value;
-                    const entryDiv = document.createElement('div');
-                    entryDiv.className = 'schedule-entry';
-                    
-                    const gradeInput = document.createElement('input');
-                    gradeInput.type = 'text';
-                    gradeInput.value = entry.grade || '';
-                    gradeInput.placeholder = 'Grade';
-                    gradeInput.onchange = (e) => updateSpecificEntry(date, index, 'grade', e.target.value);
-                    
-                    const startTimeInput = document.createElement('input');
-                    startTimeInput.type = 'time';
-                    startTimeInput.value = entry.startTime || '09:00';
-                    startTimeInput.onchange = (e) => updateSpecificEntry(date, index, 'startTime', e.target.value);
-                    
-                    const endTimeInput = document.createElement('input');
-                    endTimeInput.type = 'time';
-                    endTimeInput.value = entry.endTime || '09:45';
-                    endTimeInput.onchange = (e) => updateSpecificEntry(date, index, 'endTime', e.target.value);
-                    
-                    const subjectInput = document.createElement('input');
-                    subjectInput.type = 'text';
-                    subjectInput.value = entry.subject || '';
-                    subjectInput.placeholder = 'Subject';
-                    subjectInput.onchange = (e) => updateSpecificEntry(date, index, 'subject', e.target.value);
-                    
-                    const deleteButton = document.createElement('button');
-                    deleteButton.textContent = 'Delete';
-                    deleteButton.className = 'delete';
-                    deleteButton.onclick = () => deleteSpecificEntry(date, index);
-                    
-                    entryDiv.appendChild(gradeInput);
-                    entryDiv.appendChild(startTimeInput);
-                    entryDiv.appendChild(endTimeInput);
-                    entryDiv.appendChild(subjectInput);
-                    entryDiv.appendChild(deleteButton);
-                    
-                    container.appendChild(entryDiv);
+            const container = document.getElementById('specificSchedule');
             container.innerHTML = '';
 
             if (schedule.specific_dates[date]) {
@@ -492,7 +332,7 @@
             subject.innerHTML = `
                 <label>Subject:</label>
                 <select onchange="updateEntry('${type}', ${index}, 'subject', this.value)">
-                    <option value="Class" ${entry.subject.startsWith('Class') ? 'selected' : ''}>Class</option>
+                    <option value="Class" ${entry.subject === 'Class' || entry.subject.startsWith('Class') ? 'selected' : ''}>Class</option>
                     <option value="Recess" ${entry.subject === 'Recess' ? 'selected' : ''}>Recess</option>
                     <option value="Lunch" ${entry.subject === 'Lunch' ? 'selected' : ''}>Lunch</option>
                 </select>
@@ -523,7 +363,7 @@
             if (entries && entries[index]) {
                 entries[index][field] = value;
                 if (field === 'subject' && value === 'Class') {
-                    entries[index].subject = `Class ${entries[index].grade.split(' ')[1]}`;
+                    entries[index].subject = `Class ${entries[index].grade.split(' ')[1] || ''}`;
                 }
                 saveSchedule();
             }
@@ -537,6 +377,13 @@
             
             if (entries && entries[index]) {
                 entries.splice(index, 1);
+                if (entries.length === 0) {
+                    if (type === 'weekday') {
+                        delete schedule.weekdays[day];
+                    } else {
+                        delete schedule.specific_dates[day];
+                    }
+                }
                 if (type === 'weekday') {
                     updateWeekdaySchedule();
                 } else {
@@ -544,19 +391,6 @@
                 }
                 saveSchedule();
             }
-        }
-
-        function saveSchedule() {
-            // In a real application, this would make an API call to save the file
-            // For this demo, we'll just show a save status
-            const saveStatus = document.getElementById('saveStatus');
-            saveStatus.style.display = 'block';
-            setTimeout(() => {
-                saveStatus.style.display = 'none';
-            }, 2000);
-
-            // Log the schedule to console for demonstration
-            console.log('Schedule saved:', JSON.stringify(schedule, null, 2));
         }
     </script>
 </body>
