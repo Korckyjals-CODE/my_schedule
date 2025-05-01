@@ -38,3 +38,6 @@ dist/
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Personal .env files
+.env.tools
