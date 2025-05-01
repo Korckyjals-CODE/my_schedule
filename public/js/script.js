@@ -6,7 +6,7 @@ let currentDate = new Date();
 let selectedDate = null;
 
 // Load schedule data
-fetch('js/schedule.json')
+fetch('/js/schedule.json')
     .then(response => response.json())
     .then(data => {
         schedule = data;
