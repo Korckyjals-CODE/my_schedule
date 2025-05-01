@@ -117,7 +117,6 @@
             color: white;
             display: none;
         }
-
         .schedule-entry {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr 2fr auto;
@@ -152,7 +151,6 @@
         .schedule-entry button.delete:hover {
             background: #c82333;
         }
-
         @media (max-width: 768px) {
             .schedule-entry {
                 grid-template-columns: 1fr;
@@ -264,6 +262,11 @@
                 endTime: "09:45",
                 subject: ""
             });
+                grade: "",
+                startTime: "09:00",
+                endTime: "09:45",
+                subject: ""
+            });
             updateWeekdaySchedule();
             saveSchedule();
         }
@@ -310,11 +313,6 @@
 
         function updateWeekdaySchedule() {
             const weekday = document.getElementById('weekday').value;
-            const container = document.getElementById('weekdaySchedule');
-            container.innerHTML = '';
-
-            if (schedule.weekdays[weekday]) {
-                schedule.weekdays[weekday].forEach((entry, index) => {
                     const entryDiv = document.createElement('div');
                     entryDiv.className = 'schedule-entry';
                     
@@ -352,6 +350,11 @@
                     entryDiv.appendChild(deleteButton);
                     
                     container.appendChild(entryDiv);
+            container.innerHTML = '';
+
+            if (schedule.weekdays[weekday]) {
+                schedule.weekdays[weekday].forEach((entry, index) => {
+                    container.appendChild(createEntryElement(entry, index, 'weekday'));
                 });
             }
         }
@@ -379,11 +382,6 @@
 
         function updateSpecificSchedule() {
             const date = document.getElementById('specificDate').value;
-            const container = document.getElementById('specificSchedule');
-            container.innerHTML = '';
-
-            if (schedule.specific_dates[date]) {
-                schedule.specific_dates[date].forEach((entry, index) => {
                     const entryDiv = document.createElement('div');
                     entryDiv.className = 'schedule-entry';
                     
@@ -421,6 +419,11 @@
                     entryDiv.appendChild(deleteButton);
                     
                     container.appendChild(entryDiv);
+            container.innerHTML = '';
+
+            if (schedule.specific_dates[date]) {
+                schedule.specific_dates[date].forEach((entry, index) => {
+                    container.appendChild(createEntryElement(entry, index, 'specific'));
                 });
             }
         }
