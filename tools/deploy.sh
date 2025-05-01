@@ -16,7 +16,7 @@ if [ -z "$1" ]; then
 fi
 
 COMMIT_MSG="$1"
-REMOTE_SCRIPT="/var/www/schedule-editor/deploy.sh"
+REMOTE_SCRIPT="/root/my_schedule/tools/deploy_in_server.sh"
 
 # Step 1: Git add, commit, and push
 echo "Adding all changes..."
