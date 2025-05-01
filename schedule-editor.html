@@ -170,13 +170,40 @@
         };
 
         // Load initial schedule
-        fetch('js/schedule.json')
+        fetch('/api/schedule')
             .then(response => response.json())
             .then(data => {
                 schedule = data;
                 updateWeekdaySchedule();
             })
             .catch(error => console.error('Error loading schedule:', error));
+
+        // Function to save schedule changes
+        async function saveSchedule() {
+            try {
+                const response = await fetch('/api/schedule', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(schedule)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to save schedule');
+                }
+
+                // Show save status
+                const saveStatus = document.getElementById('saveStatus');
+                saveStatus.style.display = 'block';
+                setTimeout(() => {
+                    saveStatus.style.display = 'none';
+                }, 2000);
+            } catch (error) {
+                console.error('Error saving schedule:', error);
+                alert('Failed to save changes. Please try again.');
+            }
+        }
 
         // Tab switching
         document.querySelectorAll('.tab-button').forEach(button => {
@@ -190,6 +217,56 @@
 
         // Weekday schedule handling
         document.getElementById('weekday').addEventListener('change', updateWeekdaySchedule);
+
+        function addWeekdayEntry() {
+            const weekday = document.getElementById('weekday').value;
+            if (!schedule.weekdays[weekday]) {
+                schedule.weekdays[weekday] = [];
+            }
+            schedule.weekdays[weekday].push({ time: "09:00", description: "" });
+            updateWeekdaySchedule();
+            saveSchedule();
+        }
+
+        function deleteWeekdayEntry(weekday, index) {
+            schedule.weekdays[weekday].splice(index, 1);
+            if (schedule.weekdays[weekday].length === 0) {
+                delete schedule.weekdays[weekday];
+            }
+            updateWeekdaySchedule();
+            saveSchedule();
+        }
+
+        function updateWeekdayEntry(weekday, index, field, value) {
+            schedule.weekdays[weekday][index][field] = value;
+            saveSchedule();
+        }
+
+        function addSpecificEntry() {
+            const date = document.getElementById('specificDate').value;
+            if (!date) return;
+            
+            if (!schedule.specific_dates[date]) {
+                schedule.specific_dates[date] = [];
+            }
+            schedule.specific_dates[date].push({ time: "09:00", description: "" });
+            updateSpecificSchedule(date);
+            saveSchedule();
+        }
+
+        function deleteSpecificEntry(date, index) {
+            schedule.specific_dates[date].splice(index, 1);
+            if (schedule.specific_dates[date].length === 0) {
+                delete schedule.specific_dates[date];
+            }
+            updateSpecificSchedule(date);
+            saveSchedule();
+        }
+
+        function updateSpecificEntry(date, index, field, value) {
+            schedule.specific_dates[date][index][field] = value;
+            saveSchedule();
+        }
 
         function updateWeekdaySchedule() {
             const weekday = document.getElementById('weekday').value;
