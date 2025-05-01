@@ -136,17 +136,43 @@ function addSpecificEntry() {
 function createEntryElement(entry, index, type) {
     const div = document.createElement('div');
     div.className = 'schedule-entry';
+
+    // Grade list
+    const gradeList = [
+        'None',
+        'PKA', 'PKB',
+        'KA', 'KB',
+        'PA', 'PB',
+        '1A', '1B', 
+        '2A', '2B', 
+        '3A', '3B', 
+        '4A', '4B', 
+        '5A', '5B', 
+        '6A',
+        '7A',
+        '8A',
+        '9A', 
+        '10A', 
+        '11A', 
+        '12A',
+        'DC1A', 'DC1B',
+        'DC2A', 'DC2B',
+        'DC3A', 'DC3B',
+        'DC1',
+        'DC2',
+        'DC3'
+    ]
     
     // Grade selection
     const gradeSelect = document.createElement('div');
     gradeSelect.className = 'form-group';
+    const gradeOptions = gradeList.map(grade =>
+        `<option value="${grade}" ${entry.grade === grade ? 'selected' : ''}>${grade}</option>`
+    ).join('');
     gradeSelect.innerHTML = `
         <label>Grade:</label>
         <select onchange="updateEntry('${type}', ${index}, 'grade', this.value)">
-            <option value="None" ${entry.grade === 'None' ? 'selected' : ''}>None</option>
-            ${Array.from({length: 12}, (_, i) => i + 1).map(num => 
-                `<option value="Grade ${num}" ${entry.grade === `Grade ${num}` ? 'selected' : ''}>Grade ${num}</option>`
-            ).join('')}
+            ${gradeOptions}
         </select>
     `;
 
