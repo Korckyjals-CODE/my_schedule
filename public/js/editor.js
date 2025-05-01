@@ -5,12 +5,20 @@ let schedule = {
 
 // Load initial schedule
 fetch('/api/schedule')
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) throw new Error('Network response was not ok');
+        return response.json();
+    })
     .then(data => {
-        schedule = data;
+        schedule = data || { weekdays: {}, specific_dates: {} };
         updateWeekdaySchedule();
     })
-    .catch(error => console.error('Error loading schedule:', error));
+    .catch(error => {
+        console.error('Error loading schedule:', error);
+        schedule = { weekdays: {}, specific_dates: {} };
+        updateWeekdaySchedule();
+    });
+
 
 // Function to save schedule changes
 async function saveSchedule() {
