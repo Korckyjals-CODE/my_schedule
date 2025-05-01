@@ -42,7 +42,7 @@ app.use(express.static(path.join(__dirname, '../public')));
 // API routes
 app.get('/api/schedule', async (req, res) => {
     try {
-        const data = await fs.readFile(path.join(__dirname, '../data/schedule.json'), 'utf8');
+        const data = await fs.readFile(path.join(__dirname, 'data/schedule.json'), 'utf8');
         res.json(JSON.parse(data));
     } catch (error) {
         logger.error('Error reading schedule:', error);
@@ -54,7 +54,7 @@ app.post('/api/schedule', async (req, res) => {
     try {
         const schedule = req.body;
         await fs.writeFile(
-            path.join(__dirname, '../data/schedule.json'),
+            path.join(__dirname, 'data/schedule.json'),
             JSON.stringify(schedule, null, 2),
             'utf8'
         );
