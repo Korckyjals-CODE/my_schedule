@@ -2,19 +2,19 @@
     "weekdays": {
         "Monday": [
             {
-                "grade": "11",
+                "grade": "11A",
                 "startTime": "7:45",
                 "endTime": "8:30",
                 "subject": ""
             },
             {
-                "grade": "6",
+                "grade": "6A",
                 "startTime": "8:30",
                 "endTime": "9:15",
                 "subject": ""
             },
             {
-                "grade": "8",
+                "grade": "8A",
                 "startTime": "9:15",
                 "endTime": "10:00",
                 "subject": ""
@@ -156,7 +156,7 @@
                 "subject": ""
             },
             {
-                "grade": "10",
+                "grade": "10A",
                 "startTime": "12:00",
                 "endTime": "12:45",
                 "subject": ""
@@ -168,7 +168,7 @@
                 "subject": "Lunch"
             },
             {
-                "grade": "12",
+                "grade": "12A",
                 "startTime": "13:30",
                 "endTime": "14:00",
                 "subject": ""
@@ -182,13 +182,13 @@
         ],
         "Thursday": [
             {
-                "grade": "7",
+                "grade": "7A",
                 "startTime": "7:45",
                 "endTime": "8:30",
                 "subject": ""
             },
             {
-                "grade": "8",
+                "grade": "8A",
                 "startTime": "8:30",
                 "endTime": "9:15",
                 "subject": ""
@@ -218,7 +218,7 @@
                 "subject": ""
             },
             {
-                "grade": "7",
+                "grade": "7A",
                 "startTime": "12:00",
                 "endTime": "12:45",
                 "subject": ""
@@ -230,7 +230,7 @@
                 "subject": "Lunch"
             },
             {
-                "grade": "10",
+                "grade": "10A",
                 "startTime": "13:30",
                 "endTime": "14:00",
                 "subject": ""
@@ -256,7 +256,7 @@
                 "subject": ""
             },
             {
-                "grade": "6",
+                "grade": "6A",
                 "startTime": "9:15",
                 "endTime": "10:00",
                 "subject": ""
@@ -274,7 +274,7 @@
                 "subject": ""
             },
             {
-                "grade": "12",
+                "grade": "12A",
                 "startTime": "11:15",
                 "endTime": "11:45",
                 "subject": ""
