@@ -9,13 +9,16 @@ else
   exit 1
 fi
 
-# Check for commit message
-if [ -z "$1" ]; then
-  echo "Usage: $0 \"commit message\""
+# Prompt for commit message
+echo "Enter commit message:"
+read COMMIT_MSG
+
+# Validate commit message is not empty
+if [ -z "$COMMIT_MSG" ]; then
+  echo "Error: Commit message cannot be empty"
   exit 1
 fi
 
-COMMIT_MSG="$1"
 REMOTE_SCRIPT="/root/my_schedule/tools/deploy_in_server.sh"
 
 # Step 1: Git add, commit, and push
