@@ -3,6 +3,11 @@ let schedule = {
     specific_dates: {}
 };
 
+function padTime(timeStr) {
+    const [h, m] = timeStr.split(':');
+    return `${h.padStart(2, '0')}:${m.padStart(2, '0')}`;
+}
+
 // Load initial schedule
 fetch('/api/schedule')
     .then(response => {
@@ -150,7 +155,7 @@ function createEntryElement(entry, index, type) {
     startTime.className = 'form-group';
     startTime.innerHTML = `
         <label>Start Time:</label>
-        <input type="time" value="${entry.startTime}" 
+        <input type="time" value="${padTime(entry.startTime)}" 
                onchange="updateEntry('${type}', ${index}, 'startTime', this.value)">
     `;
 
@@ -159,7 +164,7 @@ function createEntryElement(entry, index, type) {
     endTime.className = 'form-group';
     endTime.innerHTML = `
         <label>End Time:</label>
-        <input type="time" value="${entry.endTime}" 
+        <input type="time" value="${padTime(entry.endTime)}" 
                onchange="updateEntry('${type}', ${index}, 'endTime', this.value)">
     `;
 
