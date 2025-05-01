@@ -26,7 +26,7 @@ echo "Committing with message: $COMMIT_MSG"
 git commit -m "$COMMIT_MSG"
 
 echo "Pushing to origin..."
-git push
+git push origin main
 
 # Step 2: SSH into the server and run the remote script
 echo "Deploying to server..."
