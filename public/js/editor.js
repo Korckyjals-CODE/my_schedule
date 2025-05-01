@@ -166,9 +166,10 @@ function createEntryElement(entry, index, type) {
     // Grade selection
     const gradeSelect = document.createElement('div');
     gradeSelect.className = 'form-group';
-    const gradeOptions = gradeList.map(grade =>
-        `<option value="${grade}" ${entry.grade === grade ? 'selected' : ''}>${grade}</option>`
-    ).join('');
+    const gradeOptions = gradeList.map(grade => {
+        const isSelected = grade === entry.grade;  // Direct equality comparison
+        return `<option value="${grade}" ${isSelected ? 'selected' : ''}>${grade}</option>`;
+    }).join('');
     gradeSelect.innerHTML = `
         <label>Grade:</label>
         <select onchange="updateEntry('${type}', ${index}, 'grade', this.value)">
