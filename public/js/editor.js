@@ -1,9 +1,4 @@
-let schedule = {
-    weekdays: {},
-    specific_dates: {}
-};
-
-const subjectOptions = [
+const SUBJECT_OPTIONS = [
     'Class',
     'Recess',
     'Lunch',
@@ -14,6 +9,11 @@ const subjectOptions = [
     'Field Trip',
     'Other'
 ];
+
+let schedule = {
+    weekdays: {},
+    specific_dates: {}
+};
 
 function padTime(timeStr) {
     const [h, m] = timeStr.split(':');
@@ -207,17 +207,17 @@ function createEntryElement(entry, index, type) {
                onchange="updateEntry('${type}', ${index}, 'endTime', this.value)">
     `;
 
-    // Subject
+    // Update the subject options generation to use SUBJECT_OPTIONS
     const subject = document.createElement('div');
     subject.className = 'form-group';
-    const subjectOptions = subjectOptions.map(option => {
+    const subjectOptionsList = SUBJECT_OPTIONS.map(option => {
         const isSelected = option === entry.subject;
         return `<option value="${option}" ${isSelected ? 'selected' : ''}>${option}</option>`;
     }).join('');
     subject.innerHTML = `
         <label>Subject:</label>
         <select onchange="updateEntry('${type}', ${index}, 'subject', this.value)">
-            ${subjectOptions}
+            ${subjectOptionsList}
         </select>
     `;
 
