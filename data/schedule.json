@@ -5,19 +5,19 @@
                 "grade": "11A",
                 "startTime": "7:45",
                 "endTime": "8:30",
-                "subject": ""
+                "subject": "Class"
             },
             {
                 "grade": "6A",
                 "startTime": "8:30",
                 "endTime": "9:15",
-                "subject": ""
+                "subject": "Class"
             },
             {
                 "grade": "8A",
                 "startTime": "9:15",
                 "endTime": "10:00",
-                "subject": ""
+                "subject": "Class"
             },
             {
                 "grade": "",
@@ -29,13 +29,13 @@
                 "grade": "5A",
                 "startTime": "10:30",
                 "endTime": "11:15",
-                "subject": ""
+                "subject": "Class"
             },
             {
                 "grade": "3A",
                 "startTime": "11:15",
                 "endTime": "12:00",
-                "subject": ""
+                "subject": "Class"
             },
             {
                 "grade": "",
@@ -47,13 +47,13 @@
                 "grade": "2B",
                 "startTime": "13:30",
                 "endTime": "14:00",
-                "subject": ""
+                "subject": "Class"
             },
             {
                 "grade": "3B",
                 "startTime": "14:00",
                 "endTime": "14:30",
-                "subject": ""
+                "subject": "Class"
             }
         ],
         "Tuesday": [
@@ -61,13 +61,13 @@
                 "grade": "4A",
                 "startTime": "7:45",
                 "endTime": "8:30",
-                "subject": ""
+                "subject": "Class"
             },
             {
                 "grade": "5B",
                 "startTime": "8:30",
                 "endTime": "9:15",
-                "subject": ""
+                "subject": "Class"
             },
             {
                 "grade": "",
@@ -79,25 +79,25 @@
                 "grade": "1A",
                 "startTime": "9:45",
                 "endTime": "10:30",
-                "subject": ""
+                "subject": "Class"
             },
             {
                 "grade": "9A",
                 "startTime": "10:30",
                 "endTime": "11:15",
-                "subject": ""
+                "subject": "Class"
             },
             {
                 "grade": "9A",
                 "startTime": "11:15",
                 "endTime": "12:00",
-                "subject": ""
+                "subject": "Class"
             },
             {
                 "grade": "11A",
                 "startTime": "12:00",
                 "endTime": "12:45",
-                "subject": ""
+                "subject": "Class"
             },
             {
                 "grade": "",
@@ -109,13 +109,13 @@
                 "grade": "1A",
                 "startTime": "13:30",
                 "endTime": "14:00",
-                "subject": ""
+                "subject": "Class"
             },
             {
                 "grade": "2A",
                 "startTime": "14:00",
                 "endTime": "14:30",
-                "subject": ""
+                "subject": "Class"
             }
         ],
         "Wednesday": [
@@ -123,13 +123,13 @@
                 "grade": "1B",
                 "startTime": "7:45",
                 "endTime": "8:30",
-                "subject": ""
+                "subject": "Class"
             },
             {
                 "grade": "1B",
                 "startTime": "8:30",
                 "endTime": "9:15",
-                "subject": ""
+                "subject": "Class"
             },
             {
                 "grade": "",
@@ -141,25 +141,25 @@
                 "grade": "5A",
                 "startTime": "9:45",
                 "endTime": "10:30",
-                "subject": ""
+                "subject": "Class"
             },
             {
                 "grade": "2B",
                 "startTime": "10:30",
                 "endTime": "11:15",
-                "subject": ""
+                "subject": "Class"
             },
             {
                 "grade": "DC3",
                 "startTime": "11:15",
                 "endTime": "12:00",
-                "subject": ""
+                "subject": "Class"
             },
             {
                 "grade": "10A",
                 "startTime": "12:00",
                 "endTime": "12:45",
-                "subject": ""
+                "subject": "Class"
             },
             {
                 "grade": "",
@@ -171,13 +171,13 @@
                 "grade": "12A",
                 "startTime": "13:30",
                 "endTime": "14:00",
-                "subject": ""
+                "subject": "Class"
             },
             {
                 "grade": "3B",
                 "startTime": "14:00",
                 "endTime": "14:30",
-                "subject": ""
+                "subject": "Class"
             }
         ],
         "Thursday": [
@@ -185,19 +185,19 @@
                 "grade": "7A",
                 "startTime": "7:45",
                 "endTime": "8:30",
-                "subject": ""
+                "subject": "Class"
             },
             {
                 "grade": "8A",
                 "startTime": "8:30",
                 "endTime": "9:15",
-                "subject": ""
+                "subject": "Class"
             },
             {
                 "grade": "DC3",
                 "startTime": "9:15",
                 "endTime": "10:00",
-                "subject": ""
+                "subject": "Class"
             },
             {
                 "grade": "",
@@ -209,19 +209,19 @@
                 "grade": "2A",
                 "startTime": "10:30",
                 "endTime": "11:15",
-                "subject": ""
+                "subject": "Class"
             },
             {
                 "grade": "4B",
                 "startTime": "11:15",
                 "endTime": "12:00",
-                "subject": ""
+                "subject": "Class"
             },
             {
                 "grade": "7A",
                 "startTime": "12:00",
                 "endTime": "12:45",
-                "subject": ""
+                "subject": "Class"
             },
             {
                 "grade": "",
@@ -233,13 +233,13 @@
                 "grade": "10A",
                 "startTime": "13:30",
                 "endTime": "14:00",
-                "subject": ""
+                "subject": "Class"
             },
             {
                 "grade": "4A",
                 "startTime": "14:00",
                 "endTime": "14:30",
-                "subject": ""
+                "subject": "Class"
             }
         ],
         "Friday": [
@@ -247,19 +247,19 @@
                 "grade": "5B",
                 "startTime": "7:45",
                 "endTime": "8:30",
-                "subject": ""
+                "subject": "Class"
             },
             {
                 "grade": "4B",
                 "startTime": "8:30",
                 "endTime": "9:15",
-                "subject": ""
+                "subject": "Class"
             },
             {
                 "grade": "6A",
                 "startTime": "9:15",
                 "endTime": "10:00",
-                "subject": ""
+                "subject": "Class"
             },
             {
                 "grade": "",
@@ -271,13 +271,13 @@
                 "grade": "3A",
                 "startTime": "10:30",
                 "endTime": "11:15",
-                "subject": ""
+                "subject": "Class"
             },
             {
                 "grade": "12A",
                 "startTime": "11:15",
                 "endTime": "11:45",
-                "subject": ""
+                "subject": "Class"
             },
             {
                 "grade": "",
