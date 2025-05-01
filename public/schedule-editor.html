@@ -118,6 +118,41 @@
             display: none;
         }
 
+        .schedule-entry {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 2fr auto;
+            gap: 10px;
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            align-items: center;
+        }
+
+        .schedule-entry input {
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .schedule-entry input[type="time"] {
+            width: 100%;
+        }
+
+        .schedule-entry button.delete {
+            padding: 5px 10px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .schedule-entry button.delete:hover {
+            background: #c82333;
+        }
+
         @media (max-width: 768px) {
             .schedule-entry {
                 grid-template-columns: 1fr;
@@ -223,7 +258,12 @@
             if (!schedule.weekdays[weekday]) {
                 schedule.weekdays[weekday] = [];
             }
-            schedule.weekdays[weekday].push({ time: "09:00", description: "" });
+            schedule.weekdays[weekday].push({
+                grade: "",
+                startTime: "09:00",
+                endTime: "09:45",
+                subject: ""
+            });
             updateWeekdaySchedule();
             saveSchedule();
         }
@@ -275,7 +315,43 @@
 
             if (schedule.weekdays[weekday]) {
                 schedule.weekdays[weekday].forEach((entry, index) => {
-                    container.appendChild(createEntryElement(entry, index, 'weekday'));
+                    const entryDiv = document.createElement('div');
+                    entryDiv.className = 'schedule-entry';
+                    
+                    const gradeInput = document.createElement('input');
+                    gradeInput.type = 'text';
+                    gradeInput.value = entry.grade || '';
+                    gradeInput.placeholder = 'Grade';
+                    gradeInput.onchange = (e) => updateWeekdayEntry(weekday, index, 'grade', e.target.value);
+                    
+                    const startTimeInput = document.createElement('input');
+                    startTimeInput.type = 'time';
+                    startTimeInput.value = entry.startTime || '09:00';
+                    startTimeInput.onchange = (e) => updateWeekdayEntry(weekday, index, 'startTime', e.target.value);
+                    
+                    const endTimeInput = document.createElement('input');
+                    endTimeInput.type = 'time';
+                    endTimeInput.value = entry.endTime || '09:45';
+                    endTimeInput.onchange = (e) => updateWeekdayEntry(weekday, index, 'endTime', e.target.value);
+                    
+                    const subjectInput = document.createElement('input');
+                    subjectInput.type = 'text';
+                    subjectInput.value = entry.subject || '';
+                    subjectInput.placeholder = 'Subject';
+                    subjectInput.onchange = (e) => updateWeekdayEntry(weekday, index, 'subject', e.target.value);
+                    
+                    const deleteButton = document.createElement('button');
+                    deleteButton.textContent = 'Delete';
+                    deleteButton.className = 'delete';
+                    deleteButton.onclick = () => deleteWeekdayEntry(weekday, index);
+                    
+                    entryDiv.appendChild(gradeInput);
+                    entryDiv.appendChild(startTimeInput);
+                    entryDiv.appendChild(endTimeInput);
+                    entryDiv.appendChild(subjectInput);
+                    entryDiv.appendChild(deleteButton);
+                    
+                    container.appendChild(entryDiv);
                 });
             }
         }
@@ -308,7 +384,43 @@
 
             if (schedule.specific_dates[date]) {
                 schedule.specific_dates[date].forEach((entry, index) => {
-                    container.appendChild(createEntryElement(entry, index, 'specific'));
+                    const entryDiv = document.createElement('div');
+                    entryDiv.className = 'schedule-entry';
+                    
+                    const gradeInput = document.createElement('input');
+                    gradeInput.type = 'text';
+                    gradeInput.value = entry.grade || '';
+                    gradeInput.placeholder = 'Grade';
+                    gradeInput.onchange = (e) => updateSpecificEntry(date, index, 'grade', e.target.value);
+                    
+                    const startTimeInput = document.createElement('input');
+                    startTimeInput.type = 'time';
+                    startTimeInput.value = entry.startTime || '09:00';
+                    startTimeInput.onchange = (e) => updateSpecificEntry(date, index, 'startTime', e.target.value);
+                    
+                    const endTimeInput = document.createElement('input');
+                    endTimeInput.type = 'time';
+                    endTimeInput.value = entry.endTime || '09:45';
+                    endTimeInput.onchange = (e) => updateSpecificEntry(date, index, 'endTime', e.target.value);
+                    
+                    const subjectInput = document.createElement('input');
+                    subjectInput.type = 'text';
+                    subjectInput.value = entry.subject || '';
+                    subjectInput.placeholder = 'Subject';
+                    subjectInput.onchange = (e) => updateSpecificEntry(date, index, 'subject', e.target.value);
+                    
+                    const deleteButton = document.createElement('button');
+                    deleteButton.textContent = 'Delete';
+                    deleteButton.className = 'delete';
+                    deleteButton.onclick = () => deleteSpecificEntry(date, index);
+                    
+                    entryDiv.appendChild(gradeInput);
+                    entryDiv.appendChild(startTimeInput);
+                    entryDiv.appendChild(endTimeInput);
+                    entryDiv.appendChild(subjectInput);
+                    entryDiv.appendChild(deleteButton);
+                    
+                    container.appendChild(entryDiv);
                 });
             }
         }
