@@ -139,6 +139,7 @@
         <div class="editor-tabs">
             <button class="tab-button active" data-tab="weekday">Weekday Schedule</button>
             <button class="tab-button" data-tab="specific">Specific Dates</button>
+            <button class="tab-button" data-tab="import">Import From Image</button>
         </div>
 
         <div id="weekdayEditor" class="editor-section active">
@@ -163,6 +164,21 @@
             </div>
             <div id="specificSchedule" class="schedule-entries"></div>
             <button onclick="addSpecificEntry()">Add Entry</button>
+        </div>
+        <div id="importEditor" class="editor-section">
+            <div class="form-group">
+                <label>Upload or take a photo of the schedule:</label>
+                <input type="file" id="scheduleImage" accept="image/*" capture="environment">
+            </div>
+            <div class="form-group">
+                <button id="extractBtn" type="button">Extract schedule from image</button>
+            </div>
+            <div id="ocrProgress"></div>
+            <img id="previewImage" style="max-width:100%;display:none" />
+            <pre id="extractedJson" style="white-space:pre-wrap; display:none"></pre>
+            <div class="form-group">
+                <button id="applyExtractedBtn" type="button" disabled>Apply &amp; Save</button>
+            </div>
         </div>
     </div>
 

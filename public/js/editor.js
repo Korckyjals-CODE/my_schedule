@@ -275,3 +275,56 @@ function deleteEntry(type, index) {
         saveSchedule();
     }
 }
+
+// ===== Import From Image via OpenAI endpoint =====
+let extractedSchedule = null;
+
+function initImportTab() {
+	const fileInput = document.getElementById('scheduleImage');
+	const extractBtn = document.getElementById('extractBtn');
+	const applyBtn = document.getElementById('applyExtractedBtn');
+	const preview = document.getElementById('previewImage');
+	const progress = document.getElementById('ocrProgress');
+	const jsonEl = document.getElementById('extractedJson');
+	if (!fileInput || !extractBtn) return;
+
+	extractBtn.addEventListener('click', async () => {
+		if (!fileInput.files || !fileInput.files[0]) {
+			alert('Please choose a schedule image first.');
+			return;
+		}
+		const img = fileInput.files[0];
+		preview.style.display = 'block';
+		preview.src = URL.createObjectURL(img);
+		progress.textContent = 'Uploading image...';
+		jsonEl.style.display = 'none';
+		if (applyBtn) applyBtn.disabled = true;
+
+		const form = new FormData();
+		form.append('image', img);
+		try {
+			const resp = await fetch('/api/schedule/extract', { method: 'POST', body: form });
+			if (!resp.ok) throw new Error('Extraction failed');
+			const data = await resp.json();
+			extractedSchedule = data;
+			jsonEl.textContent = JSON.stringify(data, null, 2);
+			jsonEl.style.display = 'block';
+			progress.textContent = 'Extraction complete. Review and Apply.';
+			if (applyBtn) applyBtn.disabled = false;
+		} catch (e) {
+			console.error(e);
+			progress.textContent = 'Extraction failed. Please try another image.';
+		}
+	});
+
+	if (applyBtn) {
+		applyBtn.addEventListener('click', async () => {
+			if (!extractedSchedule) return;
+			schedule = extractedSchedule;
+			await saveSchedule();
+			window.location.href = 'index.html';
+		});
+	}
+}
+
+document.addEventListener('DOMContentLoaded', initImportTab);

@@ -6,6 +6,8 @@ const helmet = require('helmet');
 const morgan = require('morgan');
 const cors = require('cors');
 const winston = require('winston');
+const multer = require('multer');
+const OpenAI = require('openai');
 
 // Configure logger
 const logger = winston.createLogger({
@@ -39,6 +41,17 @@ app.use(express.json());
 // Serve static files from the public directory
 app.use(express.static(path.join(__dirname, '../public')));
 
+// OpenAI client configuration
+const openaiApiKey = process.env.OPENAI_API_KEY;
+const openaiModel = process.env.OPENAI_MODEL || 'gpt-4o-mini';
+const openai = openaiApiKey ? new OpenAI({ apiKey: openaiApiKey }) : null;
+
+// Multer for image uploads (memory storage)
+const upload = multer({
+	storage: multer.memoryStorage(),
+	limits: { fileSize: 10 * 1024 * 1024 }
+});
+
 // API routes
 app.get('/api/schedule', async (req, res) => {
     try {
@@ -63,6 +76,52 @@ app.post('/api/schedule', async (req, res) => {
         logger.error('Error saving schedule:', error);
         res.status(500).json({ error: 'Failed to save schedule' });
     }
+});
+
+// Extract schedule from an uploaded image via OpenAI
+app.post('/api/schedule/extract', upload.single('image'), async (req, res) => {
+	try {
+		if (!openai) {
+			return res.status(500).json({ error: 'OpenAI not configured' });
+		}
+		if (!req.file) {
+			return res.status(400).json({ error: 'No image uploaded' });
+		}
+
+		const promptPath = path.join(__dirname, '../data/prompt.schedule.md');
+		const prompt = await fs.readFile(promptPath, 'utf8');
+
+		const mime = req.file.mimetype || 'image/png';
+		const base64 = req.file.buffer.toString('base64');
+		const imageUrl = `data:${mime};base64,${base64}`;
+
+		const completion = await openai.chat.completions.create({
+			model: openaiModel,
+			response_format: { type: 'json_object' },
+			messages: [
+				{ role: 'system', content: prompt },
+				{
+					role: 'user',
+					content: [
+						{ type: 'text', text: 'Extract the schedule JSON from this image.' },
+						{ type: 'image_url', image_url: { url: imageUrl } }
+					]
+				}
+			]
+		});
+
+		const content = completion.choices && completion.choices[0] && completion.choices[0].message && completion.choices[0].message.content ? completion.choices[0].message.content : '{}';
+		let json;
+		try {
+			json = JSON.parse(content);
+		} catch (e) {
+			return res.status(502).json({ error: 'Model did not return valid JSON', raw: content });
+		}
+		return res.json(json);
+	} catch (error) {
+		logger.error('Error extracting schedule:', error);
+		res.status(500).json({ error: 'Failed to extract schedule' });
+	}
 });
 
 // Error handling middleware
