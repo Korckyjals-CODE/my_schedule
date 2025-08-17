@@ -15,40 +15,134 @@ let schedule = {
     specific_dates: {}
 };
 
+// Authentication functions
+function showLogin() {
+    document.getElementById('loginForm').style.display = 'block';
+    document.getElementById('signupForm').style.display = 'none';
+}
+
+function showSignUp() {
+    document.getElementById('loginForm').style.display = 'none';
+    document.getElementById('signupForm').style.display = 'block';
+}
+
+async function handleLogin() {
+    try {
+        const email = document.getElementById('loginEmail').value;
+        const password = document.getElementById('loginPassword').value;
+        
+        await supabaseAuth.signIn(email, password);
+        showApp();
+        loadSchedule();
+    } catch (error) {
+        alert('Login failed: ' + error.message);
+    }
+}
+
+async function handleSignUp() {
+    try {
+        const email = document.getElementById('signupEmail').value;
+        const password = document.getElementById('signupPassword').value;
+        
+        await supabaseAuth.signUp(email, password);
+        alert('Account created! Please check your email to confirm your account, then sign in.');
+        showLogin();
+    } catch (error) {
+        alert('Sign up failed: ' + error.message);
+    }
+}
+
+async function handleSignOut() {
+    try {
+        await supabaseAuth.signOut();
+        showAuth();
+    } catch (error) {
+        alert('Sign out failed: ' + error.message);
+    }
+}
+
+function showAuth() {
+    document.getElementById('authSection').style.display = 'block';
+    document.getElementById('appSection').style.display = 'none';
+}
+
+function showApp() {
+    document.getElementById('authSection').style.display = 'none';
+    document.getElementById('appSection').style.display = 'block';
+    
+    // Update user info
+    const user = supabaseAuth.getCurrentUser();
+    if (user) {
+        document.getElementById('userEmail').textContent = user.email;
+    }
+}
+
+// Initialize app
+async function initApp() {
+    try {
+        const isAuthenticated = await supabaseAuth.checkAuth();
+        if (isAuthenticated) {
+            showApp();
+            loadSchedule();
+        } else {
+            showAuth();
+        }
+    } catch (error) {
+        console.error('Error initializing app:', error);
+        showAuth();
+    }
+}
+
 function padTime(timeStr) {
     const [h, m] = timeStr.split(':');
     return `${h.padStart(2, '0')}:${m.padStart(2, '0')}`;
 }
 
-// Load initial schedule
-fetch('/api/schedule')
-    .then(response => {
-        if (!response.ok) throw new Error('Network response was not ok');
-        return response.json();
-    })
-    .then(data => {
+// Load initial schedule with authentication
+async function loadSchedule() {
+    try {
+        const headers = supabaseAuth.getAuthHeaders();
+        const response = await fetch('/api/schedule', {
+            headers: headers
+        });
+        
+        if (!response.ok) {
+            if (response.status === 401) {
+                // Token expired, redirect to auth
+                showAuth();
+                return;
+            }
+            throw new Error('Failed to load schedule');
+        }
+        
+        const data = await response.json();
         schedule = data || { weekdays: {}, specific_dates: {} };
         updateWeekdaySchedule();
-    })
-    .catch(error => {
+    } catch (error) {
         console.error('Error loading schedule:', error);
+        if (error.message.includes('No authentication token')) {
+            showAuth();
+        }
         schedule = { weekdays: {}, specific_dates: {} };
         updateWeekdaySchedule();
-    });
+    }
+}
 
-
-// Function to save schedule changes
+// Function to save schedule changes with authentication
 async function saveSchedule() {
     try {
+        const headers = supabaseAuth.getAuthHeaders();
         const response = await fetch('/api/schedule', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: headers,
             body: JSON.stringify(schedule)
         });
 
         if (!response.ok) {
+            if (response.status === 401) {
+                showAuth();
+                return;
+            }
             throw new Error('Failed to save schedule');
         }
 
@@ -327,4 +421,89 @@ function initImportTab() {
 	}
 }
 
-document.addEventListener('DOMContentLoaded', initImportTab);
+// ===== Image Upload and Schedule Extraction =====
+async function extractScheduleFromImage() {
+    const fileInput = document.getElementById('imageUpload');
+    const preview = document.getElementById('imagePreview');
+    
+    if (!fileInput.files || !fileInput.files[0]) {
+        alert('Please choose a schedule image first.');
+        return;
+    }
+    
+    const img = fileInput.files[0];
+    
+    // Show preview
+    preview.innerHTML = `
+        <h4>Image Preview:</h4>
+        <img src="${URL.createObjectURL(img)}" style="max-width: 100%; height: auto;" />
+        <p>Processing image...</p>
+    `;
+    
+    const form = new FormData();
+    form.append('image', img);
+    
+    try {
+        const headers = supabaseAuth.getAuthHeaders();
+        // Remove Content-Type header for FormData
+        delete headers['Content-Type'];
+        
+        const response = await fetch('/api/schedule/extract', {
+            method: 'POST',
+            headers: headers,
+            body: form
+        });
+        
+        if (!response.ok) {
+            if (response.status === 401) {
+                showAuth();
+                return;
+            }
+            throw new Error('Failed to extract schedule');
+        }
+        
+        const extractedData = await response.json();
+        
+        // Show extracted data
+        preview.innerHTML = `
+            <h4>Image Preview:</h4>
+            <img src="${URL.createObjectURL(img)}" style="max-width: 100%; height: auto;" />
+            <h4>Extracted Schedule:</h4>
+            <pre style="background: #f8f9fa; padding: 15px; border-radius: 5px; overflow-x: auto;">${JSON.stringify(extractedData, null, 2)}</pre>
+            <button onclick="applyExtractedSchedule(${JSON.stringify(extractedData).replace(/"/g, '&quot;')})" class="save-btn">Apply & Save</button>
+        `;
+        
+    } catch (error) {
+        console.error('Error extracting schedule:', error);
+        preview.innerHTML = `
+            <h4>Image Preview:</h4>
+            <img src="${URL.createObjectURL(img)}" style="max-width: 100%; height: auto;" />
+            <p style="color: red;">Error: ${error.message}</p>
+        `;
+    }
+}
+
+function applyExtractedSchedule(extractedData) {
+    if (extractedData.weekdays) {
+        schedule.weekdays = { ...schedule.weekdays, ...extractedData.weekdays };
+    }
+    if (extractedData.specific_dates) {
+        schedule.specific_dates = { ...schedule.specific_dates, ...extractedData.specific_dates };
+    }
+    
+    // Update the UI
+    updateWeekdaySchedule();
+    updateSpecificSchedule();
+    
+    // Save the schedule
+    saveSchedule();
+    
+    // Show success message
+    const preview = document.getElementById('imagePreview');
+    preview.innerHTML = `
+        <h4>Schedule Applied Successfully!</h4>
+        <p>The extracted schedule has been applied and saved.</p>
+    `;
+}
+
+document.addEventListener('DOMContentLoaded', initApp);

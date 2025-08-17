@@ -7,30 +7,66 @@
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-    <div class="container">
-        <div class="calendar-container">
-            <div class="calendar-header">
-                <button id="prevMonth">&lt;</button>
-                <h2 id="monthDisplay"></h2>
-                <button id="nextMonth">&gt;</button>
-                <button id="editSchedule" onclick="window.location.href='schedule-editor.html'" class="edit-button">Edit Schedule</button>
+    <!-- Authentication Section -->
+    <div id="authSection" class="auth-section" style="display: none;">
+        <div class="auth-container">
+            <h2>Welcome to Schedule Editor</h2>
+            <div id="loginForm" class="auth-form">
+                <h3>Sign In</h3>
+                <input type="email" id="loginEmail" placeholder="Email" required>
+                <input type="password" id="loginPassword" placeholder="Password" required>
+                <button onclick="handleLogin()">Sign In</button>
+                <p>Don't have an account? <a href="#" onclick="showSignUp()">Sign Up</a></p>
             </div>
-            <div class="weekdays">
-                <div>Sun</div>
-                <div>Mon</div>
-                <div>Tue</div>
-                <div>Wed</div>
-                <div>Thu</div>
-                <div>Fri</div>
-                <div>Sat</div>
+            <div id="signupForm" class="auth-form" style="display: none;">
+                <h3>Sign Up</h3>
+                <input type="email" id="signupEmail" placeholder="Email" required>
+                <input type="password" id="signupPassword" placeholder="Password" required>
+                <button onclick="handleSignUp()">Sign Up</button>
+                <p>Already have an account? <a href="#" onclick="showLogin()">Sign In</a></p>
             </div>
-            <div id="calendar" class="calendar-grid"></div>
-        </div>
-        <div class="schedule-container">
-            <h3 id="selectedDate"></h3>
-            <div id="scheduleList" class="schedule-list"></div>
         </div>
     </div>
+
+    <!-- Main App Section -->
+    <div id="appSection" class="app-section" style="display: none;">
+        <div class="app-header">
+            <h1>Class Schedule Calendar</h1>
+            <div class="user-info">
+                <span id="userEmail"></span>
+                <button onclick="handleSignOut()" class="signout-btn">Sign Out</button>
+            </div>
+        </div>
+        
+        <div class="container">
+            <div class="calendar-container">
+                <div class="calendar-header">
+                    <button id="prevMonth">&lt;</button>
+                    <h2 id="monthDisplay"></h2>
+                    <button id="nextMonth">&gt;</button>
+                    <button id="editSchedule" onclick="window.location.href='schedule-editor.html'" class="edit-button">Edit Schedule</button>
+                </div>
+                <div class="weekdays">
+                    <div>Sun</div>
+                    <div>Mon</div>
+                    <div>Tue</div>
+                    <div>Wed</div>
+                    <div>Thu</div>
+                    <div>Fri</div>
+                    <div>Sat</div>
+                </div>
+                <div id="calendar" class="calendar-grid"></div>
+            </div>
+            <div class="schedule-container">
+                <h3 id="selectedDate"></h3>
+                <div id="scheduleList" class="schedule-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load Supabase CDN first -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-client.js"></script>
     <script src="js/script.js"></script>
 </body>
 </html>

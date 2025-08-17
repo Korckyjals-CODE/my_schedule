@@ -100,89 +100,210 @@
             cursor: pointer;
         }
 
-        button.delete {
+        button:hover {
+            background: #0056b3;
+        }
+
+        .delete-btn {
             background: #dc3545;
         }
 
-        button:hover {
-            opacity: 0.9;
+        .delete-btn:hover {
+            background: #c82333;
+        }
+
+        .save-btn {
+            background: #28a745;
+        }
+
+        .save-btn:hover {
+            background: #218838;
         }
 
         .save-status {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 10px 20px;
-            border-radius: 5px;
-            background: #28a745;
-            color: white;
             display: none;
+            padding: 10px;
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            border-radius: 4px;
+            margin-bottom: 20px;
         }
 
-        .schedule-entry input[type="time"] {
+        .auth-section {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #f8f9fa;
+        }
+
+        .auth-container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 400px;
             width: 100%;
         }
 
-        @media (max-width: 768px) {
-            .schedule-entry {
-                grid-template-columns: 1fr;
-            }
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .auth-form input {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .auth-form button {
+            padding: 12px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .auth-form button:hover {
+            background: #0056b3;
+        }
+
+        .auth-form a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .auth-form a:hover {
+            text-decoration: underline;
+        }
+
+        .app-header {
+            background: #f8f9fa;
+            padding: 20px;
+            border-bottom: 1px solid #dee2e6;
+            margin-bottom: 20px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .signout-btn {
+            background: #6c757d;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .signout-btn:hover {
+            background: #5a6268;
         }
     </style>
 </head>
 <body>
-    <div class="editor-container">
-        <div class="editor-header">
-            <h1>Schedule Editor</h1>
-            <button onclick="window.location.href='index.html'" class="back-button">Back to Calendar</button>
-        </div>
-        <div class="editor-tabs">
-            <button class="tab-button active" data-tab="weekday">Weekday Schedule</button>
-            <button class="tab-button" data-tab="specific">Specific Dates</button>
-            <button class="tab-button" data-tab="import">Import From Image</button>
-        </div>
-
-        <div id="weekdayEditor" class="editor-section active">
-            <div class="form-group">
-                <label for="weekday">Select Day:</label>
-                <select id="weekday">
-                    <option value="Monday">Monday</option>
-                    <option value="Tuesday">Tuesday</option>
-                    <option value="Wednesday">Wednesday</option>
-                    <option value="Thursday">Thursday</option>
-                    <option value="Friday">Friday</option>
-                </select>
+    <!-- Authentication Section -->
+    <div id="authSection" class="auth-section" style="display: none;">
+        <div class="auth-container">
+            <h2>Schedule Editor</h2>
+            <div id="loginForm" class="auth-form">
+                <h3>Sign In</h3>
+                <input type="email" id="loginEmail" placeholder="Email" required>
+                <input type="password" id="loginPassword" placeholder="Password" required>
+                <button onclick="handleLogin()">Sign In</button>
+                <p>Don't have an account? <a href="#" onclick="showSignUp()">Sign Up</a></p>
             </div>
-            <div id="weekdaySchedule" class="schedule-entries"></div>
-            <button onclick="addWeekdayEntry()">Add Entry</button>
-        </div>
-
-        <div id="specificEditor" class="editor-section">
-            <div class="form-group">
-                <label for="specificDate">Select Date:</label>
-                <input type="date" id="specificDate">
-            </div>
-            <div id="specificSchedule" class="schedule-entries"></div>
-            <button onclick="addSpecificEntry()">Add Entry</button>
-        </div>
-        <div id="importEditor" class="editor-section">
-            <div class="form-group">
-                <label>Upload or take a photo of the schedule:</label>
-                <input type="file" id="scheduleImage" accept="image/*" capture="environment">
-            </div>
-            <div class="form-group">
-                <button id="extractBtn" type="button">Extract schedule from image</button>
-            </div>
-            <div id="ocrProgress"></div>
-            <img id="previewImage" style="max-width:100%;display:none" />
-            <pre id="extractedJson" style="white-space:pre-wrap; display:none"></pre>
-            <div class="form-group">
-                <button id="applyExtractedBtn" type="button" disabled>Apply &amp; Save</button>
+            <div id="signupForm" class="auth-form" style="display: none;">
+                <h3>Sign Up</h3>
+                <input type="email" id="signupEmail" placeholder="Email" required>
+                <input type="password" id="signupPassword" placeholder="Password" required>
+                <button onclick="handleSignUp()">Sign Up</button>
+                <p>Already have an account? <a href="#" onclick="showLogin()">Sign In</a></p>
             </div>
         </div>
     </div>
 
-    <div id="saveStatus" class="save-status">Changes saved!</div>
+    <!-- Main Editor Section -->
+    <div id="appSection" class="app-section" style="display: none;">
+        <div class="app-header">
+            <h1>Schedule Editor</h1>
+            <div class="user-info">
+                <span id="userEmail"></span>
+                <button onclick="handleSignOut()" class="signout-btn">Sign Out</button>
+            </div>
+        </div>
+
+        <div class="editor-container">
+            <div class="editor-header">
+                <button onclick="window.location.href='index.html'" class="back-button">← Back to Calendar</button>
+                <button onclick="saveSchedule()" class="save-btn">Save Schedule</button>
+            </div>
+
+            <div id="saveStatus" class="save-status">Schedule saved successfully!</div>
+
+            <div class="editor-tabs">
+                <button class="tab-button active" data-tab="weekday">Weekday Schedule</button>
+                <button class="tab-button" data-tab="specific">Specific Dates</button>
+                <button class="tab-button" data-tab="image">Image Upload</button>
+            </div>
+
+            <!-- Weekday Schedule Editor -->
+            <div id="weekdayEditor" class="editor-section active">
+                <div class="schedule-form">
+                    <div class="form-group">
+                        <label for="weekday">Select Weekday:</label>
+                        <select id="weekday">
+                            <option value="Monday">Monday</option>
+                            <option value="Tuesday">Tuesday</option>
+                            <option value="Wednesday">Wednesday</option>
+                            <option value="Thursday">Thursday</option>
+                            <option value="Friday">Friday</option>
+                        </select>
+                    </div>
+                    <div id="weekdaySchedule" class="schedule-entries"></div>
+                    <button onclick="addWeekdayEntry()">Add Entry</button>
+                </div>
+            </div>
+
+            <!-- Specific Date Schedule Editor -->
+            <div id="specificEditor" class="editor-section">
+                <div class="schedule-form">
+                    <div class="form-group">
+                        <label for="specificDate">Select Date:</label>
+                        <input type="date" id="specificDate">
+                    </div>
+                    <div id="specificSchedule" class="schedule-entries"></div>
+                    <button onclick="addSpecificEntry()">Add Entry</button>
+                </div>
+            </div>
+
+            <!-- Image Upload Editor -->
+            <div id="imageEditor" class="editor-section">
+                <div class="schedule-form">
+                    <div class="form-group">
+                        <label for="imageUpload">Upload Schedule Image:</label>
+                        <input type="file" id="imageUpload" accept="image/*">
+                        <button onclick="extractScheduleFromImage()">Extract Schedule</button>
+                    </div>
+                    <div id="imagePreview"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load Supabase CDN first -->
+    <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-client.js"></script>
     <script src="js/editor.js"></script>
 </body>
 </html>

@@ -5,14 +5,111 @@ let schedule = {
 let currentDate = new Date();
 let selectedDate = null;
 
-// Load schedule data
-fetch('/api/schedule')
-    .then(response => response.json())
-    .then(data => {
+// Authentication functions
+function showLogin() {
+    document.getElementById('loginForm').style.display = 'block';
+    document.getElementById('signupForm').style.display = 'none';
+}
+
+function showSignUp() {
+    document.getElementById('loginForm').style.display = 'none';
+    document.getElementById('signupForm').style.display = 'block';
+}
+
+async function handleLogin() {
+    try {
+        const email = document.getElementById('loginEmail').value;
+        const password = document.getElementById('loginPassword').value;
+        
+        await supabaseAuth.signIn(email, password);
+        showApp();
+        loadSchedule();
+    } catch (error) {
+        alert('Login failed: ' + error.message);
+    }
+}
+
+async function handleSignUp() {
+    try {
+        const email = document.getElementById('signupEmail').value;
+        const password = document.getElementById('signupPassword').value;
+        
+        await supabaseAuth.signUp(email, password);
+        alert('Account created! Please check your email to confirm your account, then sign in.');
+        showLogin();
+    } catch (error) {
+        alert('Sign up failed: ' + error.message);
+    }
+}
+
+async function handleSignOut() {
+    try {
+        await supabaseAuth.signOut();
+        showAuth();
+    } catch (error) {
+        alert('Sign out failed: ' + error.message);
+    }
+}
+
+function showAuth() {
+    document.getElementById('authSection').style.display = 'block';
+    document.getElementById('appSection').style.display = 'none';
+}
+
+function showApp() {
+    document.getElementById('authSection').style.display = 'none';
+    document.getElementById('appSection').style.display = 'block';
+    
+    // Update user info
+    const user = supabaseAuth.getCurrentUser();
+    if (user) {
+        document.getElementById('userEmail').textContent = user.email;
+    }
+}
+
+// Initialize app
+async function initApp() {
+    try {
+        const isAuthenticated = await supabaseAuth.checkAuth();
+        if (isAuthenticated) {
+            showApp();
+            loadSchedule();
+        } else {
+            showAuth();
+        }
+    } catch (error) {
+        console.error('Error initializing app:', error);
+        showAuth();
+    }
+}
+
+// Load schedule data with authentication
+async function loadSchedule() {
+    try {
+        const headers = supabaseAuth.getAuthHeaders();
+        const response = await fetch('/api/schedule', {
+            headers: headers
+        });
+        
+        if (!response.ok) {
+            if (response.status === 401) {
+                // Token expired, redirect to auth
+                showAuth();
+                return;
+            }
+            throw new Error('Failed to load schedule');
+        }
+        
+        const data = await response.json();
         schedule = data;
         renderCalendar();
-    })
-    .catch(error => console.error('Error loading schedule:', error));
+    } catch (error) {
+        console.error('Error loading schedule:', error);
+        if (error.message.includes('No authentication token')) {
+            showAuth();
+        }
+    }
+}
 
 function renderCalendar() {
     const monthDisplay = document.getElementById('monthDisplay');
@@ -133,3 +230,6 @@ document.getElementById('nextMonth').addEventListener('click', () => {
     currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1);
     renderCalendar();
 });
+
+// Initialize the app when DOM is loaded
+document.addEventListener('DOMContentLoaded', initApp);

@@ -1,6 +1,5 @@
 require('dotenv').config();
 const express = require('express');
-const fs = require('fs').promises;
 const path = require('path');
 const helmet = require('helmet');
 const morgan = require('morgan');
@@ -8,6 +7,7 @@ const cors = require('cors');
 const winston = require('winston');
 const multer = require('multer');
 const OpenAI = require('openai');
+const { supabase } = require('./supabase');
 
 // Configure logger
 const logger = winston.createLogger({
@@ -52,26 +52,116 @@ const upload = multer({
 	limits: { fileSize: 10 * 1024 * 1024 }
 });
 
-// API routes
-app.get('/api/schedule', async (req, res) => {
+// Middleware to extract user from Supabase JWT
+const authenticateUser = async (req, res, next) => {
     try {
-        const data = await fs.readFile(path.join(__dirname, 'data/schedule.json'), 'utf8');
-        res.json(JSON.parse(data));
+        const authHeader = req.headers.authorization;
+        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+            return res.status(401).json({ error: 'No token provided' });
+        }
+
+        const token = authHeader.substring(7);
+        const { data: { user }, error } = await supabase.auth.getUser(token);
+        
+        if (error || !user) {
+            return res.status(401).json({ error: 'Invalid token' });
+        }
+
+        req.user = user;
+        next();
+    } catch (error) {
+        logger.error('Authentication error:', error);
+        res.status(401).json({ error: 'Authentication failed' });
+    }
+};
+
+// API routes
+app.get('/api/config', (req, res) => {
+    try {
+        // Only expose public configuration (no sensitive keys)
+        res.json({
+            SUPABASE_URL: process.env.SUPABASE_URL,
+            SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY
+        });
+    } catch (error) {
+        logger.error('Error providing config:', error);
+        res.status(500).json({ error: 'Failed to load configuration' });
+    }
+});
+
+app.get('/api/schedule', authenticateUser, async (req, res) => {
+    try {
+        const { data: schedules, error } = await supabase
+            .from('schedules')
+            .select('*')
+            .eq('user_id', req.user.id)
+            .order('created_at', { ascending: false })
+            .limit(1);
+
+        if (error) throw error;
+
+        if (schedules && schedules.length > 0) {
+            res.json({
+                weekdays: schedules[0].weekdays || {},
+                specific_dates: schedules[0].specific_dates || {}
+            });
+        } else {
+            // Return default empty schedule
+            res.json({
+                weekdays: {},
+                specific_dates: {}
+            });
+        }
     } catch (error) {
         logger.error('Error reading schedule:', error);
         res.status(500).json({ error: 'Failed to read schedule' });
     }
 });
 
-app.post('/api/schedule', async (req, res) => {
+app.post('/api/schedule', authenticateUser, async (req, res) => {
     try {
         const schedule = req.body;
-        await fs.writeFile(
-            path.join(__dirname, 'data/schedule.json'),
-            JSON.stringify(schedule, null, 2),
-            'utf8'
-        );
-        res.json({ message: 'Schedule saved successfully' });
+        
+        // Check if user already has a schedule
+        const { data: existingSchedules, error: checkError } = await supabase
+            .from('schedules')
+            .select('id')
+            .eq('user_id', req.user.id)
+            .limit(1);
+
+        if (checkError) throw checkError;
+
+        let result;
+        if (existingSchedules && existingSchedules.length > 0) {
+            // Update existing schedule
+            const { data, error } = await supabase
+                .from('schedules')
+                .update({
+                    weekdays: schedule.weekdays || {},
+                    specific_dates: schedule.specific_dates || {},
+                    updated_at: new Date().toISOString()
+                })
+                .eq('id', existingSchedules[0].id)
+                .select();
+
+            if (error) throw error;
+            result = data;
+        } else {
+            // Create new schedule
+            const { data, error } = await supabase
+                .from('schedules')
+                .insert({
+                    user_id: req.user.id,
+                    weekdays: schedule.weekdays || {},
+                    specific_dates: schedule.specific_dates || {}
+                })
+                .select();
+
+            if (error) throw error;
+            result = data;
+        }
+
+        res.json({ message: 'Schedule saved successfully', schedule: result[0] });
     } catch (error) {
         logger.error('Error saving schedule:', error);
         res.status(500).json({ error: 'Failed to save schedule' });
@@ -79,7 +169,7 @@ app.post('/api/schedule', async (req, res) => {
 });
 
 // Extract schedule from an uploaded image via OpenAI
-app.post('/api/schedule/extract', upload.single('image'), async (req, res) => {
+app.post('/api/schedule/extract', authenticateUser, upload.single('image'), async (req, res) => {
 	try {
 		if (!openai) {
 			return res.status(500).json({ error: 'OpenAI not configured' });
@@ -88,8 +178,31 @@ app.post('/api/schedule/extract', upload.single('image'), async (req, res) => {
 			return res.status(400).json({ error: 'No image uploaded' });
 		}
 
-		const promptPath = path.join(__dirname, '../data/prompt.schedule.md');
-		const prompt = await fs.readFile(promptPath, 'utf8');
+		// Get prompt from environment variable instead of file
+		const prompt = process.env.SCHEDULE_EXTRACTION_PROMPT || `You are given an image of a school schedule grid with days as rows (Monday–Friday) and time slots as columns.
+Extract the schedule into the following strict JSON schema. Return ONLY valid JSON, no extra text.
+
+Schema:
+{
+  "weekdays": {
+    "Monday": [ { "grade": "string", "startTime": "HH:MM", "endTime": "HH:MM", "subject": "string" } ],
+    "Tuesday": [],
+    "Wednesday": [],
+    "Thursday": [],
+    "Friday": []
+  },
+  "specific_dates": {}
+}
+
+Rules:
+- Time format: 24-hour HH:MM with leading zeros.
+- For non-class blocks, use subject in {"Recess","Lunch","Assembly","Home Room","Dismissal","Other"} and set "grade" to "".
+- For class blocks, set subject to "Class" and put the class label (e.g., "6A","11A","DC3A") in "grade".
+- If a cell is empty, omit it.
+- Use the time windows printed in the header row as the canonical intervals.
+- If the image shows colored recess/lunch/assembly columns, map them accordingly even if not labeled.
+- Do not infer specific_dates unless the image explicitly contains a date; leave "specific_dates" as {} otherwise.
+- Return compact but valid JSON per the schema.`;
 
 		const mime = req.file.mimetype || 'image/png';
 		const base64 = req.file.buffer.toString('base64');
