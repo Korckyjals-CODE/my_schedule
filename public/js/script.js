@@ -288,6 +288,12 @@ async function deleteEventFromCalendar(dateStr, weekDay, index) {
     const daySchedule = schedule.specific_dates[dateStr] || schedule.weekdays[weekDay];
     console.log('📅 Day schedule before deletion:', daySchedule);
     console.log('📊 Full schedule before deletion:', schedule);
+    console.log('🔍 Index to delete:', index);
+    console.log('🔍 Array length before splice:', daySchedule ? daySchedule.length : 'undefined');
+    console.log('🔍 Is daySchedule the same reference as schedule.specific_dates[dateStr]?', daySchedule === schedule.specific_dates[dateStr]);
+    console.log('🔍 Is daySchedule the same reference as schedule.weekdays[weekDay]?', daySchedule === schedule.weekdays[weekDay]);
+    console.log('🔍 schedule.specific_dates[dateStr]:', schedule.specific_dates[dateStr]);
+    console.log('🔍 schedule.weekdays[weekDay]:', schedule.weekdays[weekDay]);
     
     if (!daySchedule || !Array.isArray(daySchedule)) {
         console.error('❌ Invalid day schedule:', daySchedule);
@@ -295,8 +301,11 @@ async function deleteEventFromCalendar(dateStr, weekDay, index) {
         return;
     }
     
-    daySchedule.splice(index, 1);
+    console.log('🔍 About to splice index', index, 'from array of length', daySchedule.length);
+    const removedItem = daySchedule.splice(index, 1);
+    console.log('🔍 Removed item:', removedItem);
     console.log('📅 Day schedule after deletion:', daySchedule);
+    console.log('🔍 Array length after splice:', daySchedule.length);
     
     // If no events left, remove the day
     if (daySchedule.length === 0) {
