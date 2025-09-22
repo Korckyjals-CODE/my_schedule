@@ -186,12 +186,18 @@ function selectDate(date) {
             return a.startTime.localeCompare(b.startTime);
         });
         
-        sortedSchedule.forEach(classInfo => {
+        sortedSchedule.forEach((classInfo, index) => {
             const classBox = document.createElement('div');
             classBox.className = 'class-box';
             classBox.innerHTML = `
-                <div class="grade">${classInfo.grade} - ${classInfo.subject}</div>
-                <div class="time">${classInfo.startTime} - ${classInfo.endTime}</div>
+                <div class="class-content">
+                    <div class="grade">${classInfo.grade} - ${classInfo.subject}</div>
+                    <div class="time">${classInfo.startTime} - ${classInfo.endTime}</div>
+                </div>
+                <div class="hover-buttons">
+                    <button class="edit-btn" onclick="editEventFromCalendar('${dateStr}', '${weekDay}', ${index})" title="Edit Event">✏️</button>
+                    <button class="delete-btn" onclick="deleteEventFromCalendar('${dateStr}', '${weekDay}', ${index})" title="Delete Event">🗑️</button>
+                </div>
             `;
             scheduleList.appendChild(classBox);
         });
@@ -238,3 +244,77 @@ document.getElementById('nextMonth').addEventListener('click', () => {
 
 // Initialize the app when DOM is loaded
 document.addEventListener('DOMContentLoaded', initApp);
+
+// Event editing and deletion functions
+async function editEventFromCalendar(dateStr, weekDay, index) {
+    // Get the event data
+    const daySchedule = schedule.specific_dates[dateStr] || schedule.weekdays[weekDay];
+    const event = daySchedule[index];
+    
+    // Create a simple prompt-based edit (you could enhance this with a modal)
+    const newGrade = prompt('Edit Grade:', event.grade);
+    if (newGrade === null) return; // User cancelled
+    
+    const newStartTime = prompt('Edit Start Time (HH:MM):', event.startTime);
+    if (newStartTime === null) return;
+    
+    const newEndTime = prompt('Edit End Time (HH:MM):', event.endTime);
+    if (newEndTime === null) return;
+    
+    const newSubject = prompt('Edit Subject:', event.subject);
+    if (newSubject === null) return;
+    
+    // Update the event
+    event.grade = newGrade;
+    event.startTime = newStartTime;
+    event.endTime = newEndTime;
+    event.subject = newSubject;
+    
+    // Save and refresh
+    await saveSchedule();
+    selectDate(selectedDate); // Refresh the current view
+}
+
+async function deleteEventFromCalendar(dateStr, weekDay, index) {
+    if (!confirm('Are you sure you want to delete this event?')) return;
+    
+    const daySchedule = schedule.specific_dates[dateStr] || schedule.weekdays[weekDay];
+    daySchedule.splice(index, 1);
+    
+    // If no events left, remove the day
+    if (daySchedule.length === 0) {
+        if (schedule.specific_dates[dateStr]) {
+            delete schedule.specific_dates[dateStr];
+        } else {
+            delete schedule.weekdays[weekDay];
+        }
+    }
+    
+    // Save and refresh
+    await saveSchedule();
+    selectDate(selectedDate); // Refresh the current view
+}
+
+async function saveSchedule() {
+    try {
+        const headers = supabaseAuth.getAuthHeaders();
+        const response = await fetch('/api/schedule', {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify(schedule)
+        });
+
+        if (!response.ok) {
+            if (response.status === 401) {
+                showAuth();
+                return;
+            }
+            throw new Error('Failed to save schedule');
+        }
+
+        console.log('Schedule saved successfully');
+    } catch (error) {
+        console.error('Error saving schedule:', error);
+        alert('Failed to save changes. Please try again.');
+    }
+}
