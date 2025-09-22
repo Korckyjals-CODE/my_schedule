@@ -181,7 +181,12 @@ function selectDate(date) {
     
     // Show schedule for selected date
     if (daySchedule) {
-        daySchedule.forEach(classInfo => {
+        // Sort events by start time in ascending order
+        const sortedSchedule = [...daySchedule].sort((a, b) => {
+            return a.startTime.localeCompare(b.startTime);
+        });
+        
+        sortedSchedule.forEach(classInfo => {
             const classBox = document.createElement('div');
             classBox.className = 'class-box';
             classBox.innerHTML = `
