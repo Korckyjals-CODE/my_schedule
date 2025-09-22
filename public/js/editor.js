@@ -211,6 +211,10 @@ function addWeekdayEntry() {
 // Specific date schedule handling
 document.getElementById('specificDate').addEventListener('change', updateSpecificSchedule);
 
+// Range date schedule handling
+document.getElementById('rangeStartDate').addEventListener('change', updateRangeWeekdays);
+document.getElementById('rangeEndDate').addEventListener('change', updateRangeWeekdays);
+
 function updateSpecificSchedule() {
     const date = document.getElementById('specificDate').value;
     const container = document.getElementById('specificSchedule');
@@ -244,6 +248,117 @@ function addSpecificEntry() {
     schedule.specific_dates[date].push(newEntry);
     updateSpecificSchedule();
     saveSchedule();
+}
+
+// Range date schedule functions
+function updateRangeWeekdays() {
+    const startDate = document.getElementById('rangeStartDate').value;
+    const endDate = document.getElementById('rangeEndDate').value;
+    const container = document.getElementById('rangeWeekdays');
+    
+    container.innerHTML = '';
+    
+    if (!startDate || !endDate) {
+        return;
+    }
+    
+    const weekdays = getWeekdaysInRange(startDate, endDate);
+    
+    weekdays.forEach(day => {
+        const tag = document.createElement('span');
+        tag.className = 'weekday-tag weekday';
+        tag.textContent = day;
+        container.appendChild(tag);
+    });
+    
+    // Update the range schedule display
+    updateRangeSchedule();
+}
+
+function getWeekdaysInRange(startDateStr, endDateStr) {
+    const startDate = new Date(startDateStr);
+    const endDate = new Date(endDateStr);
+    const weekdays = [];
+    const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    
+    // Ensure start date is not after end date
+    if (startDate > endDate) {
+        return [];
+    }
+    
+    const currentDate = new Date(startDate);
+    
+    while (currentDate <= endDate) {
+        const dayOfWeek = currentDate.getDay();
+        // Only include weekdays (Monday = 1 to Friday = 5)
+        if (dayOfWeek >= 1 && dayOfWeek <= 5) {
+            weekdays.push(dayNames[dayOfWeek]);
+        }
+        currentDate.setDate(currentDate.getDate() + 1);
+    }
+    
+    return weekdays;
+}
+
+function updateRangeSchedule() {
+    const startDate = document.getElementById('rangeStartDate').value;
+    const endDate = document.getElementById('rangeEndDate').value;
+    const container = document.getElementById('rangeSchedule');
+    
+    container.innerHTML = '';
+    
+    if (!startDate || !endDate) {
+        return;
+    }
+    
+    const weekdays = getWeekdaysInRange(startDate, endDate);
+    
+    // Show a sample entry for the first weekday to give user an idea
+    if (weekdays.length > 0) {
+        const firstWeekday = weekdays[0];
+        if (schedule.weekdays[firstWeekday]) {
+            schedule.weekdays[firstWeekday].forEach((entry, index) => {
+                container.appendChild(createEntryElement(entry, index, 'range'));
+            });
+        }
+    }
+}
+
+function addRangeEntry() {
+    const startDate = document.getElementById('rangeStartDate').value;
+    const endDate = document.getElementById('rangeEndDate').value;
+    
+    if (!startDate || !endDate) {
+        alert('Please select both start and end dates');
+        return;
+    }
+    
+    const weekdays = getWeekdaysInRange(startDate, endDate);
+    
+    if (weekdays.length === 0) {
+        alert('No weekdays found in the selected date range');
+        return;
+    }
+    
+    const newEntry = {
+        grade: "None",
+        startTime: "08:00",
+        endTime: "08:45",
+        subject: "Class"
+    };
+    
+    // Add the entry to all weekdays in the range
+    weekdays.forEach(weekday => {
+        if (!schedule.weekdays[weekday]) {
+            schedule.weekdays[weekday] = [];
+        }
+        schedule.weekdays[weekday].push({...newEntry});
+    });
+    
+    updateRangeSchedule();
+    saveSchedule();
+    
+    alert(`Entry added to ${weekdays.length} weekdays: ${weekdays.join(', ')}`);
 }
 
 function createEntryElement(entry, index, type) {
@@ -339,10 +454,31 @@ function createEntryElement(entry, index, type) {
 }
 
 function updateEntry(type, index, field, value) {
-    const day = type === 'weekday' ? document.getElementById('weekday').value 
-                                 : document.getElementById('specificDate').value;
-    const entries = type === 'weekday' ? schedule.weekdays[day] 
-                                     : schedule.specific_dates[day];
+    let day, entries;
+    
+    if (type === 'weekday') {
+        day = document.getElementById('weekday').value;
+        entries = schedule.weekdays[day];
+    } else if (type === 'specific') {
+        day = document.getElementById('specificDate').value;
+        entries = schedule.specific_dates[day];
+    } else if (type === 'range') {
+        // For range entries, we need to update all weekdays in the current range
+        const startDate = document.getElementById('rangeStartDate').value;
+        const endDate = document.getElementById('rangeEndDate').value;
+        const weekdays = getWeekdaysInRange(startDate, endDate);
+        
+        weekdays.forEach(weekday => {
+            if (schedule.weekdays[weekday] && schedule.weekdays[weekday][index]) {
+                schedule.weekdays[weekday][index][field] = value;
+                if (field === 'subject' && value === 'Class') {
+                    schedule.weekdays[weekday][index].subject = `Class ${schedule.weekdays[weekday][index].grade.split(' ')[1] || ''}`;
+                }
+            }
+        });
+        saveSchedule();
+        return;
+    }
     
     if (entries && entries[index]) {
         entries[index][field] = value;
@@ -354,6 +490,26 @@ function updateEntry(type, index, field, value) {
 }
 
 function deleteEntry(type, index) {
+    if (type === 'range') {
+        // For range entries, we need to delete from all weekdays in the current range
+        const startDate = document.getElementById('rangeStartDate').value;
+        const endDate = document.getElementById('rangeEndDate').value;
+        const weekdays = getWeekdaysInRange(startDate, endDate);
+        
+        weekdays.forEach(weekday => {
+            if (schedule.weekdays[weekday] && schedule.weekdays[weekday][index]) {
+                schedule.weekdays[weekday].splice(index, 1);
+                if (schedule.weekdays[weekday].length === 0) {
+                    delete schedule.weekdays[weekday];
+                }
+            }
+        });
+        
+        updateRangeSchedule();
+        saveSchedule();
+        return;
+    }
+    
     const day = type === 'weekday' ? document.getElementById('weekday').value 
                                  : document.getElementById('specificDate').value;
     const entries = type === 'weekday' ? schedule.weekdays[day] 

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Range Functionality</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .form-group { margin: 10px 0; }
+        label { display: block; margin-bottom: 5px; }
+        input { padding: 8px; margin: 5px 0; }
+        .weekdays-preview { display: flex; flex-wrap: wrap; gap: 10px; margin: 10px 0; }
+        .weekday-tag { background: #e9ecef; border: 1px solid #dee2e6; border-radius: 4px; padding: 5px 10px; font-size: 12px; }
+        .weekday-tag.weekday { background: #d4edda; border-color: #c3e6cb; color: #155724; }
+        button { padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+    </style>
+</head>
+<body>
+    <h1>Test Range Functionality</h1>
+    
+    <div class="form-group">
+        <label for="rangeStartDate">Start Date:</label>
+        <input type="date" id="rangeStartDate">
+    </div>
+    
+    <div class="form-group">
+        <label for="rangeEndDate">End Date:</label>
+        <input type="date" id="rangeEndDate">
+    </div>
+    
+    <div class="form-group">
+        <label>Weekdays in Range:</label>
+        <div id="rangeWeekdays" class="weekdays-preview"></div>
+    </div>
+    
+    <button onclick="testRange()">Test Range</button>
+    
+    <div id="result"></div>
+
+    <script>
+        function getWeekdaysInRange(startDateStr, endDateStr) {
+            const startDate = new Date(startDateStr);
+            const endDate = new Date(endDateStr);
+            const weekdays = [];
+            const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            
+            // Ensure start date is not after end date
+            if (startDate > endDate) {
+                return [];
+            }
+            
+            const currentDate = new Date(startDate);
+            
+            while (currentDate <= endDate) {
+                const dayOfWeek = currentDate.getDay();
+                // Only include weekdays (Monday = 1 to Friday = 5)
+                if (dayOfWeek >= 1 && dayOfWeek <= 5) {
+                    weekdays.push(dayNames[dayOfWeek]);
+                }
+                currentDate.setDate(currentDate.getDate() + 1);
+            }
+            
+            return weekdays;
+        }
+
+        function updateRangeWeekdays() {
+            const startDate = document.getElementById('rangeStartDate').value;
+            const endDate = document.getElementById('rangeEndDate').value;
+            const container = document.getElementById('rangeWeekdays');
+            
+            container.innerHTML = '';
+            
+            if (!startDate || !endDate) {
+                return;
+            }
+            
+            const weekdays = getWeekdaysInRange(startDate, endDate);
+            
+            weekdays.forEach(day => {
+                const tag = document.createElement('span');
+                tag.className = 'weekday-tag weekday';
+                tag.textContent = day;
+                container.appendChild(tag);
+            });
+        }
+
+        function testRange() {
+            const startDate = document.getElementById('rangeStartDate').value;
+            const endDate = document.getElementById('rangeEndDate').value;
+            
+            if (!startDate || !endDate) {
+                alert('Please select both dates');
+                return;
+            }
+            
+            const weekdays = getWeekdaysInRange(startDate, endDate);
+            document.getElementById('result').innerHTML = `
+                <h3>Test Results:</h3>
+                <p><strong>Start Date:</strong> ${startDate}</p>
+                <p><strong>End Date:</strong> ${endDate}</p>
+                <p><strong>Weekdays Found:</strong> ${weekdays.length}</p>
+                <p><strong>Weekdays:</strong> ${weekdays.join(', ')}</p>
+            `;
+        }
+
+        // Add event listeners
+        document.getElementById('rangeStartDate').addEventListener('change', updateRangeWeekdays);
+        document.getElementById('rangeEndDate').addEventListener('change', updateRangeWeekdays);
+    </script>
+</body>
+</html>
