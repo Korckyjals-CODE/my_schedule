@@ -231,6 +231,32 @@
             border-color: #c3e6cb;
             color: #155724;
         }
+
+        .event-creation-form {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .event-creation-form h4 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: #495057;
+        }
+
+        .event-creation-form .form-group {
+            margin-bottom: 15px;
+        }
+
+        .event-creation-form .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .event-creation-form button {
+            margin-right: 10px;
+        }
     </style>
 </head>
 <body>
@@ -325,8 +351,86 @@
                         <label>Weekdays in Range:</label>
                         <div id="rangeWeekdays" class="weekdays-preview"></div>
                     </div>
+                    
+                    <!-- Event Creation Form -->
+                    <div id="rangeEventForm" class="event-creation-form" style="display: none;">
+                        <h4>Create Event for Date Range</h4>
+                        <div class="form-group">
+                            <label for="rangeGrade">Grade:</label>
+                            <select id="rangeGrade">
+                                <option value="None">None</option>
+                                <option value="PKA">PKA</option>
+                                <option value="PKB">PKB</option>
+                                <option value="KA">KA</option>
+                                <option value="KB">KB</option>
+                                <option value="PA">PA</option>
+                                <option value="PB">PB</option>
+                                <option value="1A">1A</option>
+                                <option value="1B">1B</option>
+                                <option value="2A">2A</option>
+                                <option value="2B">2B</option>
+                                <option value="3A">3A</option>
+                                <option value="3B">3B</option>
+                                <option value="4A">4A</option>
+                                <option value="4B">4B</option>
+                                <option value="5A">5A</option>
+                                <option value="5B">5B</option>
+                                <option value="6A">6A</option>
+                                <option value="6B">6B</option>
+                                <option value="7A">7A</option>
+                                <option value="8A">8A</option>
+                                <option value="9A">9A</option>
+                                <option value="10A">10A</option>
+                                <option value="11A">11A</option>
+                                <option value="12A">12A</option>
+                                <option value="DC1A">DC1A</option>
+                                <option value="DC1B">DC1B</option>
+                                <option value="DC2A">DC2A</option>
+                                <option value="DC2B">DC2B</option>
+                                <option value="DC3A">DC3A</option>
+                                <option value="DC3B">DC3B</option>
+                                <option value="DC1">DC1</option>
+                                <option value="DC2">DC2</option>
+                                <option value="DC3">DC3</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="rangeStartTime">Start Time:</label>
+                            <input type="time" id="rangeStartTime" value="08:00">
+                        </div>
+                        <div class="form-group">
+                            <label for="rangeEndTime">End Time:</label>
+                            <input type="time" id="rangeEndTime" value="08:45">
+                        </div>
+                        <div class="form-group">
+                            <label for="rangeSubject">Subject:</label>
+                            <select id="rangeSubject">
+                                <option value="Class">Class</option>
+                                <option value="Recess">Recess</option>
+                                <option value="Lunch">Lunch</option>
+                                <option value="Assembly">Assembly</option>
+                                <option value="Form Period">Form Period</option>
+                                <option value="Holiday">Holiday</option>
+                                <option value="Dismissal">Dismissal</option>
+                                <option value="Field Trip">Field Trip</option>
+                                <option value="Morning Door">Morning Door</option>
+                                <option value="Morning Duty">Morning Duty</option>
+                                <option value="Recess Duty">Recess Duty</option>
+                                <option value="Lunch Duty">Lunch Duty</option>
+                                <option value="Dismissal Duty">Dismissal Duty</option>
+                                <option value="Dismissal Door">Dismissal Door</option>
+                                <option value="Prep">Prep</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <button onclick="addRangeEntry()" class="save-btn">Add Event to All Weekdays</button>
+                            <button onclick="cancelRangeEvent()" class="delete-btn">Cancel</button>
+                        </div>
+                    </div>
+                    
                     <div id="rangeSchedule" class="schedule-entries"></div>
-                    <button onclick="addRangeEntry()">Add Entry to All Weekdays</button>
+                    <button onclick="showRangeEventForm()" id="showRangeFormBtn">Create New Event</button>
                 </div>
             </div>
 

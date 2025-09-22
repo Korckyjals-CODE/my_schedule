@@ -258,6 +258,9 @@ function updateRangeWeekdays() {
     
     container.innerHTML = '';
     
+    // Hide the form when dates change
+    hideRangeEventForm();
+    
     if (!startDate || !endDate) {
         return;
     }
@@ -313,15 +316,13 @@ function updateRangeSchedule() {
     
     const weekdays = getWeekdaysInRange(startDate, endDate);
     
-    // Show a sample entry for the first weekday to give user an idea
-    if (weekdays.length > 0) {
-        const firstWeekday = weekdays[0];
-        if (schedule.weekdays[firstWeekday]) {
-            schedule.weekdays[firstWeekday].forEach((entry, index) => {
-                container.appendChild(createEntryElement(entry, index, 'range'));
-            });
-        }
+    if (weekdays.length === 0) {
+        container.innerHTML = '<p style="color: #6c757d; font-style: italic;">No weekdays found in the selected date range.</p>';
+        return;
     }
+    
+    // Don't show existing events - this section is only for creating new events
+    // The range schedule container will remain empty until user creates events
 }
 
 function addRangeEntry() {
@@ -333,6 +334,12 @@ function addRangeEntry() {
         return;
     }
     
+    // Validate date range
+    if (new Date(startDate) > new Date(endDate)) {
+        alert('Start date must be before or equal to end date');
+        return;
+    }
+    
     const weekdays = getWeekdaysInRange(startDate, endDate);
     
     if (weekdays.length === 0) {
@@ -340,11 +347,23 @@ function addRangeEntry() {
         return;
     }
     
+    // Get values from the form
+    const grade = document.getElementById('rangeGrade').value;
+    const startTime = document.getElementById('rangeStartTime').value;
+    const endTime = document.getElementById('rangeEndTime').value;
+    const subject = document.getElementById('rangeSubject').value;
+    
+    // Validate time
+    if (startTime >= endTime) {
+        alert('Start time must be before end time');
+        return;
+    }
+    
     const newEntry = {
-        grade: "None",
-        startTime: "08:00",
-        endTime: "08:45",
-        subject: "Class"
+        grade: grade,
+        startTime: startTime,
+        endTime: endTime,
+        subject: subject
     };
     
     // Add the entry to all weekdays in the range
@@ -355,10 +374,53 @@ function addRangeEntry() {
         schedule.weekdays[weekday].push({...newEntry});
     });
     
-    updateRangeSchedule();
     saveSchedule();
     
-    alert(`Entry added to ${weekdays.length} weekdays: ${weekdays.join(', ')}`);
+    // Hide the form and show success message
+    hideRangeEventForm();
+    alert(`Event added to ${weekdays.length} weekdays: ${weekdays.join(', ')}`);
+}
+
+function showRangeEventForm() {
+    const startDate = document.getElementById('rangeStartDate').value;
+    const endDate = document.getElementById('rangeEndDate').value;
+    
+    if (!startDate || !endDate) {
+        alert('Please select both start and end dates first');
+        return;
+    }
+    
+    // Validate date range
+    if (new Date(startDate) > new Date(endDate)) {
+        alert('Start date must be before or equal to end date');
+        return;
+    }
+    
+    const weekdays = getWeekdaysInRange(startDate, endDate);
+    
+    if (weekdays.length === 0) {
+        alert('No weekdays found in the selected date range');
+        return;
+    }
+    
+    // Show the form
+    document.getElementById('rangeEventForm').style.display = 'block';
+    document.getElementById('showRangeFormBtn').style.display = 'none';
+    
+    // Reset form values
+    document.getElementById('rangeGrade').value = 'None';
+    document.getElementById('rangeStartTime').value = '08:00';
+    document.getElementById('rangeEndTime').value = '08:45';
+    document.getElementById('rangeSubject').value = 'Class';
+}
+
+function hideRangeEventForm() {
+    document.getElementById('rangeEventForm').style.display = 'none';
+    document.getElementById('showRangeFormBtn').style.display = 'block';
+}
+
+function cancelRangeEvent() {
+    hideRangeEventForm();
 }
 
 function createEntryElement(entry, index, type) {
@@ -505,7 +567,6 @@ function deleteEntry(type, index) {
             }
         });
         
-        updateRangeSchedule();
         saveSchedule();
         return;
     }
