@@ -186,7 +186,18 @@ function selectDate(date) {
             return a.startTime.localeCompare(b.startTime);
         });
         
-        sortedSchedule.forEach((classInfo, index) => {
+        sortedSchedule.forEach((classInfo, sortedIndex) => {
+            // Find the actual index in the original unsorted array
+            const actualIndex = daySchedule.findIndex(item => 
+                item.grade === classInfo.grade && 
+                item.subject === classInfo.subject && 
+                item.startTime === classInfo.startTime && 
+                item.endTime === classInfo.endTime
+            );
+            
+            console.log(`🔍 Item: ${classInfo.grade} - ${classInfo.subject} (${classInfo.startTime})`);
+            console.log(`🔍 Sorted index: ${sortedIndex}, Actual index: ${actualIndex}`);
+            
             const classBox = document.createElement('div');
             classBox.className = 'class-box';
             classBox.innerHTML = `
@@ -195,8 +206,8 @@ function selectDate(date) {
                     <div class="time">${classInfo.startTime} - ${classInfo.endTime}</div>
                 </div>
                 <div class="hover-buttons">
-                    <button class="edit-btn" onclick="editEventFromCalendar('${dateStr}', '${weekDay}', ${index})" title="Edit Event">✏️</button>
-                    <button class="delete-btn" onclick="deleteEventFromCalendar('${dateStr}', '${weekDay}', ${index})" title="Delete Event">🗑️</button>
+                    <button class="edit-btn" onclick="editEventFromCalendar('${dateStr}', '${weekDay}', ${actualIndex})" title="Edit Event">✏️</button>
+                    <button class="delete-btn" onclick="deleteEventFromCalendar('${dateStr}', '${weekDay}', ${actualIndex})" title="Delete Event">🗑️</button>
                 </div>
             `;
             scheduleList.appendChild(classBox);
