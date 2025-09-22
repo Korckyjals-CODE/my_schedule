@@ -7,6 +7,13 @@ const SUBJECT_OPTIONS = [
     'Holiday',
     'Dismissal',
     'Field Trip',
+    'Morning Door',
+    'Morning Duty',
+    'Recess Duty',
+    'Lunch Duty',
+    'Dismissal Duty',
+    'Dismissal Door',
+    'Prep',
     'Other'
 ];
 
