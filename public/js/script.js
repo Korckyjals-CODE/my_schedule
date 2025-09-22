@@ -276,45 +276,84 @@ async function editEventFromCalendar(dateStr, weekDay, index) {
 }
 
 async function deleteEventFromCalendar(dateStr, weekDay, index) {
-    if (!confirm('Are you sure you want to delete this event?')) return;
+    console.log('🗑️ Delete function called with:', { dateStr, weekDay, index });
+    
+    if (!confirm('Are you sure you want to delete this event?')) {
+        console.log('❌ User cancelled deletion');
+        return;
+    }
+    
+    console.log('✅ User confirmed deletion');
     
     const daySchedule = schedule.specific_dates[dateStr] || schedule.weekdays[weekDay];
+    console.log('📅 Day schedule before deletion:', daySchedule);
+    console.log('📊 Full schedule before deletion:', schedule);
+    
+    if (!daySchedule || !Array.isArray(daySchedule)) {
+        console.error('❌ Invalid day schedule:', daySchedule);
+        alert('Error: Invalid schedule data');
+        return;
+    }
+    
     daySchedule.splice(index, 1);
+    console.log('📅 Day schedule after deletion:', daySchedule);
     
     // If no events left, remove the day
     if (daySchedule.length === 0) {
         if (schedule.specific_dates[dateStr]) {
             delete schedule.specific_dates[dateStr];
+            console.log('🗑️ Removed specific date:', dateStr);
         } else {
             delete schedule.weekdays[weekDay];
+            console.log('🗑️ Removed weekday:', weekDay);
         }
     }
     
+    console.log('📊 Full schedule after deletion:', schedule);
+    
     // Save and refresh
-    await saveSchedule();
-    selectDate(selectedDate); // Refresh the current view
+    try {
+        console.log('💾 Attempting to save schedule...');
+        await saveSchedule();
+        console.log('✅ Schedule saved successfully');
+        selectDate(selectedDate); // Refresh the current view
+        console.log('🔄 View refreshed');
+    } catch (error) {
+        console.error('❌ Error saving schedule:', error);
+        alert('Failed to save changes: ' + error.message);
+    }
 }
 
 async function saveSchedule() {
     try {
+        console.log('🔐 Getting auth headers...');
         const headers = supabaseAuth.getAuthHeaders();
+        console.log('📤 Sending schedule to server:', schedule);
+        
         const response = await fetch('/api/schedule', {
             method: 'POST',
             headers: headers,
             body: JSON.stringify(schedule)
         });
 
+        console.log('📡 Response status:', response.status);
+        console.log('📡 Response ok:', response.ok);
+
         if (!response.ok) {
             if (response.status === 401) {
+                console.log('🔒 Authentication failed, redirecting to auth');
                 showAuth();
                 return;
             }
-            throw new Error('Failed to save schedule');
+            const errorText = await response.text();
+            console.error('❌ Server error response:', errorText);
+            throw new Error(`Failed to save schedule: ${response.status} ${errorText}`);
         }
 
-        console.log('Schedule saved successfully');
+        const responseData = await response.json();
+        console.log('✅ Schedule saved successfully:', responseData);
     } catch (error) {
-        console.error('Error saving schedule:', error);
-        alert('Failed to save changes. Please try again.');
+        console.error('❌ Error saving schedule:', error);
+        alert('Failed to save changes: ' + error.message);
     }
 }
