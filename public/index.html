@@ -32,9 +32,16 @@
     <div id="appSection" class="app-section" style="display: none;">
         <div class="app-header">
             <h1>Class Schedule Calendar</h1>
-            <div class="user-info">
-                <span id="userEmail"></span>
-                <button onclick="handleSignOut()" class="signout-btn">Sign Out</button>
+            <div class="header-controls">
+                <!-- Quick Search Bar -->
+                <div class="quick-search-container">
+                    <input type="text" id="quickSearchInput" placeholder="Quick search grades, subjects..." class="quick-search-input">
+                    <button id="quickSearchBtn" class="quick-search-btn" title="Search">🔍</button>
+                </div>
+                <div class="user-info">
+                    <span id="userEmail"></span>
+                    <button onclick="handleSignOut()" class="signout-btn">Sign Out</button>
+                </div>
             </div>
         </div>
         

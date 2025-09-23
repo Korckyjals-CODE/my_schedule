@@ -283,8 +283,202 @@ document.getElementById('nextMonth').addEventListener('click', () => {
     renderCalendar();
 });
 
+// Quick search functionality
+function setupQuickSearch() {
+    const quickSearchInput = document.getElementById('quickSearchInput');
+    const quickSearchBtn = document.getElementById('quickSearchBtn');
+    
+    if (quickSearchInput && quickSearchBtn) {
+        // Search on button click
+        quickSearchBtn.addEventListener('click', performQuickSearch);
+        
+        // Search on Enter key
+        quickSearchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                performQuickSearch();
+            }
+        });
+        
+        // Auto-search suggestions (optional)
+        quickSearchInput.addEventListener('input', (e) => {
+            // Could add autocomplete suggestions here
+            const query = e.target.value.toLowerCase().trim();
+            if (query.length >= 2) {
+                // Show suggestions dropdown
+                showQuickSearchSuggestions(query);
+            } else {
+                hideQuickSearchSuggestions();
+            }
+        });
+    }
+}
+
+function performQuickSearch() {
+    const query = document.getElementById('quickSearchInput').value.toLowerCase().trim();
+    
+    if (!query) {
+        alert('Please enter a search term');
+        return;
+    }
+    
+    // Navigate to search page with query
+    const searchUrl = `search.html?q=${encodeURIComponent(query)}`;
+    window.location.href = searchUrl;
+}
+
+function showQuickSearchSuggestions(query) {
+    // Create or update suggestions dropdown
+    let suggestionsDiv = document.getElementById('quickSearchSuggestions');
+    
+    if (!suggestionsDiv) {
+        suggestionsDiv = document.createElement('div');
+        suggestionsDiv.id = 'quickSearchSuggestions';
+        suggestionsDiv.className = 'quick-search-suggestions';
+        document.querySelector('.quick-search-container').appendChild(suggestionsDiv);
+    }
+    
+    // Generate suggestions based on schedule data
+    const suggestions = generateQuickSearchSuggestions(query);
+    
+    if (suggestions.length > 0) {
+        suggestionsDiv.innerHTML = suggestions.map(suggestion => 
+            `<div class="suggestion-item" onclick="selectQuickSearchSuggestion('${suggestion}')">${suggestion}</div>`
+        ).join('');
+        suggestionsDiv.style.display = 'block';
+    } else {
+        suggestionsDiv.style.display = 'none';
+    }
+}
+
+function generateQuickSearchSuggestions(query) {
+    const suggestions = [];
+    
+    // Search through current schedule data
+    if (schedule && schedule.weekdays) {
+        Object.entries(schedule.weekdays).forEach(([day, events]) => {
+            events.forEach(event => {
+                // Check if query matches grade, subject, or day
+                if (event.grade && event.grade.toLowerCase().includes(query)) {
+                    if (!suggestions.includes(event.grade)) {
+                        suggestions.push(event.grade);
+                    }
+                }
+                if (event.subject && event.subject.toLowerCase().includes(query)) {
+                    if (!suggestions.includes(event.subject)) {
+                        suggestions.push(event.subject);
+                    }
+                }
+                if (day.toLowerCase().includes(query)) {
+                    if (!suggestions.includes(day)) {
+                        suggestions.push(day);
+                    }
+                }
+            });
+        });
+    }
+    
+    return suggestions.slice(0, 5); // Limit to 5 suggestions
+}
+
+function selectQuickSearchSuggestion(suggestion) {
+    document.getElementById('quickSearchInput').value = suggestion;
+    hideQuickSearchSuggestions();
+    performQuickSearch();
+}
+
+function hideQuickSearchSuggestions() {
+    const suggestionsDiv = document.getElementById('quickSearchSuggestions');
+    if (suggestionsDiv) {
+        suggestionsDiv.style.display = 'none';
+    }
+}
+
+// Calendar integration functions (shared with search.js)
+function applyCalendarHighlights() {
+    const highlightData = localStorage.getItem('calendarHighlight');
+    
+    if (highlightData) {
+        try {
+            const data = JSON.parse(highlightData);
+            
+            // Check if highlight is recent (within 30 seconds)
+            if (Date.now() - data.timestamp < 30000) {
+                highlightMatchingCalendarEvents(data);
+                
+                // Clear highlight data after applying
+                localStorage.removeItem('calendarHighlight');
+            }
+        } catch (error) {
+            console.error('Error parsing highlight data:', error);
+        }
+    }
+}
+
+function highlightMatchingCalendarEvents(highlightData) {
+    console.log('Highlighting calendar events:', highlightData);
+    
+    // Add visual indicators to matching calendar days
+    const calendarDays = document.querySelectorAll('.calendar-day');
+    calendarDays.forEach(dayEl => {
+        const dayText = dayEl.textContent;
+        if (dayText && !isNaN(dayText)) {
+            // This is a day number - we'd need to determine the actual date
+            // and check if it matches our highlight criteria
+            // For now, we'll add a simple highlight class
+            dayEl.classList.add('highlighted-search-result');
+        }
+    });
+    
+    // Show a notification about the highlight
+    showHighlightNotification(highlightData);
+}
+
+function showHighlightNotification(highlightData) {
+    const notification = document.createElement('div');
+    notification.className = 'highlight-notification';
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+        border-radius: 6px;
+        padding: 15px;
+        z-index: 1000;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        max-width: 300px;
+    `;
+    
+    notification.innerHTML = `
+        <strong>🔍 Search Result Highlighted</strong><br>
+        ${highlightData.grade} - ${highlightData.subject}<br>
+        ${highlightData.day} at ${highlightData.startTime}
+        <button onclick="this.parentElement.remove()" style="float: right; background: none; border: none; font-size: 16px; cursor: pointer;">&times;</button>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Auto-remove after 5 seconds
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.parentNode.removeChild(notification);
+        }
+    }, 5000);
+}
+
 // Initialize the app when DOM is loaded
-document.addEventListener('DOMContentLoaded', initApp);
+document.addEventListener('DOMContentLoaded', () => {
+    initApp();
+    setupQuickSearch();
+    
+    // Apply calendar highlights from search results
+    setTimeout(() => {
+        if (typeof applyCalendarHighlights === 'function') {
+            applyCalendarHighlights();
+        }
+    }, 500);
+});
 
 // Modal event listeners
 document.addEventListener('DOMContentLoaded', function() {

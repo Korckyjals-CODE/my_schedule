@@ -161,10 +161,30 @@ function initializeSearchInterface() {
     populateSearchHistory();
     setupEventListeners();
     
+    // Check for URL parameters (from quick search)
+    handleUrlParameters();
+    
     // Show all results initially
     setTimeout(() => {
         displayAllResults();
     }, 100);
+}
+
+// Handle URL parameters for quick search
+function handleUrlParameters() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const query = urlParams.get('q');
+    
+    if (query) {
+        // Set the search input with the query
+        document.getElementById('searchInput').value = query;
+        currentFilters.searchText = query.toLowerCase();
+        
+        // Perform search automatically
+        setTimeout(() => {
+            performSearch();
+        }, 200);
+    }
 }
 
 // Populate grade filter checkboxes
@@ -670,11 +690,11 @@ function displayResults(results, totalCount = null, page = 1, totalPages = 1) {
                 </div>
             `;
             
-            // Add click handler to highlight in calendar (future feature)
+            // Add click handler to navigate to calendar and highlight this event
             resultItem.style.cursor = 'pointer';
             resultItem.addEventListener('click', () => {
                 console.log('Clicked result:', result);
-                // Future: navigate to calendar and highlight this event
+                navigateToCalendarWithHighlight(result);
             });
             
             resultsList.appendChild(resultItem);
@@ -930,9 +950,30 @@ function exportToCSV() {
         alert('No results to export. Please perform a search first.');
         return;
     }
-    
+
     const csvContent = generateCSV(currentSearchResults);
     downloadFile(csvContent, 'schedule-search-results.csv', 'text/csv');
+}
+
+function exportToExcel() {
+    if (currentSearchResults.length === 0) {
+        alert('No results to export. Please perform a search first.');
+        return;
+    }
+    
+    // Create Excel-compatible CSV with proper formatting
+    const excelContent = generateExcelFormat(currentSearchResults);
+    downloadFile(excelContent, 'schedule-search-results.xls', 'application/vnd.ms-excel');
+}
+
+function exportToJSON() {
+    if (currentSearchResults.length === 0) {
+        alert('No results to export. Please perform a search first.');
+        return;
+    }
+    
+    const jsonContent = JSON.stringify(currentSearchResults, null, 2);
+    downloadFile(jsonContent, 'schedule-search-results.json', 'application/json');
 }
 
 function exportToPDF() {
@@ -995,6 +1036,28 @@ function generatePDF(results) {
     return content;
 }
 
+function generateExcelFormat(results) {
+    // Create Excel-compatible CSV with UTF-8 BOM for proper character encoding
+    const headers = ['Grade', 'Subject', 'Day', 'Start Time', 'End Time', 'Date', 'Type'];
+    let content = '\uFEFF'; // UTF-8 BOM for Excel compatibility
+    content += headers.join('\t') + '\n';
+    
+    results.forEach(result => {
+        const row = [
+            result.grade || '',
+            result.subject || '',
+            result.day || '',
+            result.startTime || '',
+            result.endTime || '',
+            result.date || '',
+            result.source === 'weekday' ? 'Weekly' : 'Specific Date'
+        ];
+        content += row.join('\t') + '\n';
+    });
+    
+    return content;
+}
+
 function generateText(results) {
     let content = 'Schedule Search Results\n';
     content += 'Generated: ' + new Date().toLocaleString() + '\n\n';
@@ -1019,6 +1082,100 @@ function downloadFile(content, filename, mimeType) {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+}
+
+// Calendar integration functions
+function navigateToCalendarWithHighlight(result) {
+    // Store highlight data in localStorage
+    const highlightData = {
+        day: result.day,
+        grade: result.grade,
+        subject: result.subject,
+        startTime: result.startTime,
+        endTime: result.endTime,
+        timestamp: Date.now()
+    };
+    
+    localStorage.setItem('calendarHighlight', JSON.stringify(highlightData));
+    
+    // Navigate to calendar
+    window.location.href = 'index.html';
+}
+
+// Function to be called from calendar page to apply highlights
+function applyCalendarHighlights() {
+    const highlightData = localStorage.getItem('calendarHighlight');
+    
+    if (highlightData) {
+        try {
+            const data = JSON.parse(highlightData);
+            
+            // Check if highlight is recent (within 30 seconds)
+            if (Date.now() - data.timestamp < 30000) {
+                highlightMatchingCalendarEvents(data);
+                
+                // Clear highlight data after applying
+                localStorage.removeItem('calendarHighlight');
+            }
+        } catch (error) {
+            console.error('Error parsing highlight data:', error);
+        }
+    }
+}
+
+function highlightMatchingCalendarEvents(highlightData) {
+    // This function would be called from the calendar page
+    // to highlight matching events
+    console.log('Highlighting calendar events:', highlightData);
+    
+    // Add visual indicators to matching calendar days
+    const calendarDays = document.querySelectorAll('.calendar-day');
+    calendarDays.forEach(dayEl => {
+        const dayText = dayEl.textContent;
+        if (dayText && !isNaN(dayText)) {
+            // This is a day number - we'd need to determine the actual date
+            // and check if it matches our highlight criteria
+            // For now, we'll add a simple highlight class
+            dayEl.classList.add('highlighted-search-result');
+        }
+    });
+    
+    // Show a notification about the highlight
+    showHighlightNotification(highlightData);
+}
+
+function showHighlightNotification(highlightData) {
+    const notification = document.createElement('div');
+    notification.className = 'highlight-notification';
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+        border-radius: 6px;
+        padding: 15px;
+        z-index: 1000;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        max-width: 300px;
+    `;
+    
+    notification.innerHTML = `
+        <strong>🔍 Search Result Highlighted</strong><br>
+        ${highlightData.grade} - ${highlightData.subject}<br>
+        ${highlightData.day} at ${highlightData.startTime}
+        <button onclick="this.parentElement.remove()" style="float: right; background: none; border: none; font-size: 16px; cursor: pointer;">&times;</button>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Auto-remove after 5 seconds
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.parentNode.removeChild(notification);
+        }
+    }, 5000);
 }
 
 // Setup event listeners for buttons
