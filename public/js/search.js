@@ -14,6 +14,11 @@ let currentFilters = {
     endTime: ''
 };
 
+// Saved searches and search history
+let savedSearches = JSON.parse(localStorage.getItem('savedSearches') || '[]');
+let searchHistory = JSON.parse(localStorage.getItem('searchHistory') || '[]');
+let currentSearchResults = [];
+
 // Available options for filters
 const AVAILABLE_GRADES = [
     'PKA', 'PKB', 'KA', 'KB', 'PA', 'PB',
@@ -152,6 +157,8 @@ function initializeSearchInterface() {
     populateGradeFilters();
     populateSubjectFilters();
     populateDayFilters();
+    populateSavedSearches();
+    populateSearchHistory();
     setupEventListeners();
     
     // Show all results initially
@@ -208,6 +215,34 @@ function populateDayFilters() {
     });
 }
 
+// Populate saved searches dropdown
+function populateSavedSearches() {
+    const select = document.getElementById('savedSearchesSelect');
+    select.innerHTML = '<option value="">Select a saved search...</option>';
+    
+    savedSearches.forEach((search, index) => {
+        const option = document.createElement('option');
+        option.value = index;
+        option.textContent = search.name;
+        select.appendChild(option);
+    });
+}
+
+// Populate search history dropdown
+function populateSearchHistory() {
+    const select = document.getElementById('searchHistorySelect');
+    select.innerHTML = '<option value="">Select from recent searches...</option>';
+    
+    // Show last 10 searches
+    const recentSearches = searchHistory.slice(-10).reverse();
+    recentSearches.forEach((search, index) => {
+        const option = document.createElement('option');
+        option.value = index;
+        option.textContent = `${search.name} (${new Date(search.timestamp).toLocaleDateString()})`;
+        select.appendChild(option);
+    });
+}
+
 // Setup event listeners
 function setupEventListeners() {
     // Search input
@@ -239,6 +274,18 @@ function setupEventListeners() {
     // Time filters
     document.getElementById('startTime').addEventListener('change', updateTimeFilters);
     document.getElementById('endTime').addEventListener('change', updateTimeFilters);
+    
+    // Saved searches
+    document.getElementById('savedSearchesSelect').addEventListener('change', loadSavedSearch);
+    document.getElementById('saveCurrentBtn').addEventListener('click', saveCurrentSearch);
+    document.getElementById('deleteSavedBtn').addEventListener('click', deleteSavedSearch);
+    
+    // Search history
+    document.getElementById('searchHistorySelect').addEventListener('change', loadSearchHistory);
+    document.getElementById('clearHistoryBtn').addEventListener('click', clearSearchHistory);
+    
+    // Export
+    document.getElementById('exportBtn').addEventListener('click', toggleExportOptions);
 }
 
 // Update grade filters
@@ -302,6 +349,12 @@ function clearAllFilters() {
 function performSearch() {
     console.log('Performing search with filters:', currentFilters);
     
+    // Show loading indicator
+    showLoadingIndicator();
+    
+    // Add to search history
+    addToSearchHistory();
+    
     // Check if any filters are active
     const hasActiveFilters = currentFilters.searchText || 
                             currentFilters.grades.length > 0 || 
@@ -310,13 +363,18 @@ function performSearch() {
                             currentFilters.startTime || 
                             currentFilters.endTime;
     
-    if (!hasActiveFilters) {
-        // Show all results when no filters are applied
-        displayAllResults();
-    } else {
-        const results = searchSchedule();
-        displayResults(results);
-    }
+    setTimeout(() => {
+        hideLoadingIndicator();
+        
+        if (!hasActiveFilters) {
+            // Show all results when no filters are applied
+            displayAllResults();
+        } else {
+            const results = searchSchedule();
+            currentSearchResults = results;
+            displayResults(results);
+        }
+    }, 300); // Simulate search delay for better UX
 }
 
 // Display all schedule entries when no filters are applied
@@ -585,6 +643,307 @@ function getWeekDay(date) {
     return days[date.getDay()];
 }
 
+// Loading indicator functions
+function showLoadingIndicator() {
+    document.getElementById('loadingIndicator').style.display = 'block';
+    document.getElementById('searchTips').style.display = 'none';
+}
+
+function hideLoadingIndicator() {
+    document.getElementById('loadingIndicator').style.display = 'none';
+    document.getElementById('searchTips').style.display = 'block';
+}
+
+// Search history functions
+function addToSearchHistory() {
+    const hasActiveFilters = currentFilters.searchText || 
+                            currentFilters.grades.length > 0 || 
+                            currentFilters.subjects.length > 0 || 
+                            currentFilters.days.length > 0 || 
+                            currentFilters.startTime || 
+                            currentFilters.endTime;
+    
+    if (hasActiveFilters) {
+        const searchName = generateSearchName();
+        const searchEntry = {
+            name: searchName,
+            filters: { ...currentFilters },
+            timestamp: Date.now()
+        };
+        
+        // Remove duplicate if exists
+        searchHistory = searchHistory.filter(s => 
+            JSON.stringify(s.filters) !== JSON.stringify(currentFilters)
+        );
+        
+        // Add to history
+        searchHistory.push(searchEntry);
+        
+        // Keep only last 20 searches
+        if (searchHistory.length > 20) {
+            searchHistory = searchHistory.slice(-20);
+        }
+        
+        // Save to localStorage
+        localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+        
+        // Update UI
+        populateSearchHistory();
+    }
+}
+
+function generateSearchName() {
+    const parts = [];
+    
+    if (currentFilters.searchText) {
+        parts.push(`"${currentFilters.searchText}"`);
+    }
+    
+    if (currentFilters.grades.length > 0) {
+        parts.push(`Grades: ${currentFilters.grades.join(', ')}`);
+    }
+    
+    if (currentFilters.subjects.length > 0) {
+        parts.push(`Subjects: ${currentFilters.subjects.join(', ')}`);
+    }
+    
+    if (currentFilters.days.length > 0) {
+        parts.push(`Days: ${currentFilters.days.join(', ')}`);
+    }
+    
+    if (currentFilters.startTime || currentFilters.endTime) {
+        const timeRange = `${currentFilters.startTime || '00:00'} - ${currentFilters.endTime || '23:59'}`;
+        parts.push(`Time: ${timeRange}`);
+    }
+    
+    return parts.length > 0 ? parts.join(' | ') : 'Custom Search';
+}
+
+function loadSearchHistory() {
+    const select = document.getElementById('searchHistorySelect');
+    const selectedIndex = select.value;
+    
+    if (selectedIndex !== '') {
+        const recentSearches = searchHistory.slice(-10).reverse();
+        const search = recentSearches[selectedIndex];
+        
+        if (search) {
+            applyFilters(search.filters);
+            performSearch();
+        }
+    }
+}
+
+function clearSearchHistory() {
+    if (confirm('Clear all search history?')) {
+        searchHistory = [];
+        localStorage.setItem('searchHistory', JSON.stringify(searchHistory));
+        populateSearchHistory();
+    }
+}
+
+// Saved searches functions
+function saveCurrentSearch() {
+    const hasActiveFilters = currentFilters.searchText || 
+                            currentFilters.grades.length > 0 || 
+                            currentFilters.subjects.length > 0 || 
+                            currentFilters.days.length > 0 || 
+                            currentFilters.startTime || 
+                            currentFilters.endTime;
+    
+    if (!hasActiveFilters) {
+        alert('Please set some filters before saving a search.');
+        return;
+    }
+    
+    const searchName = prompt('Enter a name for this saved search:', generateSearchName());
+    
+    if (searchName && searchName.trim()) {
+        const savedSearch = {
+            name: searchName.trim(),
+            filters: { ...currentFilters },
+            timestamp: Date.now()
+        };
+        
+        // Remove duplicate if exists
+        savedSearches = savedSearches.filter(s => s.name !== searchName.trim());
+        
+        // Add to saved searches
+        savedSearches.push(savedSearch);
+        
+        // Save to localStorage
+        localStorage.setItem('savedSearches', JSON.stringify(savedSearches));
+        
+        // Update UI
+        populateSavedSearches();
+        
+        alert('Search saved successfully!');
+    }
+}
+
+function loadSavedSearch() {
+    const select = document.getElementById('savedSearchesSelect');
+    const selectedIndex = select.value;
+    
+    if (selectedIndex !== '') {
+        const search = savedSearches[selectedIndex];
+        
+        if (search) {
+            applyFilters(search.filters);
+            performSearch();
+        }
+    }
+}
+
+function deleteSavedSearch() {
+    const select = document.getElementById('savedSearchesSelect');
+    const selectedIndex = select.value;
+    
+    if (selectedIndex !== '') {
+        const search = savedSearches[selectedIndex];
+        
+        if (confirm(`Delete saved search "${search.name}"?`)) {
+            savedSearches.splice(selectedIndex, 1);
+            localStorage.setItem('savedSearches', JSON.stringify(savedSearches));
+            populateSavedSearches();
+        }
+    } else {
+        alert('Please select a saved search to delete.');
+    }
+}
+
+function applyFilters(filters) {
+    // Clear current filters
+    clearAllFilters();
+    
+    // Apply new filters
+    currentFilters = { ...filters };
+    
+    // Update UI
+    document.getElementById('searchInput').value = currentFilters.searchText;
+    
+    // Update checkboxes
+    currentFilters.grades.forEach(grade => {
+        const checkbox = document.getElementById(`grade-${grade}`);
+        if (checkbox) checkbox.checked = true;
+    });
+    
+    currentFilters.subjects.forEach(subject => {
+        const checkbox = document.getElementById(`subject-${subject}`);
+        if (checkbox) checkbox.checked = true;
+    });
+    
+    currentFilters.days.forEach(day => {
+        const checkbox = document.getElementById(`day-${day}`);
+        if (checkbox) checkbox.checked = true;
+    });
+    
+    document.getElementById('startTime').value = currentFilters.startTime;
+    document.getElementById('endTime').value = currentFilters.endTime;
+}
+
+// Export functions
+function toggleExportOptions() {
+    const exportOptions = document.getElementById('exportOptions');
+    exportOptions.style.display = exportOptions.style.display === 'none' ? 'block' : 'none';
+}
+
+function exportToCSV() {
+    if (currentSearchResults.length === 0) {
+        alert('No results to export. Please perform a search first.');
+        return;
+    }
+    
+    const csvContent = generateCSV(currentSearchResults);
+    downloadFile(csvContent, 'schedule-search-results.csv', 'text/csv');
+}
+
+function exportToPDF() {
+    if (currentSearchResults.length === 0) {
+        alert('No results to export. Please perform a search first.');
+        return;
+    }
+    
+    // Simple PDF generation (in a real app, you'd use a library like jsPDF)
+    const pdfContent = generatePDF(currentSearchResults);
+    downloadFile(pdfContent, 'schedule-search-results.pdf', 'application/pdf');
+}
+
+function copyToClipboard() {
+    if (currentSearchResults.length === 0) {
+        alert('No results to copy. Please perform a search first.');
+        return;
+    }
+    
+    const textContent = generateText(currentSearchResults);
+    navigator.clipboard.writeText(textContent).then(() => {
+        alert('Results copied to clipboard!');
+    }).catch(() => {
+        alert('Failed to copy to clipboard. Please try again.');
+    });
+}
+
+function generateCSV(results) {
+    const headers = ['Day', 'Grade', 'Subject', 'Start Time', 'End Time', 'Type', 'Date'];
+    const csvRows = [headers.join(',')];
+    
+    results.forEach(result => {
+        const row = [
+            result.day,
+            result.grade || '',
+            result.subject,
+            result.startTime,
+            result.endTime,
+            result.source,
+            result.date || ''
+        ];
+        csvRows.push(row.join(','));
+    });
+    
+    return csvRows.join('\n');
+}
+
+function generatePDF(results) {
+    // Simple text-based PDF (in production, use jsPDF library)
+    let content = 'Schedule Search Results\n';
+    content += 'Generated: ' + new Date().toLocaleString() + '\n\n';
+    
+    results.forEach(result => {
+        content += `${result.day} - ${result.grade || 'No Grade'} - ${result.subject}\n`;
+        content += `Time: ${result.startTime} - ${result.endTime}\n`;
+        if (result.date) content += `Date: ${result.date}\n`;
+        content += `Type: ${result.source}\n\n`;
+    });
+    
+    return content;
+}
+
+function generateText(results) {
+    let content = 'Schedule Search Results\n';
+    content += 'Generated: ' + new Date().toLocaleString() + '\n\n';
+    
+    results.forEach(result => {
+        content += `${result.day} - ${result.grade || 'No Grade'} - ${result.subject}\n`;
+        content += `Time: ${result.startTime} - ${result.endTime}\n`;
+        if (result.date) content += `Date: ${result.date}\n`;
+        content += `Type: ${result.source}\n\n`;
+    });
+    
+    return content;
+}
+
+function downloadFile(content, filename, mimeType) {
+    const blob = new Blob([content], { type: mimeType });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
 // Setup event listeners for buttons
 function setupButtonEventListeners() {
     // Authentication buttons
@@ -608,6 +967,7 @@ function setupButtonEventListeners() {
     // Search buttons
     document.getElementById('clearFiltersBtn').addEventListener('click', clearAllFilters);
     document.getElementById('searchBtn').addEventListener('click', performSearch);
+    document.getElementById('exportBtn').addEventListener('click', toggleExportOptions);
 }
 
 // Initialize the app when DOM is loaded

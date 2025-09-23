@@ -167,6 +167,162 @@
             background: #2980b9;
         }
 
+        .btn-save {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-save:hover {
+            background: #229954;
+        }
+
+        .btn-delete {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-delete:hover {
+            background: #c0392b;
+        }
+
+        .btn-export {
+            background: #9b59b6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-export:hover {
+            background: #8e44ad;
+        }
+
+        .btn-clear-small {
+            background: #95a5a6;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-clear-small:hover {
+            background: #7f8c8d;
+        }
+
+        .saved-searches, .search-history {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .saved-search-actions {
+            display: flex;
+            gap: 4px;
+        }
+
+        .saved-searches select, .search-history select {
+            flex: 1;
+        }
+
+        .loading-indicator {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: #3498db;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .search-tips {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #495057;
+        }
+
+        .search-tips h5 {
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+        }
+
+        .search-tips ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .search-tips li {
+            margin-bottom: 5px;
+        }
+
+        .export-options {
+            display: none;
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .export-options h5 {
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+        }
+
+        .export-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .export-btn {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+        }
+
+        .export-btn:hover {
+            background: #5a6268;
+        }
+
         .search-results {
             background: white;
             border-radius: 12px;
@@ -278,6 +434,69 @@
             .search-container {
                 padding: 0 10px;
             }
+
+            .filter-actions {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .filter-actions button {
+                width: 100%;
+            }
+
+            .saved-searches, .search-history {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .saved-search-actions {
+                justify-content: center;
+            }
+
+            .export-buttons {
+                flex-direction: column;
+            }
+
+            .export-btn {
+                width: 100%;
+            }
+
+            .result-item {
+                padding: 15px;
+            }
+
+            .result-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .search-header {
+                padding: 20px;
+            }
+
+            .search-filters, .search-results {
+                padding: 20px;
+            }
+
+            .search-header h1 {
+                font-size: 1.5rem;
+            }
+
+            .filter-section h4 {
+                font-size: 0.9rem;
+            }
+
+            .search-tips {
+                padding: 12px;
+                font-size: 13px;
+            }
+
+            .search-tips ul {
+                padding-left: 15px;
+            }
         }
 
         /* Back button styling */
@@ -383,10 +602,36 @@
                         </div>
                     </div>
 
+                    <!-- Saved Searches -->
+                    <div class="filter-section">
+                        <h4>Saved Searches</h4>
+                        <div class="saved-searches">
+                            <select id="savedSearchesSelect" class="filter-select">
+                                <option value="">Select a saved search...</option>
+                            </select>
+                            <div class="saved-search-actions">
+                                <button id="saveCurrentBtn" class="btn-save" title="Save current filters">💾</button>
+                                <button id="deleteSavedBtn" class="btn-delete" title="Delete selected search">🗑️</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Search History -->
+                    <div class="filter-section">
+                        <h4>Recent Searches</h4>
+                        <div class="search-history">
+                            <select id="searchHistorySelect" class="filter-select">
+                                <option value="">Select from recent searches...</option>
+                            </select>
+                            <button id="clearHistoryBtn" class="btn-clear-small" title="Clear search history">Clear</button>
+                        </div>
+                    </div>
+
                     <!-- Filter Actions -->
                     <div class="filter-actions">
                         <button id="clearFiltersBtn" class="btn-clear">Clear All</button>
                         <button id="searchBtn" class="btn-search">Search</button>
+                        <button id="exportBtn" class="btn-export">Export</button>
                     </div>
                 </div>
 
@@ -395,10 +640,38 @@
                     <h3>Search Results</h3>
                     <div class="results-count" id="resultsCount">Enter search terms to find schedules</div>
                     
+                    <!-- Loading Indicator -->
+                    <div id="loadingIndicator" class="loading-indicator">
+                        <div class="loading-spinner"></div>
+                        <span>Searching...</span>
+                    </div>
+                    
+                    <!-- Search Tips -->
+                    <div id="searchTips" class="search-tips">
+                        <h5>💡 Search Tips</h5>
+                        <ul>
+                            <li><strong>Text Search:</strong> Search for grade names (11A, 6A), subjects (Class, Recess), or times (7:45)</li>
+                            <li><strong>Filters:</strong> Use checkboxes to filter by grades, subjects, or days</li>
+                            <li><strong>Time Range:</strong> Set start and end times to find events in specific time slots</li>
+                            <li><strong>Saved Searches:</strong> Save frequently used filter combinations for quick access</li>
+                            <li><strong>Export:</strong> Export search results to CSV or PDF for offline use</li>
+                        </ul>
+                    </div>
+                    
                     <div id="resultsContainer">
                         <div class="no-results">
                             <h4>🔍 Ready to Search</h4>
                             <p>Use the search box and filters to find specific schedule entries</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Export Options -->
+                    <div id="exportOptions" class="export-options">
+                        <h5>📤 Export Options</h5>
+                        <div class="export-buttons">
+                            <button class="export-btn" onclick="exportToCSV()">Export to CSV</button>
+                            <button class="export-btn" onclick="exportToPDF()">Export to PDF</button>
+                            <button class="export-btn" onclick="copyToClipboard()">Copy to Clipboard</button>
                         </div>
                     </div>
                 </div>
