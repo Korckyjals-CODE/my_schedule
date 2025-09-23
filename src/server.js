@@ -182,6 +182,104 @@ app.post('/api/schedule', authenticateUser, async (req, res) => {
     }
 });
 
+// Search analytics endpoint (for future dashboard)
+app.get('/api/search/analytics', authenticateUser, async (req, res) => {
+    try {
+        // This would typically query a search analytics table
+        // For now, we'll return mock data
+        const analytics = {
+            totalSearches: 0,
+            popularFilters: {
+                grades: [],
+                subjects: [],
+                days: []
+            },
+            searchTrends: [],
+            averageResultsPerSearch: 0
+        };
+        
+        res.json(analytics);
+    } catch (error) {
+        logger.error('Error getting search analytics:', error);
+        res.status(500).json({ error: 'Failed to get search analytics' });
+    }
+});
+
+// Search schedules endpoint
+app.post('/api/search', authenticateUser, async (req, res) => {
+    try {
+        const searchParams = req.body;
+        const {
+            searchText = '',
+            grades = [],
+            subjects = [],
+            days = [],
+            startTime = '',
+            endTime = '',
+            page = 1,
+            limit = 50
+        } = searchParams;
+
+        logger.info('Search request:', { 
+            userId: req.user.id, 
+            searchParams: { searchText, grades, subjects, days, startTime, endTime, page, limit }
+        });
+
+        // Get user's schedule
+        const { data: schedules, error } = await supabase
+            .from('schedules')
+            .select('*')
+            .eq('user_id', req.user.id)
+            .order('created_at', { ascending: false })
+            .limit(1);
+
+        if (error) throw error;
+
+        if (!schedules || schedules.length === 0) {
+            return res.json({
+                results: [],
+                totalCount: 0,
+                page: 1,
+                totalPages: 0,
+                hasMore: false
+            });
+        }
+
+        const schedule = schedules[0];
+        const results = performServerSideSearch(schedule, searchParams);
+        
+        // Pagination
+        const totalCount = results.length;
+        const totalPages = Math.ceil(totalCount / limit);
+        const startIndex = (page - 1) * limit;
+        const endIndex = startIndex + limit;
+        const paginatedResults = results.slice(startIndex, endIndex);
+
+        // Log search analytics
+        logSearchAnalytics(req.user.id, searchParams, totalCount);
+
+        res.json({
+            results: paginatedResults,
+            totalCount,
+            page,
+            totalPages,
+            hasMore: page < totalPages,
+            searchParams: {
+                searchText,
+                grades,
+                subjects,
+                days,
+                startTime,
+                endTime
+            }
+        });
+
+    } catch (error) {
+        logger.error('Error in search API:', error);
+        res.status(500).json({ error: 'Failed to perform search' });
+    }
+});
+
 // Extract schedule from an uploaded image via OpenAI
 app.post('/api/schedule/extract', authenticateUser, upload.single('image'), async (req, res) => {
 	try {
@@ -256,6 +354,162 @@ app.use((err, req, res, next) => {
     logger.error(err.stack);
     res.status(500).json({ error: 'Something broke!' });
 });
+
+// Server-side search logic
+function performServerSideSearch(schedule, searchParams) {
+    const { searchText, grades, subjects, days, startTime, endTime } = searchParams;
+    const results = [];
+    
+    // Search through weekdays
+    if (schedule.weekdays) {
+        Object.entries(schedule.weekdays).forEach(([day, events]) => {
+            if (events && Array.isArray(events)) {
+                events.forEach((event, index) => {
+                    if (matchesServerFilters(event, day, null, searchParams)) {
+                        results.push({
+                            ...event,
+                            day: day,
+                            date: null,
+                            type: 'weekday',
+                            index: index,
+                            source: 'weekday'
+                        });
+                    }
+                });
+            }
+        });
+    }
+    
+    // Search through specific dates
+    if (schedule.specific_dates) {
+        Object.entries(schedule.specific_dates).forEach(([date, events]) => {
+            if (events && Array.isArray(events)) {
+                events.forEach((event, index) => {
+                    const day = getWeekDayFromDate(date);
+                    if (matchesServerFilters(event, day, date, searchParams)) {
+                        results.push({
+                            ...event,
+                            day: day,
+                            date: date,
+                            type: 'specific',
+                            index: index,
+                            source: 'specific_date'
+                        });
+                    }
+                });
+            }
+        });
+    }
+    
+    // Sort results by day and time
+    return results.sort((a, b) => {
+        const dayOrder = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+        const aDayIndex = dayOrder.indexOf(a.day);
+        const bDayIndex = dayOrder.indexOf(b.day);
+        
+        if (aDayIndex !== bDayIndex) {
+            return aDayIndex - bDayIndex;
+        }
+        
+        return convertTimeToMinutes(a.startTime) - convertTimeToMinutes(b.startTime);
+    });
+}
+
+// Server-side filter matching
+function matchesServerFilters(event, day, date, searchParams) {
+    const { searchText, grades, subjects, days, startTime, endTime } = searchParams;
+    
+    // Text search
+    if (searchText) {
+        const searchLower = searchText.toLowerCase().trim();
+        if (searchLower) {
+            const eventText = `${event.grade || ''} ${event.subject || ''} ${event.startTime || ''} ${event.endTime || ''} ${day || ''}`.toLowerCase();
+            if (!eventText.includes(searchLower)) {
+                return false;
+            }
+        }
+    }
+    
+    // Grade filter
+    if (grades.length > 0) {
+        const eventGrade = event.grade || '';
+        if (!grades.includes(eventGrade)) {
+            return false;
+        }
+    }
+    
+    // Subject filter
+    if (subjects.length > 0) {
+        const eventSubject = event.subject || '';
+        if (!subjects.includes(eventSubject)) {
+            return false;
+        }
+    }
+    
+    // Day filter
+    if (days.length > 0) {
+        if (!days.includes(day)) {
+            return false;
+        }
+    }
+    
+    // Time filter
+    if (startTime || endTime) {
+        const eventStart = convertTimeToMinutes(event.startTime);
+        const eventEnd = convertTimeToMinutes(event.endTime);
+        
+        if (startTime) {
+            const filterStart = convertTimeToMinutes(startTime);
+            if (eventStart < filterStart) {
+                return false;
+            }
+        }
+        
+        if (endTime) {
+            const filterEnd = convertTimeToMinutes(endTime);
+            if (eventEnd > filterEnd) {
+                return false;
+            }
+        }
+    }
+    
+    return true;
+}
+
+// Helper functions
+function getWeekDayFromDate(dateStr) {
+    const date = new Date(dateStr);
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    return days[date.getDay()];
+}
+
+function convertTimeToMinutes(timeStr) {
+    if (!timeStr) return 0;
+    const [hours, minutes] = timeStr.split(':').map(Number);
+    return hours * 60 + minutes;
+}
+
+// Search analytics logging
+function logSearchAnalytics(userId, searchParams, resultCount) {
+    const analyticsData = {
+        userId,
+        timestamp: new Date().toISOString(),
+        searchParams: {
+            searchText: searchParams.searchText,
+            gradesCount: searchParams.grades?.length || 0,
+            subjectsCount: searchParams.subjects?.length || 0,
+            daysCount: searchParams.days?.length || 0,
+            hasTimeFilter: !!(searchParams.startTime || searchParams.endTime)
+        },
+        resultCount,
+        hasResults: resultCount > 0
+    };
+    
+    logger.info('Search analytics:', analyticsData);
+    
+    // In a production environment, you might want to store this in a database
+    // or send to an analytics service like Google Analytics, Mixpanel, etc.
+}
 
 // Start server
 app.listen(port, () => {

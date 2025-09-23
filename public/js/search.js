@@ -346,7 +346,7 @@ function clearAllFilters() {
 }
 
 // Perform search
-function performSearch() {
+async function performSearch() {
     console.log('Performing search with filters:', currentFilters);
     
     // Show loading indicator
@@ -363,18 +363,57 @@ function performSearch() {
                             currentFilters.startTime || 
                             currentFilters.endTime;
     
-    setTimeout(() => {
-        hideLoadingIndicator();
-        
+    try {
         if (!hasActiveFilters) {
             // Show all results when no filters are applied
+            hideLoadingIndicator();
             displayAllResults();
         } else {
-            const results = searchSchedule();
-            currentSearchResults = results;
-            displayResults(results);
+            // Use server-side search API
+            const searchParams = {
+                searchText: currentFilters.searchText,
+                grades: currentFilters.grades,
+                subjects: currentFilters.subjects,
+                days: currentFilters.days,
+                startTime: currentFilters.startTime,
+                endTime: currentFilters.endTime,
+                page: 1,
+                limit: 100 // Get more results for better UX
+            };
+            
+            const headers = supabaseAuth.getAuthHeaders();
+            const response = await fetch('/api/search', {
+                method: 'POST',
+                headers: {
+                    ...headers,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(searchParams)
+            });
+            
+            if (!response.ok) {
+                throw new Error(`Search failed: ${response.status}`);
+            }
+            
+            const data = await response.json();
+            console.log('Server search results:', data);
+            
+            currentSearchResults = data.results;
+            displayResults(data.results, data.totalCount, data.page, data.totalPages);
         }
-    }, 300); // Simulate search delay for better UX
+    } catch (error) {
+        console.error('Search error:', error);
+        hideLoadingIndicator();
+        
+        // Fallback to client-side search
+        console.log('Falling back to client-side search');
+        const results = searchSchedule();
+        currentSearchResults = results;
+        displayResults(results);
+        
+        // Show error message
+        showSearchError('Server search failed. Using offline search.');
+    }
 }
 
 // Display all schedule entries when no filters are applied
@@ -544,11 +583,14 @@ function convertTimeToMinutes(timeStr) {
 }
 
 // Display search results
-function displayResults(results) {
+function displayResults(results, totalCount = null, page = 1, totalPages = 1) {
     const resultsContainer = document.getElementById('resultsContainer');
     const resultsCount = document.getElementById('resultsCount');
     
-    console.log('📊 Displaying', results.length, 'results');
+    console.log('📊 Displaying', results.length, 'results', totalCount ? `(total: ${totalCount})` : '');
+    
+    // Hide loading indicator
+    hideLoadingIndicator();
     
     // Update results count
     if (results.length === 0) {
@@ -577,7 +619,13 @@ function displayResults(results) {
                                 currentFilters.endTime;
         
         if (hasActiveFilters) {
-            resultsCount.textContent = `${results.length} result${results.length === 1 ? '' : 's'} found`;
+            const countText = totalCount ? `${results.length} of ${totalCount}` : results.length;
+            resultsCount.textContent = `${countText} result${totalCount ? 's' : (results.length === 1 ? '' : 's')} found`;
+            
+            // Show pagination info if applicable
+            if (totalPages > 1) {
+                resultsCount.textContent += ` (Page ${page} of ${totalPages})`;
+            }
         } else {
             resultsCount.textContent = `Showing all ${results.length} schedule entries`;
         }
@@ -652,6 +700,35 @@ function showLoadingIndicator() {
 function hideLoadingIndicator() {
     document.getElementById('loadingIndicator').style.display = 'none';
     document.getElementById('searchTips').style.display = 'block';
+}
+
+function showSearchError(message) {
+    const resultsContainer = document.getElementById('resultsContainer');
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'search-error';
+    errorDiv.style.cssText = `
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 15px;
+        text-align: center;
+    `;
+    errorDiv.innerHTML = `
+        <strong>⚠️ Search Notice</strong><br>
+        ${message}
+    `;
+    
+    // Insert error message at the top of results
+    resultsContainer.insertBefore(errorDiv, resultsContainer.firstChild);
+    
+    // Auto-remove after 5 seconds
+    setTimeout(() => {
+        if (errorDiv.parentNode) {
+            errorDiv.parentNode.removeChild(errorDiv);
+        }
+    }, 5000);
 }
 
 // Search history functions
