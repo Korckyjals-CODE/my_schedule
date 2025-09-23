@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Schedules - Test Mode</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        /* Search Page Specific Styles */
+        .search-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+
+        .search-header {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .search-header h1 {
+            margin: 0 0 20px 0;
+            color: #2c3e50;
+            font-size: 2.2rem;
+            font-weight: 300;
+        }
+
+        .search-main {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+            align-items: start;
+        }
+
+        .search-filters {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            padding: 25px;
+            position: sticky;
+            top: 20px;
+        }
+
+        .search-filters h3 {
+            margin: 0 0 20px 0;
+            color: #34495e;
+            font-size: 1.3rem;
+            font-weight: 400;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 10px;
+        }
+
+        .search-box {
+            margin-bottom: 25px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e8f4fd;
+            border-radius: 8px;
+            font-size: 16px;
+            background: #fafbfc;
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #3498db;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .search-input::placeholder {
+            color: #95a5a6;
+        }
+
+        .filter-section {
+            margin-bottom: 25px;
+        }
+
+        .filter-section h4 {
+            margin: 0 0 12px 0;
+            color: #2c3e50;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .filter-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .filter-checkbox:hover {
+            color: #3498db;
+        }
+
+        .filter-checkbox input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #3498db;
+        }
+
+        .filter-select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #e8f4fd;
+            border-radius: 6px;
+            background: white;
+            font-size: 14px;
+            color: #2c3e50;
+            transition: border-color 0.3s ease;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .filter-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-clear {
+            background: #95a5a6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-clear:hover {
+            background: #7f8c8d;
+        }
+
+        .btn-search {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-search:hover {
+            background: #2980b9;
+        }
+
+        .search-results {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            padding: 25px;
+        }
+
+        .search-results h3 {
+            margin: 0 0 20px 0;
+            color: #34495e;
+            font-size: 1.3rem;
+            font-weight: 400;
+        }
+
+        .results-count {
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .results-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .result-item {
+            background: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 20px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .result-item:hover {
+            background: #e8f4fd;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .result-grade {
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 1.1rem;
+        }
+
+        .result-subject {
+            color: #3498db;
+            font-weight: 500;
+        }
+
+        .result-time {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+
+        .result-day {
+            background: #ecf0f1;
+            color: #2c3e50;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #7f8c8d;
+        }
+
+        .no-results h4 {
+            margin: 0 0 10px 0;
+            color: #95a5a6;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #3498db;
+        }
+
+        /* Test Mode Banner */
+        .test-banner {
+            background: #f39c12;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            font-weight: bold;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .search-main {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .search-filters {
+                position: static;
+            }
+
+            .search-header h1 {
+                font-size: 1.8rem;
+            }
+
+            .search-container {
+                padding: 0 10px;
+            }
+        }
+
+        /* Back button styling */
+        .back-button {
+            background: #95a5a6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .back-button:hover {
+            background: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+    <!-- Test Mode Banner -->
+    <div class="test-banner">
+        🧪 TEST MODE - Using Mock Data
+    </div>
+
+    <!-- Main Search Section -->
+    <div id="appSection" class="app-section">
+        <div class="app-header">
+            <h1>Schedule Search - Test Mode</h1>
+            <div class="user-info">
+                <span>test@example.com</span>
+                <button onclick="window.location.href='index.html'" class="signout-btn">Back to App</button>
+            </div>
+        </div>
+
+        <div class="search-container">
+            <button onclick="window.location.href='index.html'" class="back-button">← Back to Calendar</button>
+            
+            <div class="search-header">
+                <h1>Search Your Schedules</h1>
+                <p style="color: #7f8c8d; margin: 0;">Find specific classes, grades, or time slots across your schedule</p>
+            </div>
+
+            <div class="search-main">
+                <!-- Search Filters Panel -->
+                <div class="search-filters">
+                    <h3>Search & Filters</h3>
+                    
+                    <!-- Search Box -->
+                    <div class="search-box">
+                        <input type="text" id="searchInput" class="search-input" placeholder="Search grades, subjects, or times...">
+                    </div>
+
+                    <!-- Grade Filter -->
+                    <div class="filter-section">
+                        <h4>Grades</h4>
+                        <div class="filter-group" id="gradeFilters">
+                            <!-- Will be populated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Subject Filter -->
+                    <div class="filter-section">
+                        <h4>Subjects</h4>
+                        <div class="filter-group" id="subjectFilters">
+                            <!-- Will be populated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Day Filter -->
+                    <div class="filter-section">
+                        <h4>Days</h4>
+                        <div class="filter-group" id="dayFilters">
+                            <!-- Will be populated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Time Range Filter -->
+                    <div class="filter-section">
+                        <h4>Time Range</h4>
+                        <div class="filter-group">
+                            <label for="startTime">From:</label>
+                            <input type="time" id="startTime" class="filter-select">
+                            <label for="endTime">To:</label>
+                            <input type="time" id="endTime" class="filter-select">
+                        </div>
+                    </div>
+
+                    <!-- Filter Actions -->
+                    <div class="filter-actions">
+                        <button onclick="clearAllFilters()" class="btn-clear">Clear All</button>
+                        <button onclick="performSearch()" class="btn-search">Search</button>
+                    </div>
+                </div>
+
+                <!-- Search Results Panel -->
+                <div class="search-results">
+                    <h3>Search Results</h3>
+                    <div class="results-count" id="resultsCount">Enter search terms to find schedules</div>
+                    
+                    <div id="resultsContainer">
+                        <div class="no-results">
+                            <h4>🔍 Ready to Search</h4>
+                            <p>Use the search box and filters to find specific schedule entries</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load mock data and search functionality -->
+    <script src="js/search-mock.js"></script>
+    <script src="js/search.js"></script>
+</body>
+</html>
