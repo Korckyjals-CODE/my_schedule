@@ -148,7 +148,9 @@ function renderCalendar() {
         const checkDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
         const dateStr = formatDate(checkDate);
         const weekDay = getWeekDay(checkDate);
-        if (schedule.specific_dates[dateStr] || schedule.weekdays[weekDay]) {
+        const hasSpecificEvents = schedule.specific_dates[dateStr] && schedule.specific_dates[dateStr].length > 0;
+        const hasWeekdayEvents = schedule.weekdays[weekDay] && schedule.weekdays[weekDay].length > 0;
+        if (hasSpecificEvents || hasWeekdayEvents) {
             dayEl.style.fontWeight = 'bold';
         }
         
@@ -180,27 +182,51 @@ function selectDate(date) {
     // Clear previous schedule
     scheduleList.innerHTML = '';
     
-    // Check for specific date schedule first, then fall back to weekday schedule
-    const daySchedule = schedule.specific_dates[dateStr] || schedule.weekdays[weekDay];
+    // Combine specific date schedule and weekday schedule if both exist
+    const specificSchedule = schedule.specific_dates[dateStr] || [];
+    const weekdaySchedule = schedule.weekdays[weekDay] || [];
+    const daySchedule = [...specificSchedule, ...weekdaySchedule];
     
     // Show schedule for selected date
-    if (daySchedule) {
+    if (daySchedule.length > 0) {
         // Sort events by start time in ascending order
         const sortedSchedule = [...daySchedule].sort((a, b) => {
             return a.startTime.localeCompare(b.startTime);
         });
         
         sortedSchedule.forEach((classInfo, sortedIndex) => {
-            // Find the actual index in the original unsorted array
-            const actualIndex = daySchedule.findIndex(item => 
+            // Determine if this event comes from specific dates or weekdays
+            const isFromSpecific = specificSchedule.some(item => 
                 item.grade === classInfo.grade && 
                 item.subject === classInfo.subject && 
                 item.startTime === classInfo.startTime && 
                 item.endTime === classInfo.endTime
             );
             
+            // Find the actual index in the appropriate source array
+            let actualIndex, sourceDateStr, sourceWeekDay;
+            if (isFromSpecific) {
+                actualIndex = specificSchedule.findIndex(item => 
+                    item.grade === classInfo.grade && 
+                    item.subject === classInfo.subject && 
+                    item.startTime === classInfo.startTime && 
+                    item.endTime === classInfo.endTime
+                );
+                sourceDateStr = dateStr;
+                sourceWeekDay = weekDay;
+            } else {
+                actualIndex = weekdaySchedule.findIndex(item => 
+                    item.grade === classInfo.grade && 
+                    item.subject === classInfo.subject && 
+                    item.startTime === classInfo.startTime && 
+                    item.endTime === classInfo.endTime
+                );
+                sourceDateStr = null; // No specific date for weekday events
+                sourceWeekDay = weekDay;
+            }
+            
             console.log(`🔍 Item: ${classInfo.grade} - ${classInfo.subject} (${classInfo.startTime})`);
-            console.log(`🔍 Sorted index: ${sortedIndex}, Actual index: ${actualIndex}`);
+            console.log(`🔍 From specific: ${isFromSpecific}, Actual index: ${actualIndex}`);
             
             const classBox = document.createElement('div');
             classBox.className = 'class-box';
@@ -210,8 +236,8 @@ function selectDate(date) {
                     <div class="time">${classInfo.startTime} - ${classInfo.endTime}</div>
                 </div>
                 <div class="hover-buttons">
-                    <button class="edit-btn" onclick="editEventFromCalendar('${dateStr}', '${weekDay}', ${actualIndex})" title="Edit Event">✏️</button>
-                    <button class="delete-btn" onclick="deleteEventFromCalendar('${dateStr}', '${weekDay}', ${actualIndex})" title="Delete Event">🗑️</button>
+                    <button class="edit-btn" onclick="editEventFromCalendar('${sourceDateStr}', '${sourceWeekDay}', ${actualIndex})" title="Edit Event">✏️</button>
+                    <button class="delete-btn" onclick="deleteEventFromCalendar('${sourceDateStr}', '${sourceWeekDay}', ${actualIndex})" title="Delete Event">🗑️</button>
                 </div>
             `;
             scheduleList.appendChild(classBox);
@@ -279,8 +305,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Event editing and deletion functions
 async function editEventFromCalendar(dateStr, weekDay, index) {
-    // Get the event data
-    const daySchedule = schedule.specific_dates[dateStr] || schedule.weekdays[weekDay];
+    // Get the event data - handle null dateStr for weekday-only events
+    const daySchedule = dateStr ? schedule.specific_dates[dateStr] : schedule.weekdays[weekDay];
     const event = daySchedule[index];
     
     // Store editing context
@@ -366,7 +392,7 @@ async function saveEditedEvent() {
         }
         
         // Remove from original location
-        const originalSchedule = schedule.specific_dates[editingEvent.dateStr] || schedule.weekdays[editingEvent.weekDay];
+        const originalSchedule = editingEvent.dateStr ? schedule.specific_dates[editingEvent.dateStr] : schedule.weekdays[editingEvent.weekDay];
         originalSchedule.splice(editingEvent.index, 1);
         
         // Add to new location
@@ -421,7 +447,8 @@ async function deleteEventFromCalendar(dateStr, weekDay, index) {
     
     console.log('✅ User confirmed deletion');
     
-    const daySchedule = schedule.specific_dates[dateStr] || schedule.weekdays[weekDay];
+    // Handle null dateStr for weekday-only events
+    const daySchedule = dateStr ? schedule.specific_dates[dateStr] : schedule.weekdays[weekDay];
     console.log('📅 Day schedule before deletion:', daySchedule);
     console.log('📊 Full schedule before deletion:', schedule);
     console.log('🔍 Index to delete:', index);
@@ -445,10 +472,10 @@ async function deleteEventFromCalendar(dateStr, weekDay, index) {
     
     // If no events left, remove the day
     if (daySchedule.length === 0) {
-        if (schedule.specific_dates[dateStr]) {
+        if (dateStr && schedule.specific_dates[dateStr]) {
             delete schedule.specific_dates[dateStr];
             console.log('🗑️ Removed specific date:', dateStr);
-        } else {
+        } else if (schedule.weekdays[weekDay]) {
             delete schedule.weekdays[weekDay];
             console.log('🗑️ Removed weekday:', weekDay);
         }
