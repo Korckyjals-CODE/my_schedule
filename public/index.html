@@ -64,6 +64,114 @@
         </div>
     </div>
 
+    <!-- Edit Event Modal -->
+    <div id="editEventModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Event</h2>
+                <span class="close" onclick="closeEditModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="editEventForm">
+                    <div class="form-group">
+                        <label for="editDay">Day:</label>
+                        <select id="editDay" required>
+                            <option value="Monday">Monday</option>
+                            <option value="Tuesday">Tuesday</option>
+                            <option value="Wednesday">Wednesday</option>
+                            <option value="Thursday">Thursday</option>
+                            <option value="Friday">Friday</option>
+                            <option value="Saturday">Saturday</option>
+                            <option value="Sunday">Sunday</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editGrade">Grade:</label>
+                        <select id="editGrade" required>
+                            <option value="">None</option>
+                            <option value="PKA">PKA</option>
+                            <option value="PKB">PKB</option>
+                            <option value="KA">KA</option>
+                            <option value="KB">KB</option>
+                            <option value="PA">PA</option>
+                            <option value="PB">PB</option>
+                            <option value="1A">1A</option>
+                            <option value="1B">1B</option>
+                            <option value="2A">2A</option>
+                            <option value="2B">2B</option>
+                            <option value="3A">3A</option>
+                            <option value="3B">3B</option>
+                            <option value="4A">4A</option>
+                            <option value="4B">4B</option>
+                            <option value="5A">5A</option>
+                            <option value="5B">5B</option>
+                            <option value="6A">6A</option>
+                            <option value="6B">6B</option>
+                            <option value="7A">7A</option>
+                            <option value="8A">8A</option>
+                            <option value="9A">9A</option>
+                            <option value="10A">10A</option>
+                            <option value="11A">11A</option>
+                            <option value="12A">12A</option>
+                            <option value="DC1A">DC1A</option>
+                            <option value="DC1B">DC1B</option>
+                            <option value="DC2A">DC2A</option>
+                            <option value="DC2B">DC2B</option>
+                            <option value="DC3A">DC3A</option>
+                            <option value="DC3B">DC3B</option>
+                            <option value="DC1">DC1</option>
+                            <option value="DC2">DC2</option>
+                            <option value="DC3">DC3</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editStartTime">Start Time:</label>
+                        <input type="time" id="editStartTime" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editEndTime">End Time:</label>
+                        <input type="time" id="editEndTime" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editSubject">Subject:</label>
+                        <select id="editSubject" required>
+                            <option value="Class">Class</option>
+                            <option value="Recess">Recess</option>
+                            <option value="Lunch">Lunch</option>
+                            <option value="Assembly">Assembly</option>
+                            <option value="Form Period">Form Period</option>
+                            <option value="Holiday">Holiday</option>
+                            <option value="Dismissal">Dismissal</option>
+                            <option value="Field Trip">Field Trip</option>
+                            <option value="Morning Door">Morning Door</option>
+                            <option value="Morning Duty">Morning Duty</option>
+                            <option value="Recess Duty">Recess Duty</option>
+                            <option value="Lunch Duty">Lunch Duty</option>
+                            <option value="Dismissal Duty">Dismissal Duty</option>
+                            <option value="Dismissal Door">Dismissal Door</option>
+                            <option value="Prep">Prep</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="editSpecificDate">Specific Date (optional):</label>
+                        <input type="date" id="editSpecificDate">
+                        <small>Leave empty for weekday schedule, or specify a date for specific date schedule</small>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="closeEditModal()" class="btn btn-secondary">Cancel</button>
+                <button type="button" onclick="saveEditedEvent()" class="btn btn-primary">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Load Supabase CDN first -->
     <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
     <script src="js/supabase-client.js"></script>

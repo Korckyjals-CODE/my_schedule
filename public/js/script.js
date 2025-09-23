@@ -5,6 +5,10 @@ let schedule = {
 let currentDate = new Date();
 let selectedDate = null;
 
+// Modal editing variables
+let editingEvent = null;
+let editingEventData = null;
+
 // Authentication functions
 function showLogin() {
     document.getElementById('loginForm').style.display = 'block';
@@ -256,34 +260,155 @@ document.getElementById('nextMonth').addEventListener('click', () => {
 // Initialize the app when DOM is loaded
 document.addEventListener('DOMContentLoaded', initApp);
 
+// Modal event listeners
+document.addEventListener('DOMContentLoaded', function() {
+    // Close modal when clicking outside of it
+    document.getElementById('editEventModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeEditModal();
+        }
+    });
+    
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && document.getElementById('editEventModal').style.display === 'flex') {
+            closeEditModal();
+        }
+    });
+});
+
 // Event editing and deletion functions
 async function editEventFromCalendar(dateStr, weekDay, index) {
     // Get the event data
     const daySchedule = schedule.specific_dates[dateStr] || schedule.weekdays[weekDay];
     const event = daySchedule[index];
     
-    // Create a simple prompt-based edit (you could enhance this with a modal)
-    const newGrade = prompt('Edit Grade:', event.grade);
-    if (newGrade === null) return; // User cancelled
+    // Store editing context
+    editingEvent = { dateStr, weekDay, index };
+    editingEventData = { ...event };
     
-    const newStartTime = prompt('Edit Start Time (HH:MM):', event.startTime);
-    if (newStartTime === null) return;
+    // Populate the modal form
+    populateEditModal(event, dateStr, weekDay);
     
-    const newEndTime = prompt('Edit End Time (HH:MM):', event.endTime);
-    if (newEndTime === null) return;
+    // Show the modal
+    document.getElementById('editEventModal').style.display = 'flex';
+}
+
+function populateEditModal(event, dateStr, weekDay) {
+    // Set day - determine if it's a specific date or weekday
+    const daySelect = document.getElementById('editDay');
+    const specificDateInput = document.getElementById('editSpecificDate');
     
-    const newSubject = prompt('Edit Subject:', event.subject);
-    if (newSubject === null) return;
+    if (dateStr && schedule.specific_dates[dateStr]) {
+        // It's a specific date
+        specificDateInput.value = dateStr;
+        daySelect.value = weekDay; // Set weekday as fallback
+    } else {
+        // It's a weekday
+        daySelect.value = weekDay;
+        specificDateInput.value = '';
+    }
     
-    // Update the event
-    event.grade = newGrade;
-    event.startTime = newStartTime;
-    event.endTime = newEndTime;
-    event.subject = newSubject;
-    
-    // Save and refresh
-    await saveSchedule();
-    selectDate(selectedDate); // Refresh the current view
+    // Set other fields
+    document.getElementById('editGrade').value = event.grade || '';
+    document.getElementById('editStartTime').value = padTime(event.startTime);
+    document.getElementById('editEndTime').value = padTime(event.endTime);
+    document.getElementById('editSubject').value = event.subject || 'Class';
+}
+
+function padTime(timeStr) {
+    // Convert time format from "H:MM" to "HH:MM" for HTML time input
+    if (!timeStr) return '';
+    const parts = timeStr.split(':');
+    return parts[0].padStart(2, '0') + ':' + parts[1];
+}
+
+function closeEditModal() {
+    document.getElementById('editEventModal').style.display = 'none';
+    editingEvent = null;
+    editingEventData = null;
+}
+
+async function saveEditedEvent() {
+    try {
+        // Get form values
+        const day = document.getElementById('editDay').value;
+        const grade = document.getElementById('editGrade').value;
+        const startTime = document.getElementById('editStartTime').value;
+        const endTime = document.getElementById('editEndTime').value;
+        const subject = document.getElementById('editSubject').value;
+        const specificDate = document.getElementById('editSpecificDate').value;
+        
+        // Validate required fields
+        if (!startTime || !endTime || !subject) {
+            alert('Please fill in all required fields.');
+            return;
+        }
+        
+        // Convert time format from "HH:MM" to "H:MM" for storage
+        const formattedStartTime = formatTimeForStorage(startTime);
+        const formattedEndTime = formatTimeForStorage(endTime);
+        
+        // Create updated event object
+        const updatedEvent = {
+            grade: grade,
+            startTime: formattedStartTime,
+            endTime: formattedEndTime,
+            subject: subject
+        };
+        
+        // Determine target location
+        let targetDateStr = null;
+        let targetWeekDay = day;
+        
+        if (specificDate) {
+            targetDateStr = specificDate;
+        }
+        
+        // Remove from original location
+        const originalSchedule = schedule.specific_dates[editingEvent.dateStr] || schedule.weekdays[editingEvent.weekDay];
+        originalSchedule.splice(editingEvent.index, 1);
+        
+        // Add to new location
+        if (targetDateStr) {
+            // Add to specific date
+            if (!schedule.specific_dates[targetDateStr]) {
+                schedule.specific_dates[targetDateStr] = [];
+            }
+            schedule.specific_dates[targetDateStr].push(updatedEvent);
+        } else {
+            // Add to weekday
+            if (!schedule.weekdays[targetWeekDay]) {
+                schedule.weekdays[targetWeekDay] = [];
+            }
+            schedule.weekdays[targetWeekDay].push(updatedEvent);
+        }
+        
+        // Sort the schedule by start time
+        if (targetDateStr && schedule.specific_dates[targetDateStr]) {
+            schedule.specific_dates[targetDateStr].sort((a, b) => a.startTime.localeCompare(b.startTime));
+        } else if (schedule.weekdays[targetWeekDay]) {
+            schedule.weekdays[targetWeekDay].sort((a, b) => a.startTime.localeCompare(b.startTime));
+        }
+        
+        // Save and refresh
+        await saveSchedule();
+        selectDate(selectedDate); // Refresh the current view
+        
+        // Close modal
+        closeEditModal();
+        
+    } catch (error) {
+        console.error('Error saving edited event:', error);
+        alert('Error saving changes. Please try again.');
+    }
+}
+
+function formatTimeForStorage(timeStr) {
+    // Convert time format from "HH:MM" to "H:MM" for storage
+    if (!timeStr) return '';
+    const parts = timeStr.split(':');
+    return parts[0].replace(/^0+/, '') + ':' + parts[1];
 }
 
 async function deleteEventFromCalendar(dateStr, weekDay, index) {
