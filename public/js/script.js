@@ -723,3 +723,71 @@ async function saveSchedule() {
         alert('Failed to save changes: ' + error.message);
     }
 }
+
+// Event listeners for buttons (replacing inline onclick handlers)
+document.addEventListener('DOMContentLoaded', function() {
+    // Edit Schedule button
+    const editScheduleBtn = document.getElementById('editSchedule');
+    if (editScheduleBtn) {
+        editScheduleBtn.addEventListener('click', function() {
+            window.location.href = 'schedule-editor.html';
+        });
+    }
+
+    // Search button
+    const searchButton = document.getElementById('searchButton');
+    if (searchButton) {
+        searchButton.addEventListener('click', function() {
+            window.location.href = 'search.html';
+        });
+    }
+
+    // Authentication buttons
+    const loginButton = document.getElementById('loginButton');
+    if (loginButton) {
+        loginButton.addEventListener('click', handleLogin);
+    }
+
+    const signupButton = document.getElementById('signupButton');
+    if (signupButton) {
+        signupButton.addEventListener('click', handleSignUp);
+    }
+
+    const signoutButton = document.getElementById('signoutButton');
+    if (signoutButton) {
+        signoutButton.addEventListener('click', handleSignOut);
+    }
+
+    // Auth form links
+    const showSignUpLink = document.getElementById('showSignUpLink');
+    if (showSignUpLink) {
+        showSignUpLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            showSignUp();
+        });
+    }
+
+    const showLoginLink = document.getElementById('showLoginLink');
+    if (showLoginLink) {
+        showLoginLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            showLogin();
+        });
+    }
+
+    // Edit modal buttons
+    const closeEditModalBtn = document.getElementById('closeEditModalBtn');
+    if (closeEditModalBtn) {
+        closeEditModalBtn.addEventListener('click', closeEditModal);
+    }
+
+    const cancelEditBtn = document.getElementById('cancelEditBtn');
+    if (cancelEditBtn) {
+        cancelEditBtn.addEventListener('click', closeEditModal);
+    }
+
+    const saveEditBtn = document.getElementById('saveEditBtn');
+    if (saveEditBtn) {
+        saveEditBtn.addEventListener('click', saveEditedEvent);
+    }
+});
