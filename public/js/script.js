@@ -642,7 +642,7 @@ async function deleteEventFromCalendar(dateStr, weekDay, index) {
     console.log('✅ User confirmed deletion');
     
     // Handle null dateStr for weekday-only events
-    const daySchedule = dateStr ? schedule.specific_dates[dateStr] : schedule.weekdays[weekDay];
+    const daySchedule = (dateStr && dateStr !== 'null') ? schedule.specific_dates[dateStr] : schedule.weekdays[weekDay];
     console.log('📅 Day schedule before deletion:', daySchedule);
     console.log('📊 Full schedule before deletion:', schedule);
     console.log('🔍 Index to delete:', index);
