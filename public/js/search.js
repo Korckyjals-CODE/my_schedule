@@ -686,13 +686,14 @@ function displayResults(results, totalCount = null, page = 1, totalPages = 1) {
                     <div class="result-subject">${subjectDisplay}</div>
                     <div class="result-time">${result.startTime} - ${result.endTime}</div>
                     ${result.date ? `<div class="result-date" style="font-size: 12px; color: #95a5a6; margin-top: 5px;">📅 Specific Date: ${result.date}</div>` : ''}
+                    ${result.notes ? `<div class="result-notes" style="font-size: 12px; color: #7f8c8d; margin-top: 5px; font-style: italic;">📝 ${result.notes}</div>` : ''}
                     <div class="result-source" style="font-size: 11px; color: #bdc3c7; margin-top: 5px;">
                         ${result.source === 'weekday' ? '📅 Weekly Schedule' : '📆 Specific Date Schedule'}
                     </div>
                 </div>
                 <div class="hover-buttons">
-                    <button class="edit-btn" onclick="editEventFromSearch('${result.date || ''}', '${result.day}', ${result.index})" title="Edit Event">✏️</button>
-                    <button class="delete-btn" onclick="deleteEventFromSearch('${result.date || ''}', '${result.day}', ${result.index})" title="Delete Event">🗑️</button>
+                    <button class="edit-btn" data-date="${result.date || ''}" data-day="${result.day}" data-index="${result.index}" title="Edit Event">✏️</button>
+                    <button class="delete-btn" data-date="${result.date || ''}" data-day="${result.day}" data-index="${result.index}" title="Delete Event">🗑️</button>
                 </div>
             `;
             
@@ -701,6 +702,30 @@ function displayResults(results, totalCount = null, page = 1, totalPages = 1) {
             resultItem.addEventListener('click', () => {
                 console.log('Clicked result:', result);
                 navigateToCalendarWithHighlight(result);
+            });
+            
+            // Add event listeners for edit and delete buttons
+            const editBtn = resultItem.querySelector('.edit-btn');
+            const deleteBtn = resultItem.querySelector('.delete-btn');
+            
+            editBtn.addEventListener('click', (event) => {
+                console.log('Edit button clicked, preventing navigation to calendar');
+                event.stopPropagation();
+                event.preventDefault();
+                const dateStr = editBtn.getAttribute('data-date');
+                const weekDay = editBtn.getAttribute('data-day');
+                const index = parseInt(editBtn.getAttribute('data-index'));
+                console.log('Edit button data:', { dateStr, weekDay, index });
+                editEventFromSearch(dateStr, weekDay, index, event);
+            });
+            
+            deleteBtn.addEventListener('click', (event) => {
+                event.stopPropagation();
+                event.preventDefault();
+                const dateStr = deleteBtn.getAttribute('data-date');
+                const weekDay = deleteBtn.getAttribute('data-day');
+                const index = parseInt(deleteBtn.getAttribute('data-index'));
+                deleteEventFromSearch(dateStr, weekDay, index, event);
             });
             
             resultsList.appendChild(resultItem);
@@ -1095,17 +1120,21 @@ let editingEvent = null;
 let editingEventData = null;
 
 // Event editing and deletion functions for search results
-async function editEventFromSearch(dateStr, weekDay, index) {
+async function editEventFromSearch(dateStr, weekDay, index, event) {
     // Prevent event bubbling to avoid navigating to calendar
-    event.stopPropagation();
+    if (event) {
+        event.stopPropagation();
+        event.preventDefault();
+    }
     
     console.log('✏️ Edit event from search:', { dateStr, weekDay, index });
+    console.log('Event object:', event);
     
     // Get the event data - handle null dateStr for weekday-only events
     const daySchedule = dateStr ? schedule.specific_dates[dateStr] : schedule.weekdays[weekDay];
-    const event = daySchedule[index];
+    const eventData = daySchedule[index];
     
-    if (!event) {
+    if (!eventData) {
         console.error('Event not found:', { dateStr, weekDay, index });
         alert('Event not found. It may have been deleted.');
         return;
@@ -1113,18 +1142,21 @@ async function editEventFromSearch(dateStr, weekDay, index) {
     
     // Store editing context
     editingEvent = { dateStr, weekDay, index };
-    editingEventData = { ...event };
+    editingEventData = { ...eventData };
     
     // Populate the modal form
-    populateEditModal(event, dateStr, weekDay);
+    populateSearchEditModal(eventData, dateStr, weekDay);
     
     // Show the modal
     document.getElementById('editEventModal').style.display = 'flex';
 }
 
-async function deleteEventFromSearch(dateStr, weekDay, index) {
+async function deleteEventFromSearch(dateStr, weekDay, index, event) {
     // Prevent event bubbling to avoid navigating to calendar
-    event.stopPropagation();
+    if (event) {
+        event.stopPropagation();
+        event.preventDefault();
+    }
     
     console.log('🗑️ Delete event from search:', { dateStr, weekDay, index });
     
@@ -1321,18 +1353,30 @@ function setupButtonEventListeners() {
 }
 
 // Modal functions
-function populateEditModal(event, dateStr, weekDay) {
+function populateSearchEditModal(event, dateStr, weekDay) {
+    // Determine event type and set radio buttons
+    let eventType = 'weekday';
+    if (dateStr) {
+        eventType = 'specific';
+    }
+    
+    // Set event type radio button
+    document.getElementById(`editType${eventType.charAt(0).toUpperCase() + eventType.slice(1)}`).checked = true;
+    
+    // Show/hide appropriate form groups
+    toggleEditFormGroups(eventType);
+    
     // Set day - determine if it's a specific date or weekday
     const daySelect = document.getElementById('editDay');
     if (dateStr) {
         // This is a specific date event
         const day = getWeekDay(new Date(dateStr));
         daySelect.value = day;
-        daySelect.disabled = true; // Can't change day for specific date events
+        document.getElementById('editSpecificDate').value = dateStr;
     } else {
         // This is a weekday event
         daySelect.value = weekDay;
-        daySelect.disabled = false;
+        document.getElementById('editSpecificDate').value = '';
     }
     
     // Set other fields
@@ -1340,28 +1384,109 @@ function populateEditModal(event, dateStr, weekDay) {
     document.getElementById('editSubject').value = event.subject || '';
     document.getElementById('editStartTime').value = event.startTime || '';
     document.getElementById('editEndTime').value = event.endTime || '';
-    document.getElementById('editSpecificDate').value = dateStr || '';
+    document.getElementById('editNotes').value = event.notes || '';
+    
+    // Set up event listeners for radio buttons
+    setupEditModalEventListeners();
 }
 
-function closeEditModal() {
+function closeSearchEditModal() {
     document.getElementById('editEventModal').style.display = 'none';
     editingEvent = null;
     editingEventData = null;
 }
 
-async function saveEditedEvent() {
+// Toggle form groups based on event type
+function toggleEditFormGroups(eventType) {
+    const dayGroup = document.getElementById('editDayGroup');
+    const specificDateGroup = document.getElementById('editSpecificDateGroup');
+    const dateRangeGroup = document.getElementById('editDateRangeGroup');
+    
+    // Hide all groups first
+    dayGroup.style.display = 'none';
+    specificDateGroup.style.display = 'none';
+    dateRangeGroup.style.display = 'none';
+    
+    // Show appropriate group
+    switch (eventType) {
+        case 'weekday':
+            dayGroup.style.display = 'block';
+            break;
+        case 'specific':
+            specificDateGroup.style.display = 'block';
+            break;
+        case 'range':
+            dateRangeGroup.style.display = 'block';
+            break;
+    }
+}
+
+// Setup event listeners for edit modal
+function setupEditModalEventListeners() {
+    // Remove existing listeners to avoid duplicates
+    const radioButtons = document.querySelectorAll('input[name="editEventType"]');
+    radioButtons.forEach(radio => {
+        radio.removeEventListener('change', handleEditEventTypeChange);
+        radio.addEventListener('change', handleEditEventTypeChange);
+    });
+}
+
+// Handle event type change in edit modal
+function handleEditEventTypeChange(event) {
+    const eventType = event.target.value;
+    toggleEditFormGroups(eventType);
+    
+    // Clear date fields when switching types
+    if (eventType === 'weekday') {
+        document.getElementById('editSpecificDate').value = '';
+        document.getElementById('editRangeStartDate').value = '';
+        document.getElementById('editRangeEndDate').value = '';
+    } else if (eventType === 'specific') {
+        document.getElementById('editDay').value = '';
+        document.getElementById('editRangeStartDate').value = '';
+        document.getElementById('editRangeEndDate').value = '';
+    } else if (eventType === 'range') {
+        document.getElementById('editDay').value = '';
+        document.getElementById('editSpecificDate').value = '';
+    }
+}
+
+async function saveSearchEditedEvent() {
     try {
         // Get form data
-        const day = document.getElementById('editDay').value;
+        const eventType = document.querySelector('input[name="editEventType"]:checked').value;
         const grade = document.getElementById('editGrade').value.trim();
         const subject = document.getElementById('editSubject').value;
         const startTime = document.getElementById('editStartTime').value;
         const endTime = document.getElementById('editEndTime').value;
-        const specificDate = document.getElementById('editSpecificDate').value;
+        const notes = document.getElementById('editNotes').value.trim();
         
         // Validate form
-        if (!day || !grade || !subject || !startTime || !endTime) {
+        if (!grade || !subject || !startTime || !endTime) {
             alert('Please fill in all required fields.');
+            return;
+        }
+        
+        // Validate based on event type
+        let validationError = '';
+        if (eventType === 'weekday') {
+            const day = document.getElementById('editDay').value;
+            if (!day) validationError = 'Please select a day of the week.';
+        } else if (eventType === 'specific') {
+            const specificDate = document.getElementById('editSpecificDate').value;
+            if (!specificDate) validationError = 'Please select a specific date.';
+        } else if (eventType === 'range') {
+            const startDate = document.getElementById('editRangeStartDate').value;
+            const endDate = document.getElementById('editRangeEndDate').value;
+            if (!startDate || !endDate) {
+                validationError = 'Please select both start and end dates.';
+            } else if (new Date(startDate) > new Date(endDate)) {
+                validationError = 'Start date must be before end date.';
+            }
+        }
+        
+        if (validationError) {
+            alert(validationError);
             return;
         }
         
@@ -1370,13 +1495,9 @@ async function saveEditedEvent() {
             grade: grade,
             subject: subject,
             startTime: startTime,
-            endTime: endTime
+            endTime: endTime,
+            notes: notes || undefined
         };
-        
-        // Determine if this is a specific date or weekday event
-        const isSpecificDate = specificDate && specificDate.trim() !== '';
-        const targetDateStr = isSpecificDate ? specificDate : null;
-        const targetWeekDay = isSpecificDate ? null : day;
         
         // Remove from old location
         if (editingEvent.dateStr) {
@@ -1399,19 +1520,42 @@ async function saveEditedEvent() {
             }
         }
         
-        // Add to new location
-        if (isSpecificDate) {
-            // Add to specific dates
-            if (!schedule.specific_dates[targetDateStr]) {
-                schedule.specific_dates[targetDateStr] = [];
+        // Add to new location based on event type
+        if (eventType === 'weekday') {
+            const day = document.getElementById('editDay').value;
+            if (!schedule.weekdays[day]) {
+                schedule.weekdays[day] = [];
             }
-            schedule.specific_dates[targetDateStr].push(updatedEvent);
-        } else {
-            // Add to weekdays
-            if (!schedule.weekdays[targetWeekDay]) {
-                schedule.weekdays[targetWeekDay] = [];
+            schedule.weekdays[day].push(updatedEvent);
+        } else if (eventType === 'specific') {
+            const specificDate = document.getElementById('editSpecificDate').value;
+            if (!schedule.specific_dates[specificDate]) {
+                schedule.specific_dates[specificDate] = [];
             }
-            schedule.weekdays[targetWeekDay].push(updatedEvent);
+            schedule.specific_dates[specificDate].push(updatedEvent);
+        } else if (eventType === 'range') {
+            const startDate = document.getElementById('editRangeStartDate').value;
+            const endDate = document.getElementById('editRangeEndDate').value;
+            
+            // Create events for each weekday in the date range
+            const start = new Date(startDate);
+            const end = new Date(endDate);
+            
+            for (let date = new Date(start); date <= end; date.setDate(date.getDate() + 1)) {
+                const dayOfWeek = getWeekDay(date);
+                const dateStr = date.toISOString().split('T')[0];
+                
+                // Skip weekends
+                if (dayOfWeek === 'Saturday' || dayOfWeek === 'Sunday') {
+                    continue;
+                }
+                
+                // Add to specific dates
+                if (!schedule.specific_dates[dateStr]) {
+                    schedule.specific_dates[dateStr] = [];
+                }
+                schedule.specific_dates[dateStr].push({ ...updatedEvent });
+            }
         }
         
         // Save to server
@@ -1432,13 +1576,14 @@ async function saveEditedEvent() {
         console.log('✅ Event updated successfully');
         
         // Close modal
-        closeEditModal();
+        closeSearchEditModal();
         
         // Refresh search results
         performSearch();
         
         // Show success message
-        showNotification('Event updated successfully!', 'success');
+        const message = eventType === 'range' ? 'Date range events created successfully!' : 'Event updated successfully!';
+        showNotification(message, 'success');
         
     } catch (error) {
         console.error('❌ Error updating event:', error);
@@ -1483,5 +1628,26 @@ function showNotification(message, type = 'info') {
 // Initialize the app when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     setupButtonEventListeners();
+    setupModalEventListeners();
     initApp();
 });
+
+// Setup modal event listeners
+function setupModalEventListeners() {
+    // Close modal when clicking outside of it
+    const editModal = document.getElementById('editEventModal');
+    if (editModal) {
+        editModal.addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeSearchEditModal();
+            }
+        });
+    }
+    
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && editModal && editModal.style.display === 'flex') {
+            closeSearchEditModal();
+        }
+    });
+}
