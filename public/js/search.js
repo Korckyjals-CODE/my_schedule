@@ -1198,7 +1198,7 @@ async function deleteEventFromSearch(dateStr, weekDay, index, event) {
     try {
         const headers = supabaseAuth.getAuthHeaders();
         const response = await fetch('/api/schedule', {
-            method: 'PUT',
+            method: 'POST',
             headers: {
                 ...headers,
                 'Content-Type': 'application/json'
@@ -1350,6 +1350,13 @@ function setupButtonEventListeners() {
     document.getElementById('clearFiltersBtn').addEventListener('click', clearAllFilters);
     document.getElementById('searchBtn').addEventListener('click', performSearch);
     document.getElementById('exportBtn').addEventListener('click', toggleExportOptions);
+    
+    // Export buttons
+    document.getElementById('exportCSVBtn').addEventListener('click', exportToCSV);
+    document.getElementById('exportExcelBtn').addEventListener('click', exportToExcel);
+    document.getElementById('exportJSONBtn').addEventListener('click', exportToJSON);
+    document.getElementById('exportPDFBtn').addEventListener('click', exportToPDF);
+    document.getElementById('exportClipboardBtn').addEventListener('click', copyToClipboard);
 }
 
 // Modal functions
@@ -1429,6 +1436,26 @@ function setupEditModalEventListeners() {
         radio.removeEventListener('change', handleEditEventTypeChange);
         radio.addEventListener('change', handleEditEventTypeChange);
     });
+    
+    // Add event listeners for modal buttons
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const cancelEditBtn = document.getElementById('cancelEditBtn');
+    const saveEditBtn = document.getElementById('saveEditBtn');
+    
+    if (closeModalBtn) {
+        closeModalBtn.removeEventListener('click', closeSearchEditModal);
+        closeModalBtn.addEventListener('click', closeSearchEditModal);
+    }
+    
+    if (cancelEditBtn) {
+        cancelEditBtn.removeEventListener('click', closeSearchEditModal);
+        cancelEditBtn.addEventListener('click', closeSearchEditModal);
+    }
+    
+    if (saveEditBtn) {
+        saveEditBtn.removeEventListener('click', saveSearchEditedEvent);
+        saveEditBtn.addEventListener('click', saveSearchEditedEvent);
+    }
 }
 
 // Handle event type change in edit modal
@@ -1561,7 +1588,7 @@ async function saveSearchEditedEvent() {
         // Save to server
         const headers = supabaseAuth.getAuthHeaders();
         const response = await fetch('/api/schedule', {
-            method: 'PUT',
+            method: 'POST',
             headers: {
                 ...headers,
                 'Content-Type': 'application/json'
@@ -1634,6 +1661,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Setup modal event listeners
 function setupModalEventListeners() {
+    // Setup edit modal event listeners
+    setupEditModalEventListeners();
+    
     // Close modal when clicking outside of it
     const editModal = document.getElementById('editEventModal');
     if (editModal) {
