@@ -678,15 +678,21 @@ function displayResults(results, totalCount = null, page = 1, totalPages = 1) {
             const subjectDisplay = result.subject || 'Unknown Subject';
             
             resultItem.innerHTML = `
-                <div class="result-header">
-                    <div class="result-grade">${gradeDisplay}</div>
-                    <div class="result-day">${result.day}</div>
+                <div class="result-content">
+                    <div class="result-header">
+                        <div class="result-grade">${gradeDisplay}</div>
+                        <div class="result-day">${result.day}</div>
+                    </div>
+                    <div class="result-subject">${subjectDisplay}</div>
+                    <div class="result-time">${result.startTime} - ${result.endTime}</div>
+                    ${result.date ? `<div class="result-date" style="font-size: 12px; color: #95a5a6; margin-top: 5px;">📅 Specific Date: ${result.date}</div>` : ''}
+                    <div class="result-source" style="font-size: 11px; color: #bdc3c7; margin-top: 5px;">
+                        ${result.source === 'weekday' ? '📅 Weekly Schedule' : '📆 Specific Date Schedule'}
+                    </div>
                 </div>
-                <div class="result-subject">${subjectDisplay}</div>
-                <div class="result-time">${result.startTime} - ${result.endTime}</div>
-                ${result.date ? `<div class="result-date" style="font-size: 12px; color: #95a5a6; margin-top: 5px;">📅 Specific Date: ${result.date}</div>` : ''}
-                <div class="result-source" style="font-size: 11px; color: #bdc3c7; margin-top: 5px;">
-                    ${result.source === 'weekday' ? '📅 Weekly Schedule' : '📆 Specific Date Schedule'}
+                <div class="hover-buttons">
+                    <button class="edit-btn" onclick="editEventFromSearch('${result.date || ''}', '${result.day}', ${result.index})" title="Edit Event">✏️</button>
+                    <button class="delete-btn" onclick="deleteEventFromSearch('${result.date || ''}', '${result.day}', ${result.index})" title="Delete Event">🗑️</button>
                 </div>
             `;
             
@@ -1084,6 +1090,116 @@ function downloadFile(content, filename, mimeType) {
     URL.revokeObjectURL(url);
 }
 
+// Global variables for editing
+let editingEvent = null;
+let editingEventData = null;
+
+// Event editing and deletion functions for search results
+async function editEventFromSearch(dateStr, weekDay, index) {
+    // Prevent event bubbling to avoid navigating to calendar
+    event.stopPropagation();
+    
+    console.log('✏️ Edit event from search:', { dateStr, weekDay, index });
+    
+    // Get the event data - handle null dateStr for weekday-only events
+    const daySchedule = dateStr ? schedule.specific_dates[dateStr] : schedule.weekdays[weekDay];
+    const event = daySchedule[index];
+    
+    if (!event) {
+        console.error('Event not found:', { dateStr, weekDay, index });
+        alert('Event not found. It may have been deleted.');
+        return;
+    }
+    
+    // Store editing context
+    editingEvent = { dateStr, weekDay, index };
+    editingEventData = { ...event };
+    
+    // Populate the modal form
+    populateEditModal(event, dateStr, weekDay);
+    
+    // Show the modal
+    document.getElementById('editEventModal').style.display = 'flex';
+}
+
+async function deleteEventFromSearch(dateStr, weekDay, index) {
+    // Prevent event bubbling to avoid navigating to calendar
+    event.stopPropagation();
+    
+    console.log('🗑️ Delete event from search:', { dateStr, weekDay, index });
+    
+    if (!confirm('Are you sure you want to delete this event?')) {
+        console.log('❌ User cancelled deletion');
+        return;
+    }
+    
+    console.log('✅ User confirmed deletion');
+    
+    // Handle null dateStr for weekday-only events
+    const daySchedule = dateStr ? schedule.specific_dates[dateStr] : schedule.weekdays[weekDay];
+    console.log('📅 Day schedule before deletion:', daySchedule);
+    console.log('📊 Full schedule before deletion:', schedule);
+    console.log('🔍 Index to delete:', index);
+    
+    if (!daySchedule || !Array.isArray(daySchedule)) {
+        console.error('❌ Invalid day schedule:', daySchedule);
+        alert('Error: Invalid schedule data');
+        return;
+    }
+    
+    console.log('🔍 About to splice index', index, 'from array of length', daySchedule.length);
+    const removedItem = daySchedule.splice(index, 1);
+    console.log('🔍 Removed item:', removedItem);
+    console.log('📅 Day schedule after deletion:', daySchedule);
+    console.log('🔍 Array length after splice:', daySchedule.length);
+    
+    // If no events left, remove the day
+    if (daySchedule.length === 0) {
+        if (dateStr) {
+            delete schedule.specific_dates[dateStr];
+        } else {
+            delete schedule.weekdays[weekDay];
+        }
+    }
+    
+    // Save the updated schedule
+    try {
+        const headers = supabaseAuth.getAuthHeaders();
+        const response = await fetch('/api/schedule', {
+            method: 'PUT',
+            headers: {
+                ...headers,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(schedule)
+        });
+        
+        if (!response.ok) {
+            throw new Error(`Failed to save schedule: ${response.status}`);
+        }
+        
+        console.log('✅ Schedule saved successfully');
+        
+        // Refresh the search results
+        performSearch();
+        
+        // Show success message
+        showNotification('Event deleted successfully!', 'success');
+        
+    } catch (error) {
+        console.error('❌ Error saving schedule:', error);
+        alert('Error saving schedule: ' + error.message);
+        
+        // Revert the change
+        daySchedule.splice(index, 0, removedItem[0]);
+        if (dateStr) {
+            schedule.specific_dates[dateStr] = daySchedule;
+        } else {
+            schedule.weekdays[weekDay] = daySchedule;
+        }
+    }
+}
+
 // Calendar integration functions
 function navigateToCalendarWithHighlight(result) {
     // Store highlight data in localStorage
@@ -1202,6 +1318,166 @@ function setupButtonEventListeners() {
     document.getElementById('clearFiltersBtn').addEventListener('click', clearAllFilters);
     document.getElementById('searchBtn').addEventListener('click', performSearch);
     document.getElementById('exportBtn').addEventListener('click', toggleExportOptions);
+}
+
+// Modal functions
+function populateEditModal(event, dateStr, weekDay) {
+    // Set day - determine if it's a specific date or weekday
+    const daySelect = document.getElementById('editDay');
+    if (dateStr) {
+        // This is a specific date event
+        const day = getWeekDay(new Date(dateStr));
+        daySelect.value = day;
+        daySelect.disabled = true; // Can't change day for specific date events
+    } else {
+        // This is a weekday event
+        daySelect.value = weekDay;
+        daySelect.disabled = false;
+    }
+    
+    // Set other fields
+    document.getElementById('editGrade').value = event.grade || '';
+    document.getElementById('editSubject').value = event.subject || '';
+    document.getElementById('editStartTime').value = event.startTime || '';
+    document.getElementById('editEndTime').value = event.endTime || '';
+    document.getElementById('editSpecificDate').value = dateStr || '';
+}
+
+function closeEditModal() {
+    document.getElementById('editEventModal').style.display = 'none';
+    editingEvent = null;
+    editingEventData = null;
+}
+
+async function saveEditedEvent() {
+    try {
+        // Get form data
+        const day = document.getElementById('editDay').value;
+        const grade = document.getElementById('editGrade').value.trim();
+        const subject = document.getElementById('editSubject').value;
+        const startTime = document.getElementById('editStartTime').value;
+        const endTime = document.getElementById('editEndTime').value;
+        const specificDate = document.getElementById('editSpecificDate').value;
+        
+        // Validate form
+        if (!day || !grade || !subject || !startTime || !endTime) {
+            alert('Please fill in all required fields.');
+            return;
+        }
+        
+        // Create updated event
+        const updatedEvent = {
+            grade: grade,
+            subject: subject,
+            startTime: startTime,
+            endTime: endTime
+        };
+        
+        // Determine if this is a specific date or weekday event
+        const isSpecificDate = specificDate && specificDate.trim() !== '';
+        const targetDateStr = isSpecificDate ? specificDate : null;
+        const targetWeekDay = isSpecificDate ? null : day;
+        
+        // Remove from old location
+        if (editingEvent.dateStr) {
+            // Was a specific date event
+            const oldDaySchedule = schedule.specific_dates[editingEvent.dateStr];
+            if (oldDaySchedule) {
+                oldDaySchedule.splice(editingEvent.index, 1);
+                if (oldDaySchedule.length === 0) {
+                    delete schedule.specific_dates[editingEvent.dateStr];
+                }
+            }
+        } else {
+            // Was a weekday event
+            const oldDaySchedule = schedule.weekdays[editingEvent.weekDay];
+            if (oldDaySchedule) {
+                oldDaySchedule.splice(editingEvent.index, 1);
+                if (oldDaySchedule.length === 0) {
+                    delete schedule.weekdays[editingEvent.weekDay];
+                }
+            }
+        }
+        
+        // Add to new location
+        if (isSpecificDate) {
+            // Add to specific dates
+            if (!schedule.specific_dates[targetDateStr]) {
+                schedule.specific_dates[targetDateStr] = [];
+            }
+            schedule.specific_dates[targetDateStr].push(updatedEvent);
+        } else {
+            // Add to weekdays
+            if (!schedule.weekdays[targetWeekDay]) {
+                schedule.weekdays[targetWeekDay] = [];
+            }
+            schedule.weekdays[targetWeekDay].push(updatedEvent);
+        }
+        
+        // Save to server
+        const headers = supabaseAuth.getAuthHeaders();
+        const response = await fetch('/api/schedule', {
+            method: 'PUT',
+            headers: {
+                ...headers,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(schedule)
+        });
+        
+        if (!response.ok) {
+            throw new Error(`Failed to save schedule: ${response.status}`);
+        }
+        
+        console.log('✅ Event updated successfully');
+        
+        // Close modal
+        closeEditModal();
+        
+        // Refresh search results
+        performSearch();
+        
+        // Show success message
+        showNotification('Event updated successfully!', 'success');
+        
+    } catch (error) {
+        console.error('❌ Error updating event:', error);
+        alert('Error updating event: ' + error.message);
+    }
+}
+
+function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.className = 'notification';
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: ${type === 'success' ? '#d4edda' : '#d1ecf1'};
+        color: ${type === 'success' ? '#155724' : '#0c5460'};
+        border: 1px solid ${type === 'success' ? '#c3e6cb' : '#bee5eb'};
+        border-radius: 6px;
+        padding: 15px 20px;
+        z-index: 1001;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        max-width: 300px;
+        font-size: 14px;
+        font-weight: 500;
+    `;
+    
+    notification.innerHTML = `
+        ${type === 'success' ? '✅' : 'ℹ️'} ${message}
+        <button onclick="this.parentElement.remove()" style="float: right; background: none; border: none; font-size: 16px; cursor: pointer; margin-left: 10px;">&times;</button>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Auto-remove after 3 seconds
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.parentNode.removeChild(notification);
+        }
+    }, 3000);
 }
 
 // Initialize the app when DOM is loaded
