@@ -279,8 +279,9 @@ function updateRangeWeekdays() {
 }
 
 function getWeekdaysInRange(startDateStr, endDateStr) {
-    const startDate = new Date(startDateStr);
-    const endDate = new Date(endDateStr);
+    // Parse dates as local dates to avoid timezone issues
+    const startDate = new Date(startDateStr + 'T00:00:00');
+    const endDate = new Date(endDateStr + 'T00:00:00');
     const weekdays = [];
     const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     
