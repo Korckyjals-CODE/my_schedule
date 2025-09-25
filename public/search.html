@@ -924,11 +924,11 @@
                     <div id="exportOptions" class="export-options">
                         <h5>📤 Export Options</h5>
                         <div class="export-buttons">
-                            <button class="export-btn" onclick="exportToCSV()">📊 CSV</button>
-                            <button class="export-btn" onclick="exportToExcel()">📈 Excel</button>
-                            <button class="export-btn" onclick="exportToJSON()">📋 JSON</button>
-                            <button class="export-btn" onclick="exportToPDF()">📄 PDF</button>
-                            <button class="export-btn" onclick="copyToClipboard()">📋 Clipboard</button>
+                            <button class="export-btn" id="exportCSVBtn">📊 CSV</button>
+                            <button class="export-btn" id="exportExcelBtn">📈 Excel</button>
+                            <button class="export-btn" id="exportJSONBtn">📋 JSON</button>
+                            <button class="export-btn" id="exportPDFBtn">📄 PDF</button>
+                            <button class="export-btn" id="exportClipboardBtn">📋 Clipboard</button>
                         </div>
                     </div>
                 </div>
@@ -941,7 +941,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h3>Edit Event</h3>
-                <button class="close-btn" onclick="closeSearchEditModal()">&times;</button>
+                <button class="close-btn" id="closeModalBtn">&times;</button>
             </div>
             <div class="modal-body">
                 <form id="editEventForm">
@@ -1077,8 +1077,8 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn-cancel" onclick="closeSearchEditModal()">Cancel</button>
-                <button type="button" class="btn-save" onclick="saveSearchEditedEvent()">Save Changes</button>
+                <button type="button" class="btn-cancel" id="cancelEditBtn">Cancel</button>
+                <button type="button" class="btn-save" id="saveEditBtn">Save Changes</button>
             </div>
         </div>
     </div>
