@@ -326,17 +326,35 @@ function updateRangeSchedule() {
 }
 
 function addRangeEntry() {
+    // Prevent multiple rapid clicks
+    const addButton = document.querySelector('button[onclick="addRangeEntry()"]');
+    if (addButton && addButton.disabled) {
+        return; // Already processing
+    }
+    if (addButton) {
+        addButton.disabled = true;
+        addButton.textContent = 'Adding...';
+    }
+    
     const startDate = document.getElementById('rangeStartDate').value;
     const endDate = document.getElementById('rangeEndDate').value;
     
     if (!startDate || !endDate) {
         alert('Please select both start and end dates');
+        if (addButton) {
+            addButton.disabled = false;
+            addButton.textContent = 'Add Event to All Weekdays';
+        }
         return;
     }
     
     // Validate date range
     if (new Date(startDate) > new Date(endDate)) {
         alert('Start date must be before or equal to end date');
+        if (addButton) {
+            addButton.disabled = false;
+            addButton.textContent = 'Add Event to All Weekdays';
+        }
         return;
     }
     
@@ -344,6 +362,10 @@ function addRangeEntry() {
     
     if (weekdays.length === 0) {
         alert('No weekdays found in the selected date range');
+        if (addButton) {
+            addButton.disabled = false;
+            addButton.textContent = 'Add Event to All Weekdays';
+        }
         return;
     }
     
@@ -356,6 +378,10 @@ function addRangeEntry() {
     // Validate time
     if (startTime >= endTime) {
         alert('Start time must be before end time');
+        if (addButton) {
+            addButton.disabled = false;
+            addButton.textContent = 'Add Event to All Weekdays';
+        }
         return;
     }
     
@@ -366,19 +392,53 @@ function addRangeEntry() {
         subject: subject
     };
     
-    // Add the entry to all weekdays in the range
+    // Check for duplicates and add the entry to all weekdays in the range
+    let addedCount = 0;
+    let skippedCount = 0;
+    const skippedWeekdays = [];
+    
     weekdays.forEach(weekday => {
         if (!schedule.weekdays[weekday]) {
             schedule.weekdays[weekday] = [];
         }
-        schedule.weekdays[weekday].push({...newEntry});
+        
+        // Check if an identical event already exists for this weekday
+        const isDuplicate = schedule.weekdays[weekday].some(existingEvent => 
+            existingEvent.grade === newEntry.grade &&
+            existingEvent.startTime === newEntry.startTime &&
+            existingEvent.endTime === newEntry.endTime &&
+            existingEvent.subject === newEntry.subject
+        );
+        
+        if (!isDuplicate) {
+            schedule.weekdays[weekday].push({...newEntry});
+            addedCount++;
+        } else {
+            skippedCount++;
+            skippedWeekdays.push(weekday);
+        }
     });
     
-    saveSchedule();
+    // Only save if at least one event was added
+    if (addedCount > 0) {
+        saveSchedule();
+    }
     
     // Hide the form and show success message
     hideRangeEventForm();
-    alert(`Event added to ${weekdays.length} weekdays: ${weekdays.join(', ')}`);
+    
+    // Re-enable the button
+    if (addButton) {
+        addButton.disabled = false;
+        addButton.textContent = 'Add Event to All Weekdays';
+    }
+    
+    // Show appropriate message based on results
+    if (skippedCount > 0) {
+        alert(`Event added to ${addedCount} weekdays: ${weekdays.filter(day => !skippedWeekdays.includes(day)).join(', ')}\n\nSkipped ${skippedCount} weekdays where identical events already exist: ${skippedWeekdays.join(', ')}`);
+    } else {
+        alert(`Event added to ${addedCount} weekdays: ${weekdays.join(', ')}`);
+    }
 }
 
 function showRangeEventForm() {
