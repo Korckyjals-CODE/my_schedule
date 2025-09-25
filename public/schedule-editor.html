@@ -273,8 +273,16 @@
             </div>
             <div id="signupForm" class="auth-form" style="display: none;">
                 <h3>Sign Up</h3>
+                <input type="text" id="signupName" placeholder="Full Name" required>
                 <input type="email" id="signupEmail" placeholder="Email" required>
                 <input type="password" id="signupPassword" placeholder="Password" required>
+                <input type="password" id="signupConfirmPassword" placeholder="Confirm Password" required>
+                <div class="terms-checkbox">
+                    <label>
+                        <input type="checkbox" id="signupTerms" required>
+                        I agree to the <a href="#" onclick="showTerms()">Terms of Service</a>
+                    </label>
+                </div>
                 <button onclick="handleSignUp()">Sign Up</button>
                 <p>Already have an account? <a href="#" onclick="showLogin()">Sign In</a></p>
             </div>

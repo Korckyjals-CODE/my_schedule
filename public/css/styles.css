@@ -224,7 +224,7 @@ body {
 .auth-form {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 20px;
 }
 
 .auth-form h3 {
@@ -407,6 +407,35 @@ body {
 }
 
 .auth-form a:hover {
+    text-decoration: underline;
+}
+
+/* Terms checkbox styling */
+.terms-checkbox {
+    margin: 0;
+}
+
+.terms-checkbox label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #666;
+    cursor: pointer;
+}
+
+.terms-checkbox input[type="checkbox"] {
+    width: auto;
+    margin: 0;
+    cursor: pointer;
+}
+
+.terms-checkbox a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.terms-checkbox a:hover {
     text-decoration: underline;
 }
 

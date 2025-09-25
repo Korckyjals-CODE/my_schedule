@@ -54,8 +54,43 @@ async function handleLogin() {
 
 async function handleSignUp() {
     try {
-        const email = document.getElementById('signupEmail').value;
+        // Get form values
+        const name = document.getElementById('signupName').value.trim();
+        const email = document.getElementById('signupEmail').value.trim();
         const password = document.getElementById('signupPassword').value;
+        const confirmPassword = document.getElementById('signupConfirmPassword').value;
+        const termsAccepted = document.getElementById('signupTerms').checked;
+        
+        // Validate form
+        if (!name) {
+            alert('Please enter your full name.');
+            return;
+        }
+        
+        if (!email) {
+            alert('Please enter your email address.');
+            return;
+        }
+        
+        if (!password) {
+            alert('Please enter a password.');
+            return;
+        }
+        
+        if (password !== confirmPassword) {
+            alert('Passwords do not match. Please try again.');
+            return;
+        }
+        
+        if (password.length < 6) {
+            alert('Password must be at least 6 characters long.');
+            return;
+        }
+        
+        if (!termsAccepted) {
+            alert('Please accept the Terms of Service to continue.');
+            return;
+        }
         
         await supabaseAuth.signUp(email, password);
         alert('Account created! Please check your email to confirm your account, then sign in.');
@@ -72,6 +107,10 @@ async function handleSignOut() {
     } catch (error) {
         alert('Sign out failed: ' + error.message);
     }
+}
+
+function showTerms() {
+    alert('Terms of Service:\n\nBy using this application, you agree to:\n\n1. Use the service responsibly and in accordance with applicable laws\n2. Not share your account credentials with others\n3. Respect the privacy of schedule information\n4. Contact support for any issues or concerns\n\nFor the complete terms, please contact the administrator.');
 }
 
 function showAuth() {
