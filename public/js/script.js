@@ -203,30 +203,13 @@ function selectDate(date) {
                 item.endTime === classInfo.endTime
             );
             
-            // Find the actual index in the appropriate source array
-            let actualIndex, sourceDateStr, sourceWeekDay;
-            if (isFromSpecific) {
-                actualIndex = specificSchedule.findIndex(item => 
-                    item.grade === classInfo.grade && 
-                    item.subject === classInfo.subject && 
-                    item.startTime === classInfo.startTime && 
-                    item.endTime === classInfo.endTime
-                );
-                sourceDateStr = dateStr;
-                sourceWeekDay = weekDay;
-            } else {
-                actualIndex = weekdaySchedule.findIndex(item => 
-                    item.grade === classInfo.grade && 
-                    item.subject === classInfo.subject && 
-                    item.startTime === classInfo.startTime && 
-                    item.endTime === classInfo.endTime
-                );
-                sourceDateStr = null; // No specific date for weekday events
-                sourceWeekDay = weekDay;
-            }
+            // Create a unique identifier for the event instead of relying on array index
+            const eventId = `${classInfo.grade}-${classInfo.subject}-${classInfo.startTime}-${classInfo.endTime}`;
+            const sourceDateStr = isFromSpecific ? dateStr : null;
+            const sourceWeekDay = weekDay;
             
             console.log(`🔍 Item: ${classInfo.grade} - ${classInfo.subject} (${classInfo.startTime})`);
-            console.log(`🔍 From specific: ${isFromSpecific}, Actual index: ${actualIndex}`);
+            console.log(`🔍 From specific: ${isFromSpecific}, Event ID: ${eventId}`);
             
             const classBox = document.createElement('div');
             classBox.className = 'class-box';
@@ -236,8 +219,8 @@ function selectDate(date) {
                     <div class="time">${classInfo.startTime} - ${classInfo.endTime}</div>
                 </div>
                 <div class="hover-buttons">
-                    <button class="edit-btn" onclick="editEventFromCalendar('${sourceDateStr}', '${sourceWeekDay}', ${actualIndex})" title="Edit Event">✏️</button>
-                    <button class="delete-btn" onclick="deleteEventFromCalendar('${sourceDateStr}', '${sourceWeekDay}', ${actualIndex})" title="Delete Event">🗑️</button>
+                    <button class="edit-btn" onclick="editEventFromCalendar(${sourceDateStr ? `'${sourceDateStr}'` : 'null'}, '${sourceWeekDay}', '${eventId}')" title="Edit Event">✏️</button>
+                    <button class="delete-btn" onclick="deleteEventFromCalendar(${sourceDateStr ? `'${sourceDateStr}'` : 'null'}, '${sourceWeekDay}', '${eventId}')" title="Delete Event">🗑️</button>
                 </div>
             `;
             scheduleList.appendChild(classBox);
@@ -498,10 +481,45 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Event editing and deletion functions
-async function editEventFromCalendar(dateStr, weekDay, index) {
+async function editEventFromCalendar(dateStr, weekDay, eventId) {
     // Get the event data - handle null dateStr for weekday-only events
-    const daySchedule = dateStr ? schedule.specific_dates[dateStr] : schedule.weekdays[weekDay];
-    const event = daySchedule[index];
+    const daySchedule = (dateStr && dateStr !== 'null') ? schedule.specific_dates[dateStr] : schedule.weekdays[weekDay];
+    
+    if (!daySchedule || !Array.isArray(daySchedule)) {
+        console.error(`Invalid day schedule for ${dateStr && dateStr !== 'null' ? 'specific date' : 'weekday'} schedule:`, daySchedule);
+        alert('Error: Could not find the schedule. Please refresh the page and try again.');
+        return;
+    }
+    
+    // Find the event by matching the eventId components
+    const eventParts = eventId.split('-');
+    if (eventParts.length < 4) {
+        console.error(`Invalid eventId format: ${eventId}`);
+        alert('Error: Invalid event identifier. Please refresh the page and try again.');
+        return;
+    }
+    
+    const [grade, subject, startTime, endTime] = eventParts;
+    const event = daySchedule.find(item => 
+        item.grade === grade && 
+        item.subject === subject && 
+        item.startTime === startTime && 
+        item.endTime === endTime
+    );
+    
+    if (!event) {
+        console.error(`Event not found with ID: ${eventId}`);
+        alert('Error: Could not find the event to edit. Please refresh the page and try again.');
+        return;
+    }
+    
+    // Find the actual index for editing context
+    const index = daySchedule.findIndex(item => 
+        item.grade === grade && 
+        item.subject === subject && 
+        item.startTime === startTime && 
+        item.endTime === endTime
+    );
     
     // Store editing context
     editingEvent = { dateStr, weekDay, index };
@@ -631,8 +649,8 @@ function formatTimeForStorage(timeStr) {
     return parts[0].replace(/^0+/, '') + ':' + parts[1];
 }
 
-async function deleteEventFromCalendar(dateStr, weekDay, index) {
-    console.log('🗑️ Delete function called with:', { dateStr, weekDay, index });
+async function deleteEventFromCalendar(dateStr, weekDay, eventId) {
+    console.log('🗑️ Delete function called with:', { dateStr, weekDay, eventId });
     
     if (!confirm('Are you sure you want to delete this event?')) {
         console.log('❌ User cancelled deletion');
@@ -645,16 +663,33 @@ async function deleteEventFromCalendar(dateStr, weekDay, index) {
     const daySchedule = (dateStr && dateStr !== 'null') ? schedule.specific_dates[dateStr] : schedule.weekdays[weekDay];
     console.log('📅 Day schedule before deletion:', daySchedule);
     console.log('📊 Full schedule before deletion:', schedule);
-    console.log('🔍 Index to delete:', index);
-    console.log('🔍 Array length before splice:', daySchedule ? daySchedule.length : 'undefined');
-    console.log('🔍 Is daySchedule the same reference as schedule.specific_dates[dateStr]?', daySchedule === schedule.specific_dates[dateStr]);
-    console.log('🔍 Is daySchedule the same reference as schedule.weekdays[weekDay]?', daySchedule === schedule.weekdays[weekDay]);
-    console.log('🔍 schedule.specific_dates[dateStr]:', schedule.specific_dates[dateStr]);
-    console.log('🔍 schedule.weekdays[weekDay]:', schedule.weekdays[weekDay]);
+    console.log('🔍 Event ID to delete:', eventId);
     
     if (!daySchedule || !Array.isArray(daySchedule)) {
         console.error('❌ Invalid day schedule:', daySchedule);
         alert('Error: Invalid schedule data');
+        return;
+    }
+    
+    // Find the event by matching the eventId components
+    const eventParts = eventId.split('-');
+    if (eventParts.length < 4) {
+        console.error(`Invalid eventId format: ${eventId}`);
+        alert('Error: Invalid event identifier');
+        return;
+    }
+    
+    const [grade, subject, startTime, endTime] = eventParts;
+    const index = daySchedule.findIndex(item => 
+        item.grade === grade && 
+        item.subject === subject && 
+        item.startTime === startTime && 
+        item.endTime === endTime
+    );
+    
+    if (index === -1) {
+        console.error(`Event not found with ID: ${eventId}`);
+        alert('Error: Could not find the event to delete');
         return;
     }
     
