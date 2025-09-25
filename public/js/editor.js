@@ -405,8 +405,8 @@ function addRangeEntry() {
     const skippedDates = [];
     
     // Loop through each specific date in the range
-    const start = new Date(startDate);
-    const end = new Date(endDate);
+    const start = new Date(startDate + 'T00:00:00');
+    const end = new Date(endDate + 'T00:00:00');
     
     // Calculate the number of days in the range
     const timeDiff = end.getTime() - start.getTime();
