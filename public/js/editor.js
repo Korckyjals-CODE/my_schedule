@@ -1,3 +1,9 @@
+// Helper function to get weekday name from date
+function getWeekDay(date) {
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    return days[date.getDay()];
+}
+
 const SUBJECT_OPTIONS = [
     'Class',
     'Recess',
@@ -393,18 +399,49 @@ function addRangeEntry() {
         subject: subject
     };
     
-    // Check for duplicates and add the entry to all weekdays in the range
+    // Check for duplicates and add the entry to all specific dates in the range
     let addedCount = 0;
     let skippedCount = 0;
-    const skippedWeekdays = [];
+    const skippedDates = [];
     
-    weekdays.forEach(weekday => {
-        if (!schedule.weekdays[weekday]) {
-            schedule.weekdays[weekday] = [];
+    // Loop through each specific date in the range
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    
+    // Calculate the number of days in the range
+    const timeDiff = end.getTime() - start.getTime();
+    const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+    
+    console.log('Date range:', startDate, 'to', endDate);
+    console.log('Days in range:', daysDiff + 1);
+    
+    // Initialize specific_dates if it doesn't exist
+    if (!schedule.specific_dates) {
+        schedule.specific_dates = {};
+    }
+    
+    // Loop through each day in the range
+    for (let i = 0; i <= daysDiff; i++) {
+        const date = new Date(start);
+        date.setDate(start.getDate() + i);
+        
+        const dayOfWeek = getWeekDay(date);
+        const dateStr = date.toISOString().split('T')[0];
+        
+        console.log('Processing date:', dateStr, 'Day of week:', dayOfWeek);
+        
+        // Skip weekends
+        if (dayOfWeek === 'Saturday' || dayOfWeek === 'Sunday') {
+            console.log('Skipping weekend:', dayOfWeek);
+            continue;
         }
         
-        // Check if an identical event already exists for this weekday
-        const isDuplicate = schedule.weekdays[weekday].some(existingEvent => 
+        if (!schedule.specific_dates[dateStr]) {
+            schedule.specific_dates[dateStr] = [];
+        }
+        
+        // Check if an identical event already exists for this specific date
+        const isDuplicate = schedule.specific_dates[dateStr].some(existingEvent => 
             existingEvent.grade === newEntry.grade &&
             existingEvent.startTime === newEntry.startTime &&
             existingEvent.endTime === newEntry.endTime &&
@@ -412,13 +449,15 @@ function addRangeEntry() {
         );
         
         if (!isDuplicate) {
-            schedule.weekdays[weekday].push({...newEntry});
+            schedule.specific_dates[dateStr].push({...newEntry});
             addedCount++;
+            console.log('Added event to:', dateStr);
         } else {
             skippedCount++;
-            skippedWeekdays.push(weekday);
+            skippedDates.push(dateStr);
+            console.log('Skipped duplicate for:', dateStr);
         }
-    });
+    }
     
     // Only save if at least one event was added
     if (addedCount > 0) {
@@ -436,9 +475,29 @@ function addRangeEntry() {
     
     // Show appropriate message based on results
     if (skippedCount > 0) {
-        alert(`Event added to ${addedCount} weekdays: ${weekdays.filter(day => !skippedWeekdays.includes(day)).join(', ')}\n\nSkipped ${skippedCount} weekdays where identical events already exist: ${skippedWeekdays.join(', ')}`);
+        const addedDates = [];
+        for (let i = 0; i <= daysDiff; i++) {
+            const date = new Date(start);
+            date.setDate(start.getDate() + i);
+            const dayOfWeek = getWeekDay(date);
+            const dateStr = date.toISOString().split('T')[0];
+            if (dayOfWeek !== 'Saturday' && dayOfWeek !== 'Sunday' && !skippedDates.includes(dateStr)) {
+                addedDates.push(dateStr);
+            }
+        }
+        alert(`Event added to ${addedCount} dates: ${addedDates.join(', ')}\n\nSkipped ${skippedCount} dates where identical events already exist: ${skippedDates.join(', ')}`);
     } else {
-        alert(`Event added to ${addedCount} weekdays: ${weekdays.join(', ')}`);
+        const addedDates = [];
+        for (let i = 0; i <= daysDiff; i++) {
+            const date = new Date(start);
+            date.setDate(start.getDate() + i);
+            const dayOfWeek = getWeekDay(date);
+            const dateStr = date.toISOString().split('T')[0];
+            if (dayOfWeek !== 'Saturday' && dayOfWeek !== 'Sunday') {
+                addedDates.push(dateStr);
+            }
+        }
+        alert(`Event added to ${addedCount} dates: ${addedDates.join(', ')}`);
     }
 }
 
