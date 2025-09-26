@@ -1,0 +1,30 @@
+{
+  "testName": "Test 3.4: Image Upload and Schedule Extraction",
+  "timestamp": "2025-09-26T01:15:23.518Z",
+  "status": "failed",
+  "steps": [
+    {
+      "step": "Navigate to Schedule Editor",
+      "status": "passed",
+      "message": "Successfully navigated to schedule editor",
+      "timestamp": "2025-09-26T01:15:28.203Z"
+    },
+    {
+      "step": "Verify Image Upload Tab",
+      "status": "failed",
+      "message": "Failed to verify image upload tab: Node is either not clickable or not an Element",
+      "timestamp": "2025-09-26T01:15:28.252Z"
+    }
+  ],
+  "screenshots": [
+    "test_3_4_initial_load_1758849328202.png"
+  ],
+  "errors": [
+    {
+      "step": "test_execution",
+      "error": "Node is either not clickable or not an Element",
+      "timestamp": "2025-09-26T01:15:28.257Z"
+    }
+  ],
+  "summary": {}
+}
