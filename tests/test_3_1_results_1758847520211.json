@@ -1,0 +1,30 @@
+{
+  "testName": "Test 3.1: Weekday Schedule Creation",
+  "timestamp": "2025-09-26T00:45:14.457Z",
+  "status": "ERROR",
+  "steps": [
+    {
+      "step": 1,
+      "description": "Navigate to schedule editor",
+      "status": "PASS",
+      "details": "Successfully loaded schedule-editor.html"
+    },
+    {
+      "step": 1.1,
+      "description": "Authentication setup",
+      "status": "FAIL",
+      "details": "Registration/login process failed"
+    }
+  ],
+  "screenshots": [
+    "tests/test_3_1_initial_load_1758847516892.png"
+  ],
+  "errors": [
+    {
+      "step": "Unknown",
+      "error": "Authentication setup failed",
+      "stack": "Error: Authentication setup failed\n    at runTest3_1 (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\tests\\test_3_1_weekday_schedule_creation.js:96:27)"
+    }
+  ],
+  "summary": {}
+}
