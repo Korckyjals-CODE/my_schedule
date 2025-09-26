@@ -1,0 +1,24 @@
+{
+  "testName": "Test 2.2: Schedule Display",
+  "timestamp": "2025-09-26T00:35:07.954Z",
+  "setup": {
+    "serverRunning": true,
+    "calendarLoaded": true
+  },
+  "testSteps": {
+    "daySelection": "PARTIAL - No visual indicators for events"
+  },
+  "validation": {},
+  "errors": [
+    "Failed to create test data: Waiting for selector `#weekday-schedule` failed",
+    "Test execution failed: this.page.waitForTimeout is not a function"
+  ],
+  "screenshots": [],
+  "passed": false,
+  "summary": {
+    "totalSteps": 1,
+    "passedSteps": 0,
+    "passRate": "0%",
+    "overallResult": "FAILED"
+  }
+}
