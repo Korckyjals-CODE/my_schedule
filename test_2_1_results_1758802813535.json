@@ -1,0 +1,24 @@
+{
+  "testName": "Test 2.1: Calendar Display",
+  "timestamp": "2025-09-25T12:17:03.317Z",
+  "results": [],
+  "screenshots": [
+    {
+      "name": "initial_load",
+      "path": "test_2_1_initial_load_1758802627986.png",
+      "timestamp": "2025-09-25T12:17:09.564Z"
+    }
+  ],
+  "errors": [
+    {
+      "type": "auth_error",
+      "message": "Runtime.callFunctionOn timed out. Increase the 'protocolTimeout' setting in launch/connect calls for a higher timeout if needed.",
+      "stack": "ProtocolError: Runtime.callFunctionOn timed out. Increase the 'protocolTimeout' setting in launch/connect calls for a higher timeout if needed.\n    at <instance_members_initializer> (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\node_modules\\puppeteer-core\\lib\\cjs\\puppeteer\\common\\CallbackRegistry.js:102:14)\n    at new Callback (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\node_modules\\puppeteer-core\\lib\\cjs\\puppeteer\\common\\CallbackRegistry.js:106:16)\n    at CallbackRegistry.create (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\node_modules\\puppeteer-core\\lib\\cjs\\puppeteer\\common\\CallbackRegistry.js:24:26)\n    at Connection._rawSend (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\node_modules\\puppeteer-core\\lib\\cjs\\puppeteer\\cdp\\Connection.js:99:26)\n    at CdpCDPSession.send (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\node_modules\\puppeteer-core\\lib\\cjs\\puppeteer\\cdp\\CdpSession.js:73:33)\n    at #evaluate (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\node_modules\\puppeteer-core\\lib\\cjs\\puppeteer\\cdp\\ExecutionContext.js:363:50)\n    at async ExecutionContext.evaluateHandle (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\node_modules\\puppeteer-core\\lib\\cjs\\puppeteer\\cdp\\ExecutionContext.js:329:16)\n    at async IsolatedWorld.evaluateHandle (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\node_modules\\puppeteer-core\\lib\\cjs\\puppeteer\\cdp\\IsolatedWorld.js:89:16)\n    at async CdpJSHandle.evaluateHandle (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\node_modules\\puppeteer-core\\lib\\cjs\\puppeteer\\api\\JSHandle.js:157:20)\n    at async CdpElementHandle.evaluateHandle (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\node_modules\\puppeteer-core\\lib\\cjs\\puppeteer\\api\\ElementHandle.js:355:20)"
+    },
+    {
+      "type": "test_execution_error",
+      "message": "Authentication failed",
+      "stack": "Error: Authentication failed\n    at CalendarDisplayTest.runTest (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\test_2_1_calendar_display.js:557:23)"
+    }
+  ]
+}

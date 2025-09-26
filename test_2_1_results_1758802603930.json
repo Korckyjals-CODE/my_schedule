@@ -1,0 +1,24 @@
+{
+  "testName": "Test 2.1: Calendar Display",
+  "timestamp": "2025-09-25T12:16:24.837Z",
+  "results": [],
+  "screenshots": [
+    {
+      "name": "initial_load",
+      "path": "test_2_1_initial_load_1758802590536.png",
+      "timestamp": "2025-09-25T12:16:31.973Z"
+    }
+  ],
+  "errors": [
+    {
+      "type": "auth_error",
+      "message": "this.page.waitForTimeout is not a function",
+      "stack": "TypeError: this.page.waitForTimeout is not a function\n    at CalendarDisplayTest.testAuthentication (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\test_2_1_calendar_display.js:113:33)\n    at async CalendarDisplayTest.runTest (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\test_2_1_calendar_display.js:555:33)"
+    },
+    {
+      "type": "test_execution_error",
+      "message": "Authentication failed",
+      "stack": "Error: Authentication failed\n    at CalendarDisplayTest.runTest (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\test_2_1_calendar_display.js:557:23)"
+    }
+  ]
+}
