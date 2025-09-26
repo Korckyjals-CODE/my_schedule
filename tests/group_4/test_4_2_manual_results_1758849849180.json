@@ -1,0 +1,62 @@
+{
+  "testName": "Test 4.2: Advanced Filtering - Manual Documentation",
+  "timestamp": "2025-09-26T01:24:04.305Z",
+  "setup": {
+    "browserLaunched": true,
+    "pageLoaded": true,
+    "userLoggedIn": true,
+    "searchInterfaceReady": true
+  },
+  "observations": {
+    "interfaceVisible": {
+      "appSectionVisible": false,
+      "searchContainerVisible": true,
+      "searchFiltersVisible": true
+    },
+    "filterElements": {
+      "gradeFiltersContainer": true,
+      "subjectFiltersContainer": true,
+      "dayFiltersContainer": true,
+      "startTimeInput": true,
+      "endTimeInput": true,
+      "gradeCheckboxCount": 0,
+      "subjectCheckboxCount": 0,
+      "dayCheckboxCount": 0
+    },
+    "actionButtons": {
+      "clearButton": true,
+      "searchButton": true,
+      "exportButton": true,
+      "saveButton": true
+    },
+    "savedSearches": {
+      "selectElement": true,
+      "deleteButton": true,
+      "optionCount": 1
+    },
+    "searchResults": {
+      "resultsContainer": true,
+      "resultsCount": true,
+      "currentResultsText": "Enter search terms to find schedules",
+      "resultItemCount": 0
+    }
+  },
+  "screenshots": {
+    "fullPage": "test_4_2_full_page_1758849848880.png",
+    "viewport": "test_4_2_viewport_1758849848880.png"
+  },
+  "summary": {
+    "interfaceStatus": "Poor",
+    "filterElementsStatus": "Good",
+    "actionButtonsStatus": "Good",
+    "savedSearchesStatus": "Good",
+    "overallAssessment": "Fair",
+    "issues": [
+      "Search interface elements are not properly visible"
+    ],
+    "recommendations": [
+      "Improve filter responsiveness and user experience",
+      "Test edge cases and error handling"
+    ]
+  }
+}
