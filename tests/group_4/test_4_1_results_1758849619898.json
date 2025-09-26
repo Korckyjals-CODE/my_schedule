@@ -1,0 +1,151 @@
+{
+  "testName": "Test 4.1: Basic Search",
+  "timestamp": "2025-09-26T01:19:59.943Z",
+  "setup": {
+    "status": "success",
+    "message": "Browser launched and search page loaded successfully"
+  },
+  "testSteps": [
+    {
+      "step": "Authentication",
+      "status": "success",
+      "message": "Successfully authenticated with test credentials"
+    },
+    {
+      "step": "Search Interface Check",
+      "status": "success",
+      "message": "All search interface elements are present and functional"
+    },
+    {
+      "step": "Text Search: \"6A\"",
+      "status": "failed",
+      "message": "Node is either not clickable or not an Element"
+    },
+    {
+      "step": "Text Search: \"Class\"",
+      "status": "failed",
+      "message": "Node is either not clickable or not an Element"
+    },
+    {
+      "step": "Text Search: \"8:30\"",
+      "status": "failed",
+      "message": "Node is either not clickable or not an Element"
+    },
+    {
+      "step": "Text Search: \"Monday\"",
+      "status": "failed",
+      "message": "Node is either not clickable or not an Element"
+    },
+    {
+      "step": "Text Search: \"Recess\"",
+      "status": "failed",
+      "message": "Node is either not clickable or not an Element"
+    },
+    {
+      "step": "Text Search: \"xyz\"",
+      "status": "failed",
+      "message": "Node is either not clickable or not an Element"
+    },
+    {
+      "step": "Filter Functionality Test",
+      "status": "failed",
+      "message": "this.page.waitForTimeout is not a function"
+    },
+    {
+      "step": "Clear Filters Test",
+      "status": "failed",
+      "message": "Node is either not clickable or not an Element"
+    },
+    {
+      "step": "Search Results Interaction",
+      "status": "failed",
+      "message": "this.page.waitForTimeout is not a function"
+    },
+    {
+      "step": "Export Functionality Test",
+      "status": "failed",
+      "message": "this.page.waitForTimeout is not a function"
+    }
+  ],
+  "results": {},
+  "screenshots": [
+    {
+      "name": "after_authentication",
+      "path": "C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\tests\\group_4\\test_4_1_after_authentication_1758849604160.png",
+      "timestamp": "2025-09-26T01:20:04.308Z"
+    },
+    {
+      "name": "search_interface",
+      "path": "C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\tests\\group_4\\test_4_1_search_interface_1758849604663.png",
+      "timestamp": "2025-09-26T01:20:05.321Z"
+    }
+  ],
+  "errors": [
+    {
+      "type": "search_error",
+      "searchTerm": "6A",
+      "message": "Node is either not clickable or not an Element",
+      "stack": "Error: Node is either not clickable or not an Element\n    at CdpElementHandle.clickablePoint (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\node_modules\\puppeteer-core\\lib\\cjs\\puppeteer\\api\\ElementHandle.js:698:23)\n    at async CdpElementHandle.<anonymous> (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\node_modules\\puppeteer-core\\lib\\cjs\\puppeteer\\api\\ElementHandle.js:122:20)\n    at async CdpElementHandle.click (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\node_modules\\puppeteer-core\\lib\\cjs\\puppeteer\\api\\ElementHandle.js:728:30)\n    at async CdpElementHandle.<anonymous> (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\node_modules\\puppeteer-core\\lib\\cjs\\puppeteer\\api\\ElementHandle.js:133:24)\n    at async CdpFrame.click (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\node_modules\\puppeteer-core\\lib\\cjs\\puppeteer\\api\\Frame.js:756:17)\n    at async Test4_1_BasicSearch.testBasicTextSearch (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\tests\\group_4\\test_4_1_basic_search.js:209:17)\n    at async Test4_1_BasicSearch.run (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\tests\\group_4\\test_4_1_basic_search.js:565:13)"
+    },
+    {
+      "type": "search_error",
+      "searchTerm": "Class",
+      "message": "Node is either not clickable or not an Element",
+      "stack": "Error: Node is either not clickable or not an Element\n    at CdpElementHandle.clickablePoint (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\node_modules\\puppeteer-core\\lib\\cjs\\puppeteer\\api\\ElementHandle.js:698:23)\n    at async CdpElementHandle.<anonymous> (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\node_modules\\puppeteer-core\\lib\\cjs\\puppeteer\\api\\ElementHandle.js:122:20)\n    at async CdpElementHandle.click (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\node_modules\\puppeteer-core\\lib\\cjs\\puppeteer\\api\\ElementHandle.js:728:30)\n    at async CdpElementHandle.<anonymous> (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\node_modules\\puppeteer-core\\lib\\cjs\\puppeteer\\api\\ElementHandle.js:133:24)\n    at async CdpFrame.click (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\node_modules\\puppeteer-core\\lib\\cjs\\puppeteer\\api\\Frame.js:756:17)\n    at async Test4_1_BasicSearch.testBasicTextSearch (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\tests\\group_4\\test_4_1_basic_search.js:209:17)\n    at async Test4_1_BasicSearch.run (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\tests\\group_4\\test_4_1_basic_search.js:565:13)"
+    },
+    {
+      "type": "search_error",
+      "searchTerm": "8:30",
+      "message": "Node is either not clickable or not an Element",
+      "stack": "Error: Node is either not clickable or not an Element\n    at CdpElementHandle.clickablePoint (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\node_modules\\puppeteer-core\\lib\\cjs\\puppeteer\\api\\ElementHandle.js:698:23)\n    at async CdpElementHandle.<anonymous> (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\node_modules\\puppeteer-core\\lib\\cjs\\puppeteer\\api\\ElementHandle.js:122:20)\n    at async CdpElementHandle.click (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\node_modules\\puppeteer-core\\lib\\cjs\\puppeteer\\api\\ElementHandle.js:728:30)\n    at async CdpElementHandle.<anonymous> (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\node_modules\\puppeteer-core\\lib\\cjs\\puppeteer\\api\\ElementHandle.js:133:24)\n    at async CdpFrame.click (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\node_modules\\puppeteer-core\\lib\\cjs\\puppeteer\\api\\Frame.js:756:17)\n    at async Test4_1_BasicSearch.testBasicTextSearch (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\tests\\group_4\\test_4_1_basic_search.js:209:17)\n    at async Test4_1_BasicSearch.run (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\tests\\group_4\\test_4_1_basic_search.js:565:13)"
+    },
+    {
+      "type": "search_error",
+      "searchTerm": "Monday",
+      "message": "Node is either not clickable or not an Element",
+      "stack": "Error: Node is either not clickable or not an Element\n    at CdpElementHandle.clickablePoint (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\node_modules\\puppeteer-core\\lib\\cjs\\puppeteer\\api\\ElementHandle.js:698:23)\n    at async CdpElementHandle.<anonymous> (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\node_modules\\puppeteer-core\\lib\\cjs\\puppeteer\\api\\ElementHandle.js:122:20)\n    at async CdpElementHandle.click (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\node_modules\\puppeteer-core\\lib\\cjs\\puppeteer\\api\\ElementHandle.js:728:30)\n    at async CdpElementHandle.<anonymous> (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\node_modules\\puppeteer-core\\lib\\cjs\\puppeteer\\api\\ElementHandle.js:133:24)\n    at async CdpFrame.click (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\node_modules\\puppeteer-core\\lib\\cjs\\puppeteer\\api\\Frame.js:756:17)\n    at async Test4_1_BasicSearch.testBasicTextSearch (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\tests\\group_4\\test_4_1_basic_search.js:209:17)\n    at async Test4_1_BasicSearch.run (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\tests\\group_4\\test_4_1_basic_search.js:565:13)"
+    },
+    {
+      "type": "search_error",
+      "searchTerm": "Recess",
+      "message": "Node is either not clickable or not an Element",
+      "stack": "Error: Node is either not clickable or not an Element\n    at CdpElementHandle.clickablePoint (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\node_modules\\puppeteer-core\\lib\\cjs\\puppeteer\\api\\ElementHandle.js:698:23)\n    at async CdpElementHandle.<anonymous> (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\node_modules\\puppeteer-core\\lib\\cjs\\puppeteer\\api\\ElementHandle.js:122:20)\n    at async CdpElementHandle.click (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\node_modules\\puppeteer-core\\lib\\cjs\\puppeteer\\api\\ElementHandle.js:728:30)\n    at async CdpElementHandle.<anonymous> (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\node_modules\\puppeteer-core\\lib\\cjs\\puppeteer\\api\\ElementHandle.js:133:24)\n    at async CdpFrame.click (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\node_modules\\puppeteer-core\\lib\\cjs\\puppeteer\\api\\Frame.js:756:17)\n    at async Test4_1_BasicSearch.testBasicTextSearch (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\tests\\group_4\\test_4_1_basic_search.js:209:17)\n    at async Test4_1_BasicSearch.run (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\tests\\group_4\\test_4_1_basic_search.js:565:13)"
+    },
+    {
+      "type": "search_error",
+      "searchTerm": "xyz",
+      "message": "Node is either not clickable or not an Element",
+      "stack": "Error: Node is either not clickable or not an Element\n    at CdpElementHandle.clickablePoint (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\node_modules\\puppeteer-core\\lib\\cjs\\puppeteer\\api\\ElementHandle.js:698:23)\n    at async CdpElementHandle.<anonymous> (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\node_modules\\puppeteer-core\\lib\\cjs\\puppeteer\\api\\ElementHandle.js:122:20)\n    at async CdpElementHandle.click (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\node_modules\\puppeteer-core\\lib\\cjs\\puppeteer\\api\\ElementHandle.js:728:30)\n    at async CdpElementHandle.<anonymous> (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\node_modules\\puppeteer-core\\lib\\cjs\\puppeteer\\api\\ElementHandle.js:133:24)\n    at async CdpFrame.click (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\node_modules\\puppeteer-core\\lib\\cjs\\puppeteer\\api\\Frame.js:756:17)\n    at async Test4_1_BasicSearch.testBasicTextSearch (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\tests\\group_4\\test_4_1_basic_search.js:209:17)\n    at async Test4_1_BasicSearch.run (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\tests\\group_4\\test_4_1_basic_search.js:565:13)"
+    },
+    {
+      "type": "filter_error",
+      "message": "this.page.waitForTimeout is not a function",
+      "stack": "TypeError: this.page.waitForTimeout is not a function\n    at Test4_1_BasicSearch.testFilterFunctionality (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\tests\\group_4\\test_4_1_basic_search.js:339:29)\n    at async Test4_1_BasicSearch.run (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\tests\\group_4\\test_4_1_basic_search.js:566:13)"
+    },
+    {
+      "type": "clear_filters_error",
+      "message": "Node is either not clickable or not an Element",
+      "stack": "Error: Node is either not clickable or not an Element\n    at CdpElementHandle.clickablePoint (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\node_modules\\puppeteer-core\\lib\\cjs\\puppeteer\\api\\ElementHandle.js:698:23)\n    at async CdpElementHandle.<anonymous> (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\node_modules\\puppeteer-core\\lib\\cjs\\puppeteer\\api\\ElementHandle.js:122:20)\n    at async CdpElementHandle.click (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\node_modules\\puppeteer-core\\lib\\cjs\\puppeteer\\api\\ElementHandle.js:728:30)\n    at async CdpElementHandle.<anonymous> (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\node_modules\\puppeteer-core\\lib\\cjs\\puppeteer\\api\\ElementHandle.js:133:24)\n    at async CdpFrame.click (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\node_modules\\puppeteer-core\\lib\\cjs\\puppeteer\\api\\Frame.js:756:17)\n    at async Test4_1_BasicSearch.testClearFilters (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\tests\\group_4\\test_4_1_basic_search.js:371:13)\n    at async Test4_1_BasicSearch.run (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\tests\\group_4\\test_4_1_basic_search.js:567:13)"
+    },
+    {
+      "type": "interaction_error",
+      "message": "this.page.waitForTimeout is not a function",
+      "stack": "TypeError: this.page.waitForTimeout is not a function\n    at Test4_1_BasicSearch.testSearchResultsInteraction (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\tests\\group_4\\test_4_1_basic_search.js:417:29)\n    at async Test4_1_BasicSearch.run (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\tests\\group_4\\test_4_1_basic_search.js:568:13)"
+    },
+    {
+      "type": "export_error",
+      "message": "this.page.waitForTimeout is not a function",
+      "stack": "TypeError: this.page.waitForTimeout is not a function\n    at Test4_1_BasicSearch.testExportFunctionality (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\tests\\group_4\\test_4_1_basic_search.js:470:29)\n    at async Test4_1_BasicSearch.run (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\tests\\group_4\\test_4_1_basic_search.js:569:13)"
+    }
+  ],
+  "summary": {
+    "totalSteps": 12,
+    "successful": 2,
+    "failed": 10,
+    "warnings": 0,
+    "successRate": "16.67%",
+    "overallStatus": "FAIL",
+    "screenshots": 2,
+    "errors": 10
+  }
+}

@@ -1,0 +1,110 @@
+{
+  "testName": "Test 4.1: Basic Search (Simple)",
+  "timestamp": "2025-09-26T01:20:54.222Z",
+  "setup": {},
+  "testSteps": [
+    {
+      "step": "Search Page Access",
+      "status": "success",
+      "message": "Search page loads successfully with all required elements",
+      "details": {
+        "status": 200,
+        "hasSearchInput": true,
+        "hasSearchBtn": true,
+        "hasFilters": true,
+        "hasResultsContainer": true
+      }
+    },
+    {
+      "step": "Search API Endpoint",
+      "status": "failed",
+      "message": "Request failed: HTTP 401: Unauthorized"
+    },
+    {
+      "step": "Schedule Data Endpoint",
+      "status": "failed",
+      "message": "Request failed: HTTP 401: Unauthorized"
+    },
+    {
+      "step": "Search JavaScript Functionality",
+      "status": "success",
+      "message": "Search JavaScript contains all key functions",
+      "details": {
+        "status": 200,
+        "hasSearchFunction": true,
+        "hasFilterFunction": true,
+        "hasDisplayFunction": true,
+        "fileSize": 60948
+      }
+    },
+    {
+      "step": "Search CSS Styling",
+      "status": "warning",
+      "message": "Search CSS missing some styling elements",
+      "details": {
+        "status": 200,
+        "hasSearchStyles": false,
+        "hasFilterStyles": false,
+        "fileSize": 10796
+      }
+    },
+    {
+      "step": "Search HTML Structure",
+      "status": "success",
+      "message": "Search page has proper HTML structure",
+      "details": {
+        "status": 200,
+        "hasDoctype": true,
+        "hasTitle": true,
+        "hasMetaViewport": true,
+        "hasSearchForm": true,
+        "hasScripts": true,
+        "pageSize": 36069
+      }
+    },
+    {
+      "step": "Search Functionality Analysis",
+      "status": "success",
+      "message": "Search functionality analysis: 8/8 features implemented (100.0%)",
+      "details": {
+        "hasSearchFunction": true,
+        "hasFilterFunctions": true,
+        "hasDisplayFunction": true,
+        "hasClientSideSearch": true,
+        "hasServerSideSearch": true,
+        "hasExportFunctions": true,
+        "hasSavedSearches": true,
+        "hasErrorHandling": true,
+        "functionalityScore": 8,
+        "totalFeatures": 8,
+        "completenessPercentage": "100.0",
+        "fileSize": 60948
+      }
+    }
+  ],
+  "results": {},
+  "errors": [
+    {
+      "type": "api_error",
+      "message": "Request failed: HTTP 401: Unauthorized"
+    },
+    {
+      "type": "schedule_endpoint_error",
+      "message": "Request failed: HTTP 401: Unauthorized"
+    }
+  ],
+  "summary": {
+    "totalSteps": 7,
+    "successful": 4,
+    "failed": 2,
+    "warnings": 1,
+    "successRate": "57.14%",
+    "overallStatus": "FAIL",
+    "errors": 2,
+    "recommendations": [
+      "Fix failed test steps to ensure search functionality works properly",
+      "Address warning conditions to improve search functionality",
+      "Ensure API endpoints are properly configured and accessible"
+    ]
+  }
+}
