@@ -1,0 +1,36 @@
+{
+  "testId": "3.2",
+  "testName": "Specific Date Schedule Creation",
+  "timestamp": "2025-09-26T00:56:53.467Z",
+  "steps": [
+    {
+      "step": 1,
+      "description": "Navigate to schedule editor",
+      "result": "PASSED",
+      "details": "Successfully navigated to schedule editor page"
+    },
+    {
+      "step": 2,
+      "description": "Handle authentication",
+      "result": "PASSED",
+      "details": "Authentication bypass implemented successfully"
+    },
+    {
+      "step": 3,
+      "description": "Click on Specific Dates tab",
+      "result": "PASSED",
+      "details": "Specific Dates tab successfully activated and editor section is visible"
+    },
+    {
+      "step": 4,
+      "description": "Select a specific date",
+      "result": "PASSED",
+      "details": "Successfully selected date: 2025-09-27"
+    }
+  ],
+  "overallResult": "ERROR",
+  "screenshots": [
+    "test_3_2_initial_load_1758848215076.png"
+  ],
+  "error": "locator.waitFor: Error: strict mode violation: locator('button:has-text(\"Add Entry\")') resolved to 2 elements:\n    1) <button onclick=\"addWeekdayEntry()\">Add Entry</button> aka locator('#weekdayEditor').getByText('Add Entry')\n    2) <button onclick=\"addSpecificEntry()\">Add Entry</button> aka getByRole('button', { name: 'Add Entry' })\n\nCall log:\n\u001b[2m  - waiting for locator('button:has-text(\"Add Entry\")') to be visible\u001b[22m\n"
+}
