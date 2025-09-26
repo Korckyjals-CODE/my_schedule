@@ -1,0 +1,73 @@
+{
+  "testName": "Test 3.3: Date Range Schedule Creation (Simplified)",
+  "timestamp": "2025-09-26T01:10:42.886Z",
+  "results": [
+    {
+      "step": "Page Load Check",
+      "status": "pass",
+      "message": "Successfully loaded: Schedule Editor",
+      "details": null,
+      "timestamp": "2025-09-26T01:10:48.733Z"
+    },
+    {
+      "step": "Date Range Tab Check",
+      "status": "pass",
+      "message": "Date Range tab found in page content",
+      "details": null,
+      "timestamp": "2025-09-26T01:10:50.504Z"
+    },
+    {
+      "step": "Date Inputs Check",
+      "status": "pass",
+      "message": "Found 3 date input fields",
+      "details": null,
+      "timestamp": "2025-09-26T01:10:50.681Z"
+    },
+    {
+      "step": "Form Elements Check",
+      "status": "pass",
+      "message": "Found: 2 time inputs, 3 selects, 1 text inputs, 16 buttons",
+      "details": null,
+      "timestamp": "2025-09-26T01:10:52.058Z"
+    },
+    {
+      "step": "Basic Interaction Test",
+      "status": "fail",
+      "message": "Failed basic interaction test: Node is either not clickable or not an Element",
+      "details": null,
+      "timestamp": "2025-09-26T01:10:53.705Z"
+    },
+    {
+      "step": "Weekday Preview Check",
+      "status": "pass",
+      "message": "Found weekday references: Monday, Tuesday, Wednesday, Thursday, Friday",
+      "details": null,
+      "timestamp": "2025-09-26T01:10:53.708Z"
+    }
+  ],
+  "screenshots": [
+    {
+      "name": "initial_load",
+      "filename": "test_3_3_simple_initial_load_1758849048733.png",
+      "timestamp": 1758849048733
+    },
+    {
+      "name": "date_inputs_found",
+      "filename": "test_3_3_simple_date_inputs_found_1758849050681.png",
+      "timestamp": 1758849050681
+    },
+    {
+      "name": "form_elements",
+      "filename": "test_3_3_simple_form_elements_1758849052058.png",
+      "timestamp": 1758849052058
+    }
+  ],
+  "errors": [
+    "Console Error: Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ],
+  "summary": {
+    "passed": 5,
+    "failed": 1,
+    "total": 6
+  }
+}
