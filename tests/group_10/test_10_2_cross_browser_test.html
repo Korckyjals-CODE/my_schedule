@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test 10.2: Cross-Browser Compatibility</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #007bff;
+        }
+        .test-info {
+            background: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .test-controls {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 0 10px;
+        }
+        .btn:hover {
+            background: #0056b3;
+        }
+        .btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+        .results {
+            margin-top: 30px;
+        }
+        .test-section {
+            margin-bottom: 25px;
+            padding: 15px;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+        }
+        .test-section h3 {
+            margin-top: 0;
+            color: #495057;
+        }
+        .test-item {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 3px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .test-item.passed {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+        }
+        .test-item.failed {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+        }
+        .test-item.warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+        }
+        .status {
+            font-weight: bold;
+            padding: 4px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+        .status.passed {
+            background: #28a745;
+            color: white;
+        }
+        .status.failed {
+            background: #dc3545;
+            color: white;
+        }
+        .status.warning {
+            background: #ffc107;
+            color: #212529;
+        }
+        .summary {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .summary h3 {
+            margin-top: 0;
+            color: #495057;
+        }
+        .summary-stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 15px 0;
+        }
+        .stat {
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #007bff;
+        }
+        .stat-label {
+            color: #6c757d;
+            font-size: 14px;
+        }
+        .browser-info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .browser-info h4 {
+            margin-top: 0;
+            color: #1976d2;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .info-item {
+            background: white;
+            padding: 10px;
+            border-radius: 3px;
+            border: 1px solid #bbdefb;
+        }
+        .info-label {
+            font-weight: bold;
+            color: #1976d2;
+            font-size: 12px;
+        }
+        .info-value {
+            color: #424242;
+            margin-top: 5px;
+        }
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #6c757d;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Test 10.2: Cross-Browser Compatibility</h1>
+            <p>Schedule Editor Application - Cross-Browser Testing</p>
+        </div>
+
+        <div class="test-info">
+            <h3>Test Description</h3>
+            <p>This test evaluates the Schedule Editor application across different browsers and platforms. It tests core functionality, browser-specific features, and mobile compatibility.</p>
+            <p><strong>Target URL:</strong> <a href="http://localhost:3000" target="_blank">http://localhost:3000</a></p>
+        </div>
+
+        <div class="browser-info">
+            <h4>Current Browser Information</h4>
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-label">Browser</div>
+                    <div class="info-value" id="browserName">Detecting...</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Platform</div>
+                    <div class="info-value" id="platform">Detecting...</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">User Agent</div>
+                    <div class="info-value" id="userAgent">Detecting...</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Screen Size</div>
+                    <div class="info-value" id="screenSize">Detecting...</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="test-controls">
+            <button id="runTestBtn" class="btn">Run Cross-Browser Compatibility Test</button>
+            <button id="clearResultsBtn" class="btn" style="background: #6c757d;">Clear Results</button>
+        </div>
+
+        <div id="testResults" class="results" style="display: none;">
+            <div id="loadingIndicator" class="loading" style="display: none;">
+                <p>Running tests... Please wait.</p>
+            </div>
+            
+            <div id="resultsContent"></div>
+        </div>
+    </div>
+
+    <script>
+        class CrossBrowserTestUI {
+            constructor() {
+                this.testInstance = null;
+                this.initializeUI();
+                this.detectBrowserInfo();
+            }
+
+            initializeUI() {
+                document.getElementById('runTestBtn').addEventListener('click', () => this.runTest());
+                document.getElementById('clearResultsBtn').addEventListener('click', () => this.clearResults());
+            }
+
+            detectBrowserInfo() {
+                const ua = navigator.userAgent;
+                let browserName = 'Unknown';
+                
+                if (ua.includes('Chrome') && !ua.includes('Edge')) browserName = 'Chrome';
+                else if (ua.includes('Firefox')) browserName = 'Firefox';
+                else if (ua.includes('Safari') && !ua.includes('Chrome')) browserName = 'Safari';
+                else if (ua.includes('Edge')) browserName = 'Edge';
+
+                document.getElementById('browserName').textContent = browserName;
+                document.getElementById('platform').textContent = navigator.platform;
+                document.getElementById('userAgent').textContent = ua.substring(0, 100) + '...';
+                document.getElementById('screenSize').textContent = `${screen.width}x${screen.height}`;
+            }
+
+            async runTest() {
+                const runBtn = document.getElementById('runTestBtn');
+                const loadingIndicator = document.getElementById('loadingIndicator');
+                const resultsDiv = document.getElementById('testResults');
+                
+                runBtn.disabled = true;
+                runBtn.textContent = 'Running Tests...';
+                resultsDiv.style.display = 'block';
+                loadingIndicator.style.display = 'block';
+                
+                try {
+                    // Import and run the test
+                    const testModule = await import('./test_10_2_cross_browser_compatibility.js');
+                    this.testInstance = new testModule.default();
+                    
+                    // Override the saveResults method to update UI
+                    this.testInstance.saveResults = () => {
+                        this.displayResults(this.testInstance.testResults);
+                        return this.testInstance.testResults;
+                    };
+                    
+                    await this.testInstance.runAllTests();
+                    
+                } catch (error) {
+                    this.displayError('Test execution failed: ' + error.message);
+                } finally {
+                    runBtn.disabled = false;
+                    runBtn.textContent = 'Run Cross-Browser Compatibility Test';
+                    loadingIndicator.style.display = 'none';
+                }
+            }
+
+            displayResults(results) {
+                const resultsContent = document.getElementById('resultsContent');
+                
+                let html = `
+                    <div class="summary">
+                        <h3>Test Summary</h3>
+                        <div class="summary-stats">
+                            <div class="stat">
+                                <div class="stat-number">${results.summary.totalTests}</div>
+                                <div class="stat-label">Total Tests</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-number" style="color: #28a745;">${results.summary.passed}</div>
+                                <div class="stat-label">Passed</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-number" style="color: #dc3545;">${results.summary.failed}</div>
+                                <div class="stat-label">Failed</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-number" style="color: #ffc107;">${results.summary.warnings}</div>
+                                <div class="stat-label">Warnings</div>
+                            </div>
+                        </div>
+                        <p><strong>Success Rate:</strong> ${results.summary.successRate.toFixed(1)}%</p>
+                        <p><strong>Overall Status:</strong> <span class="status ${results.summary.overallStatus}">${results.summary.overallStatus.toUpperCase()}</span></p>
+                    </div>
+                `;
+
+                // Group tests by category
+                const categories = {
+                    'Core Functionality': ['Page Load', 'Authentication', 'Schedule Creation', 'Search Functionality', 'Calendar Navigation'],
+                    'Browser Features': ['File Upload Support', 'Local Storage', 'CSS Rendering', 'JavaScript Execution'],
+                    'Mobile Compatibility': ['Touch Events', 'Viewport Meta', 'Responsive Design'],
+                    'Performance': ['Performance']
+                };
+
+                for (const [categoryName, testNames] of Object.entries(categories)) {
+                    html += `<div class="test-section">
+                        <h3>${categoryName}</h3>`;
+                    
+                    for (const testName of testNames) {
+                        if (results.tests[testName]) {
+                            const test = results.tests[testName];
+                            html += `
+                                <div class="test-item ${test.status}">
+                                    <div>
+                                        <strong>${testName}</strong>
+                                        <div style="font-size: 14px; color: #6c757d; margin-top: 5px;">${test.message}</div>
+                                    </div>
+                                    <span class="status ${test.status}">${test.status.toUpperCase()}</span>
+                                </div>
+                            `;
+                        }
+                    }
+                    
+                    html += `</div>`;
+                }
+
+                resultsContent.innerHTML = html;
+            }
+
+            displayError(message) {
+                const resultsContent = document.getElementById('resultsContent');
+                resultsContent.innerHTML = `<div class="error">${message}</div>`;
+            }
+
+            clearResults() {
+                document.getElementById('testResults').style.display = 'none';
+                document.getElementById('resultsContent').innerHTML = '';
+            }
+        }
+
+        // Initialize the test UI when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new CrossBrowserTestUI();
+        });
+    </script>
+</body>
+</html>
