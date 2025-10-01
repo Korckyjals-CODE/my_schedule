@@ -1,0 +1,99 @@
+{
+  "timestamp": "2025-10-01T02:37:38.355Z",
+  "testName": "Test 6.1: Schedule API Endpoints",
+  "results": [
+    {
+      "test": "GET /api/config",
+      "passed": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF5dXphaHdxY3hqeXZseHdub2lhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUzOTU0MDAsImV4cCI6MjA3MDk3MTQwMH0.cquDlxsCP47ELvu8DR5RntYNlyiNkHwPC3J6oRjDYck",
+      "details": "Status: 200, Contains config data: true",
+      "expected": "200 status with SUPABASE_URL and SUPABASE_ANON_KEY",
+      "actual": "Status: 200, Body: {\"SUPABASE_URL\":\"https://qyuzahwqcxjyvlxwnoia.supabase.co\",\"SUPABASE_ANON_KEY\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF5dXphaHdxY3hqeXZseHdub2lhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTUzOTU0MDAsImV4cCI6MjA3MDk3MTQwMH0.cquDlxsCP47ELvu8DR5RntYNlyiNkHwPC3J6oRjDYck\"}",
+      "timestamp": "2025-10-01T02:37:38.419Z"
+    },
+    {
+      "test": "GET /api/schedule (no auth)",
+      "passed": true,
+      "details": "Status: 401, Error: No token provided",
+      "expected": "401 status with \"No token provided\" error",
+      "actual": "Status: 401, Error: No token provided",
+      "timestamp": "2025-10-01T02:37:38.426Z"
+    },
+    {
+      "test": "GET /api/schedule (invalid token)",
+      "passed": true,
+      "details": "Status: 401, Error: Invalid token",
+      "expected": "401 status with \"Invalid token\" error",
+      "actual": "Status: 401, Error: Invalid token",
+      "timestamp": "2025-10-01T02:37:38.991Z"
+    },
+    {
+      "test": "POST /api/schedule (no auth)",
+      "passed": true,
+      "details": "Status: 401, Error: No token provided",
+      "expected": "401 status with \"No token provided\" error",
+      "actual": "Status: 401, Error: No token provided",
+      "timestamp": "2025-10-01T02:37:38.997Z"
+    },
+    {
+      "test": "POST /api/schedule (invalid token)",
+      "passed": true,
+      "details": "Status: 401, Error: Invalid token",
+      "expected": "401 status with \"Invalid token\" error",
+      "actual": "Status: 401, Error: Invalid token",
+      "timestamp": "2025-10-01T02:37:39.185Z"
+    },
+    {
+      "test": "POST /api/schedule (malformed JSON)",
+      "passed": false,
+      "details": "Status: 500, Error: Something broke!",
+      "expected": "401 status (auth checked before JSON parsing)",
+      "actual": "Status: 500, Error: Something broke!",
+      "timestamp": "2025-10-01T02:37:39.190Z"
+    },
+    {
+      "test": "GET /api/search/analytics (no auth)",
+      "passed": true,
+      "details": "Status: 401, Error: No token provided",
+      "expected": "401 status with \"No token provided\" error",
+      "actual": "Status: 401, Error: No token provided",
+      "timestamp": "2025-10-01T02:37:39.194Z"
+    },
+    {
+      "test": "POST /api/search (no auth)",
+      "passed": true,
+      "details": "Status: 401, Error: No token provided",
+      "expected": "401 status with \"No token provided\" error",
+      "actual": "Status: 401, Error: No token provided",
+      "timestamp": "2025-10-01T02:37:39.198Z"
+    },
+    {
+      "test": "POST /api/schedule/extract (no auth)",
+      "passed": true,
+      "details": "Status: 401, Error: No token provided",
+      "expected": "401 status with \"No token provided\" error",
+      "actual": "Status: 401, Error: No token provided",
+      "timestamp": "2025-10-01T02:37:39.202Z"
+    },
+    {
+      "test": "Response format consistency",
+      "passed": true,
+      "details": "Config: application/json; charset=utf-8, Schedule: application/json; charset=utf-8",
+      "expected": "All responses have application/json; charset=utf-8 content-type",
+      "actual": "Config: application/json; charset=utf-8, Schedule: application/json; charset=utf-8",
+      "timestamp": "2025-10-01T02:37:39.209Z"
+    }
+  ],
+  "summary": {
+    "totalTests": 10,
+    "passed": 9,
+    "failed": 1,
+    "errors": [
+      {
+        "test": "POST /api/schedule (malformed JSON)",
+        "expected": "401 status (auth checked before JSON parsing)",
+        "actual": "Status: 500, Error: Something broke!",
+        "details": "Status: 500, Error: Something broke!"
+      }
+    ]
+  }
+}
