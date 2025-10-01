@@ -1,0 +1,75 @@
+{
+  "testName": "Test 8.1: Load Time Performance",
+  "timestamp": "2025-10-01T23:09:41.369Z",
+  "setup": {
+    "status": "completed",
+    "timestamp": "2025-10-01T23:09:43.243Z"
+  },
+  "tests": {
+    "initialLoad": {
+      "status": "completed",
+      "loadTime": 2718,
+      "performanceMetrics": {
+        "loadTime": 0,
+        "domContentLoaded": 1.899999976158142,
+        "firstContentfulPaint": 1684,
+        "largestContentfulPaint": 0,
+        "totalTime": 1428.3999999761581
+      },
+      "screenshot": "C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\tests\\group_8\\test_8_1_initial_load_1759360185964.png",
+      "timestamp": "2025-10-01T23:09:47.259Z"
+    },
+    "subsequentLoads": {
+      "status": "completed",
+      "navigationResults": [
+        {
+          "url": "http://localhost:3000/schedule-editor.html",
+          "navigationTime": 1885,
+          "timestamp": "2025-10-01T23:09:49.145Z"
+        },
+        {
+          "url": "http://localhost:3000/search.html",
+          "navigationTime": 1074,
+          "timestamp": "2025-10-01T23:09:50.219Z"
+        },
+        {
+          "url": "http://localhost:3000",
+          "navigationTime": 1010,
+          "timestamp": "2025-10-01T23:09:51.230Z"
+        }
+      ],
+      "timestamp": "2025-10-01T23:09:51.230Z"
+    },
+    "slowNetwork": {
+      "status": "completed",
+      "slowLoadTime": 1005,
+      "screenshot": "C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\tests\\group_8\\test_8_1_slow_network_1759360192241.png",
+      "timestamp": "2025-10-01T23:09:53.621Z"
+    },
+    "largeDataset": {
+      "status": "failed",
+      "error": "No element found for selector: button[type=\"submit\"]",
+      "timestamp": "2025-10-01T23:09:56.894Z"
+    }
+  },
+  "performance": {},
+  "validation": {
+    "initialLoadTime": 2718,
+    "performanceThresholds": {
+      "initialLoadUnder3Seconds": true,
+      "subsequentLoadsFaster": true,
+      "slowNetworkWorks": true,
+      "largeDatasetPerformance": false
+    },
+    "criticalResourcesLoadFirst": true,
+    "cachingEffectiveness": true
+  },
+  "errors": [
+    "Large dataset test error: No element found for selector: button[type=\"submit\"]"
+  ],
+  "screenshots": [
+    "C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\tests\\group_8\\test_8_1_initial_load_1759360185964.png",
+    "C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\tests\\group_8\\test_8_1_slow_network_1759360192241.png"
+  ],
+  "overallStatus": "FAILED"
+}
