@@ -1,0 +1,121 @@
+{
+  "testName": "Test 8.2: Memory Usage (Simplified)",
+  "timestamp": "2025-10-01T23:17:11.724Z",
+  "memorySnapshots": [
+    {
+      "label": "Initial State",
+      "timestamp": 1759360633090,
+      "usedJSHeapSize": 670684,
+      "totalJSHeapSize": 1317804,
+      "jsHeapSizeLimit": 4294705152
+    },
+    {
+      "label": "After Main Page Load",
+      "timestamp": 1759360637470,
+      "usedJSHeapSize": 2266351,
+      "totalJSHeapSize": 3240543,
+      "jsHeapSizeLimit": 4294705152
+    },
+    {
+      "label": "After Schedule Editor Load",
+      "timestamp": 1759360640182,
+      "usedJSHeapSize": 3784285,
+      "totalJSHeapSize": 5397377,
+      "jsHeapSizeLimit": 4294705152
+    },
+    {
+      "label": "After Search Page Load",
+      "timestamp": 1759360643246,
+      "usedJSHeapSize": 4975425,
+      "totalJSHeapSize": 6074569,
+      "jsHeapSizeLimit": 4294705152
+    },
+    {
+      "label": "After Return to Main Page",
+      "timestamp": 1759360646305,
+      "usedJSHeapSize": 6332122,
+      "totalJSHeapSize": 8526550,
+      "jsHeapSizeLimit": 4294705152
+    },
+    {
+      "label": "After Rapid Navigation",
+      "timestamp": 1759360669677,
+      "usedJSHeapSize": 13619855,
+      "totalJSHeapSize": 20075731,
+      "jsHeapSizeLimit": 4294705152
+    },
+    {
+      "label": "After DOM Manipulation",
+      "timestamp": 1759360669684,
+      "usedJSHeapSize": 13643249,
+      "totalJSHeapSize": 20075753,
+      "jsHeapSizeLimit": 4294705152
+    },
+    {
+      "label": "After DOM Cleanup",
+      "timestamp": 1759360669691,
+      "usedJSHeapSize": 13651985,
+      "totalJSHeapSize": 20075773,
+      "jsHeapSizeLimit": 4294705152
+    },
+    {
+      "label": "After Forced Garbage Collection",
+      "timestamp": 1759360669715,
+      "usedJSHeapSize": 10593314,
+      "totalJSHeapSize": 16935534,
+      "jsHeapSizeLimit": 4294705152
+    },
+    {
+      "label": "After Large Data Creation",
+      "timestamp": 1759360669720,
+      "usedJSHeapSize": 11207615,
+      "totalJSHeapSize": 16935543,
+      "jsHeapSizeLimit": 4294705152
+    },
+    {
+      "label": "After Large Data Clear",
+      "timestamp": 1759360669725,
+      "usedJSHeapSize": 11214855,
+      "totalJSHeapSize": 16935543,
+      "jsHeapSizeLimit": 4294705152
+    },
+    {
+      "label": "Final State After GC",
+      "timestamp": 1759360669739,
+      "usedJSHeapSize": 9464894,
+      "totalJSHeapSize": 14789438,
+      "jsHeapSizeLimit": 4294705152
+    }
+  ],
+  "operations": [],
+  "findings": [
+    "Initial memory usage: 0.64 MB",
+    "Final memory usage: 9.03 MB",
+    "Memory growth: 8.39 MB (1311.23%)",
+    "WARNING: Significant memory growth detected - potential memory leak",
+    "After Main Page Load: 1.52 MB change",
+    "After Schedule Editor Load: 1.45 MB change",
+    "After Search Page Load: 1.14 MB change",
+    "After Return to Main Page: 1.29 MB change",
+    "After Rapid Navigation: 6.95 MB change",
+    "After DOM Manipulation: 0.02 MB change",
+    "After DOM Cleanup: 0.01 MB change",
+    "After Forced Garbage Collection: -2.92 MB change",
+    "After Large Data Creation: 0.59 MB change",
+    "After Large Data Clear: 0.01 MB change",
+    "Final State After GC: -1.67 MB change",
+    "Garbage collection freed: 1.67 MB (15.60%)",
+    "Memory spike detected: 6.95 MB in After Rapid Navigation"
+  ],
+  "recommendations": [
+    "Investigate potential memory leaks in page navigation and DOM manipulation",
+    "Investigate memory spike in: After Rapid Navigation"
+  ],
+  "summary": {
+    "totalSnapshots": 12,
+    "testDuration": "Memory usage monitoring completed",
+    "memoryLeaksDetected": true,
+    "performanceIssues": true,
+    "recommendationsCount": 2
+  }
+}
