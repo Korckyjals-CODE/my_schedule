@@ -1,0 +1,26 @@
+{
+  "testName": "Test 5.2: User Data Isolation",
+  "timestamp": "2025-10-01T01:44:05.685Z",
+  "status": "FAIL",
+  "steps": [
+    {
+      "title": "Step_2: Test User A Authentication",
+      "status": "FAIL",
+      "message": "page.goto: net::ERR_CONNECTION_REFUSED at http://localhost:3000/\nCall log:\n\u001b[2m  - navigating to \"http://localhost:3000/\", waiting until \"networkidle\"\u001b[22m\n",
+      "timestamp": "2025-10-01T01:44:10.731Z",
+      "details": {
+        "email": "testisolation_a@example.com"
+      }
+    }
+  ],
+  "screenshots": [],
+  "errors": [
+    {
+      "type": "test_execution_error",
+      "message": "User A authentication failed",
+      "stack": "Error: User A authentication failed\n    at UserDataIsolationTest.runTest (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\tests\\group_5\\test_5_2_user_data_isolation.js:497:23)\n    at async UserDataIsolationTest.execute (C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\tests\\group_5\\test_5_2_user_data_isolation.js:664:9)\n    at async C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\tests\\group_5\\test_5_2_user_data_isolation.js:672:5"
+    }
+  ],
+  "dataSnapshots": [],
+  "summary": {}
+}
