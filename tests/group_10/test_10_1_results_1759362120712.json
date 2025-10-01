@@ -1,0 +1,207 @@
+{
+  "testName": "Test 10.1: End-to-End Workflow",
+  "timestamp": "2025-10-01T23:41:25.647Z",
+  "steps": [
+    {
+      "name": "Navigate to App",
+      "success": true,
+      "details": "Successfully loaded main page",
+      "timestamp": "2025-10-01T23:41:30.881Z"
+    },
+    {
+      "name": "User Registration",
+      "success": true,
+      "details": "Registration completed successfully",
+      "timestamp": "2025-10-01T23:41:48.131Z"
+    },
+    {
+      "name": "User Login",
+      "success": false,
+      "details": "Node is either not clickable or not an Element",
+      "timestamp": "2025-10-01T23:41:49.763Z"
+    },
+    {
+      "name": "Weekday Schedule Creation",
+      "success": false,
+      "details": "Node is either not clickable or not an Element",
+      "timestamp": "2025-10-01T23:41:52.288Z"
+    },
+    {
+      "name": "Specific Date Schedule Creation",
+      "success": false,
+      "details": "Node is either not clickable or not an Element",
+      "timestamp": "2025-10-01T23:41:52.325Z"
+    },
+    {
+      "name": "Date Range Schedule Creation",
+      "success": false,
+      "details": "Node is either not clickable or not an Element",
+      "timestamp": "2025-10-01T23:41:52.345Z"
+    },
+    {
+      "name": "Image Upload and Extraction",
+      "success": false,
+      "details": "Node is either not clickable or not an Element",
+      "timestamp": "2025-10-01T23:41:52.361Z"
+    },
+    {
+      "name": "Search Functionality",
+      "success": false,
+      "details": "Node is either not clickable or not an Element",
+      "timestamp": "2025-10-01T23:41:54.545Z"
+    },
+    {
+      "name": "Calendar Navigation",
+      "success": false,
+      "details": "Node is either not clickable or not an Element",
+      "timestamp": "2025-10-01T23:41:56.675Z"
+    },
+    {
+      "name": "Data Persistence - Page Refresh",
+      "success": false,
+      "details": "No schedule data found after refresh",
+      "timestamp": "2025-10-01T23:42:00.712Z"
+    }
+  ],
+  "overallResult": "FAILED",
+  "errors": [
+    {
+      "step": "HTTP Request",
+      "error": "302 - https://unpkg.com/@supabase/supabase-js@2",
+      "timestamp": "2025-10-01T23:41:27.694Z"
+    },
+    {
+      "step": "HTTP Request",
+      "error": "404 - http://localhost:3000/favicon.ico",
+      "timestamp": "2025-10-01T23:41:28.129Z"
+    },
+    {
+      "step": "Browser Console",
+      "error": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "timestamp": "2025-10-01T23:41:28.129Z"
+    },
+    {
+      "step": "HTTP Request",
+      "error": "400 - https://qyuzahwqcxjyvlxwnoia.supabase.co/auth/v1/signup",
+      "timestamp": "2025-10-01T23:41:34.163Z"
+    },
+    {
+      "step": "Browser Console",
+      "error": "Failed to load resource: the server responded with a status of 400 ()",
+      "timestamp": "2025-10-01T23:41:34.164Z"
+    },
+    {
+      "step": "Browser Console",
+      "error": "Sign up failed: JSHandle@error",
+      "timestamp": "2025-10-01T23:41:34.165Z"
+    },
+    {
+      "step": "HTTP Request",
+      "error": "302 - https://unpkg.com/@supabase/supabase-js@2",
+      "timestamp": "2025-10-01T23:41:49.852Z"
+    },
+    {
+      "step": "HTTP Request",
+      "error": "304 - http://localhost:3000/css/styles.css",
+      "timestamp": "2025-10-01T23:41:49.859Z"
+    },
+    {
+      "step": "HTTP Request",
+      "error": "304 - http://localhost:3000/js/supabase-client.js",
+      "timestamp": "2025-10-01T23:41:49.860Z"
+    },
+    {
+      "step": "HTTP Request",
+      "error": "304 - http://localhost:3000/api/config",
+      "timestamp": "2025-10-01T23:41:49.881Z"
+    },
+    {
+      "step": "HTTP Request",
+      "error": "302 - https://unpkg.com/@supabase/supabase-js@2",
+      "timestamp": "2025-10-01T23:41:52.437Z"
+    },
+    {
+      "step": "HTTP Request",
+      "error": "304 - http://localhost:3000/css/styles.css",
+      "timestamp": "2025-10-01T23:41:52.442Z"
+    },
+    {
+      "step": "HTTP Request",
+      "error": "304 - http://localhost:3000/js/supabase-client.js",
+      "timestamp": "2025-10-01T23:41:52.443Z"
+    },
+    {
+      "step": "HTTP Request",
+      "error": "304 - http://localhost:3000/api/config",
+      "timestamp": "2025-10-01T23:41:52.457Z"
+    },
+    {
+      "step": "HTTP Request",
+      "error": "304 - http://localhost:3000/",
+      "timestamp": "2025-10-01T23:41:54.593Z"
+    },
+    {
+      "step": "HTTP Request",
+      "error": "302 - https://unpkg.com/@supabase/supabase-js@2",
+      "timestamp": "2025-10-01T23:41:54.630Z"
+    },
+    {
+      "step": "HTTP Request",
+      "error": "304 - http://localhost:3000/css/styles.css",
+      "timestamp": "2025-10-01T23:41:54.642Z"
+    },
+    {
+      "step": "HTTP Request",
+      "error": "304 - http://localhost:3000/js/supabase-client.js",
+      "timestamp": "2025-10-01T23:41:54.643Z"
+    },
+    {
+      "step": "HTTP Request",
+      "error": "304 - http://localhost:3000/js/script.js",
+      "timestamp": "2025-10-01T23:41:54.646Z"
+    },
+    {
+      "step": "HTTP Request",
+      "error": "304 - http://localhost:3000/api/config",
+      "timestamp": "2025-10-01T23:41:54.666Z"
+    },
+    {
+      "step": "HTTP Request",
+      "error": "304 - http://localhost:3000/",
+      "timestamp": "2025-10-01T23:41:56.691Z"
+    },
+    {
+      "step": "HTTP Request",
+      "error": "304 - http://localhost:3000/css/styles.css",
+      "timestamp": "2025-10-01T23:41:56.729Z"
+    },
+    {
+      "step": "HTTP Request",
+      "error": "304 - http://localhost:3000/js/supabase-client.js",
+      "timestamp": "2025-10-01T23:41:56.731Z"
+    },
+    {
+      "step": "HTTP Request",
+      "error": "304 - http://localhost:3000/js/script.js",
+      "timestamp": "2025-10-01T23:41:56.731Z"
+    },
+    {
+      "step": "HTTP Request",
+      "error": "304 - http://localhost:3000/api/config",
+      "timestamp": "2025-10-01T23:41:56.746Z"
+    }
+  ],
+  "screenshots": [
+    "C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\tests\\group_10\\test_10_1_initial_load_1759362089472.png",
+    "C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\tests\\group_10\\test_10_1_registration_form_1759362092464.png",
+    "C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\tests\\group_10\\test_10_1_registration_success_1759362108131.png",
+    "C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\tests\\group_10\\test_10_1_login_form_1759362108433.png",
+    "C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\tests\\group_10\\test_10_1_schedule_editor_initial_1759362110836.png",
+    "C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\tests\\group_10\\test_10_1_search_page_initial_1759362113185.png",
+    "C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\tests\\group_10\\test_10_1_calendar_main_view_1759362115202.png",
+    "C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\tests\\group_10\\test_10_1_after_page_refresh_1759362119250.png"
+  ],
+  "successRate": 20,
+  "successCount": 2,
+  "totalSteps": 10
+}

@@ -1,0 +1,188 @@
+{
+  "testName": "Test 10.1: End-to-End Workflow",
+  "timestamp": "2025-10-01T23:39:19.981Z",
+  "steps": [
+    {
+      "name": "Navigate to App",
+      "success": true,
+      "details": "Successfully loaded main page",
+      "timestamp": "2025-10-01T23:39:25.293Z"
+    },
+    {
+      "name": "User Registration",
+      "success": false,
+      "details": "Waiting for selector `a[href=\"#signup\"]` failed",
+      "timestamp": "2025-10-01T23:39:30.315Z"
+    },
+    {
+      "name": "User Login",
+      "success": false,
+      "details": "No element found for selector: input[name=\"email\"]",
+      "timestamp": "2025-10-01T23:39:30.399Z"
+    },
+    {
+      "name": "Weekday Schedule Creation",
+      "success": false,
+      "details": "Waiting for selector `.tab-content` failed",
+      "timestamp": "2025-10-01T23:39:37.601Z"
+    },
+    {
+      "name": "Specific Date Schedule Creation",
+      "success": false,
+      "details": "No element found for selector: a[href=\"#specific-dates\"]",
+      "timestamp": "2025-10-01T23:39:37.610Z"
+    },
+    {
+      "name": "Date Range Schedule Creation",
+      "success": false,
+      "details": "No element found for selector: a[href=\"#date-range\"]",
+      "timestamp": "2025-10-01T23:39:37.612Z"
+    },
+    {
+      "name": "Image Upload and Extraction",
+      "success": false,
+      "details": "No element found for selector: a[href=\"#image-upload\"]",
+      "timestamp": "2025-10-01T23:39:37.614Z"
+    },
+    {
+      "name": "Search Functionality",
+      "success": false,
+      "details": "No element found for selector: input[name=\"search\"]",
+      "timestamp": "2025-10-01T23:39:40.021Z"
+    },
+    {
+      "name": "Calendar Navigation",
+      "success": false,
+      "details": "No element found for selector: button[data-action=\"prev-month\"]",
+      "timestamp": "2025-10-01T23:39:42.144Z"
+    },
+    {
+      "name": "Data Persistence",
+      "success": false,
+      "details": "this.page.waitForTimeout is not a function",
+      "timestamp": "2025-10-01T23:39:42.737Z"
+    }
+  ],
+  "overallResult": "FAILED",
+  "errors": [
+    {
+      "step": "HTTP Request",
+      "error": "302 - https://unpkg.com/@supabase/supabase-js@2",
+      "timestamp": "2025-10-01T23:39:22.541Z"
+    },
+    {
+      "step": "HTTP Request",
+      "error": "404 - http://localhost:3000/favicon.ico",
+      "timestamp": "2025-10-01T23:39:22.983Z"
+    },
+    {
+      "step": "Browser Console",
+      "error": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "timestamp": "2025-10-01T23:39:22.984Z"
+    },
+    {
+      "step": "HTTP Request",
+      "error": "302 - https://unpkg.com/@supabase/supabase-js@2",
+      "timestamp": "2025-10-01T23:39:30.612Z"
+    },
+    {
+      "step": "HTTP Request",
+      "error": "304 - http://localhost:3000/css/styles.css",
+      "timestamp": "2025-10-01T23:39:30.639Z"
+    },
+    {
+      "step": "HTTP Request",
+      "error": "304 - http://localhost:3000/js/supabase-client.js",
+      "timestamp": "2025-10-01T23:39:30.643Z"
+    },
+    {
+      "step": "HTTP Request",
+      "error": "304 - http://localhost:3000/api/config",
+      "timestamp": "2025-10-01T23:39:30.711Z"
+    },
+    {
+      "step": "HTTP Request",
+      "error": "302 - https://unpkg.com/@supabase/supabase-js@2",
+      "timestamp": "2025-10-01T23:39:37.708Z"
+    },
+    {
+      "step": "HTTP Request",
+      "error": "304 - http://localhost:3000/css/styles.css",
+      "timestamp": "2025-10-01T23:39:37.715Z"
+    },
+    {
+      "step": "HTTP Request",
+      "error": "304 - http://localhost:3000/js/supabase-client.js",
+      "timestamp": "2025-10-01T23:39:37.715Z"
+    },
+    {
+      "step": "HTTP Request",
+      "error": "304 - http://localhost:3000/api/config",
+      "timestamp": "2025-10-01T23:39:37.726Z"
+    },
+    {
+      "step": "HTTP Request",
+      "error": "304 - http://localhost:3000/",
+      "timestamp": "2025-10-01T23:39:40.097Z"
+    },
+    {
+      "step": "HTTP Request",
+      "error": "302 - https://unpkg.com/@supabase/supabase-js@2",
+      "timestamp": "2025-10-01T23:39:40.141Z"
+    },
+    {
+      "step": "HTTP Request",
+      "error": "304 - http://localhost:3000/css/styles.css",
+      "timestamp": "2025-10-01T23:39:40.144Z"
+    },
+    {
+      "step": "HTTP Request",
+      "error": "304 - http://localhost:3000/js/supabase-client.js",
+      "timestamp": "2025-10-01T23:39:40.146Z"
+    },
+    {
+      "step": "HTTP Request",
+      "error": "304 - http://localhost:3000/js/script.js",
+      "timestamp": "2025-10-01T23:39:40.150Z"
+    },
+    {
+      "step": "HTTP Request",
+      "error": "304 - http://localhost:3000/api/config",
+      "timestamp": "2025-10-01T23:39:40.166Z"
+    },
+    {
+      "step": "HTTP Request",
+      "error": "304 - http://localhost:3000/",
+      "timestamp": "2025-10-01T23:39:42.166Z"
+    },
+    {
+      "step": "HTTP Request",
+      "error": "304 - http://localhost:3000/css/styles.css",
+      "timestamp": "2025-10-01T23:39:42.208Z"
+    },
+    {
+      "step": "HTTP Request",
+      "error": "304 - http://localhost:3000/js/supabase-client.js",
+      "timestamp": "2025-10-01T23:39:42.210Z"
+    },
+    {
+      "step": "HTTP Request",
+      "error": "304 - http://localhost:3000/js/script.js",
+      "timestamp": "2025-10-01T23:39:42.216Z"
+    },
+    {
+      "step": "HTTP Request",
+      "error": "304 - http://localhost:3000/api/config",
+      "timestamp": "2025-10-01T23:39:42.232Z"
+    }
+  ],
+  "screenshots": [
+    "C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\tests\\group_10\\test_10_1_initial_load_1759361964031.png",
+    "C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\tests\\group_10\\test_10_1_schedule_editor_initial_1759361971206.png",
+    "C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\tests\\group_10\\test_10_1_search_page_initial_1759361978691.png",
+    "C:\\Users\\korck\\Dropbox\\Korckyjals-CODE\\CodeLLM\\Schedule\\tests\\group_10\\test_10_1_calendar_main_view_1759361980698.png"
+  ],
+  "successRate": 10,
+  "successCount": 1,
+  "totalSteps": 10
+}
