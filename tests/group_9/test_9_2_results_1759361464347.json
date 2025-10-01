@@ -1,0 +1,55 @@
+{
+  "testName": "Test 9.2: Input Validation and Error Handling",
+  "timestamp": "2025-10-01T23:30:53.263Z",
+  "setup": {
+    "status": "FAILED",
+    "error": "this.page.waitForTimeout is not a function"
+  },
+  "formValidation": {
+    "error": "No element found for selector: #addEntryBtn"
+  },
+  "dataValidation": {
+    "error": "No element found for selector: #saveScheduleBtn"
+  },
+  "errorRecovery": {
+    "error": "No element found for selector: #saveScheduleBtn"
+  },
+  "edgeCases": {
+    "error": "No element found for selector: #saveScheduleBtn"
+  },
+  "overallResult": "FAILED",
+  "screenshots": [
+    {
+      "name": "initial_load",
+      "filename": "test_9_2_initial_load_1759361456945.png",
+      "timestamp": 1759361456945
+    },
+    {
+      "name": "form_validation",
+      "filename": "test_9_2_form_validation_1759361458692.png",
+      "timestamp": 1759361458692
+    },
+    {
+      "name": "data_validation",
+      "filename": "test_9_2_data_validation_1759361459901.png",
+      "timestamp": 1759361459901
+    },
+    {
+      "name": "error_recovery",
+      "filename": "test_9_2_error_recovery_1759361461386.png",
+      "timestamp": 1759361461386
+    },
+    {
+      "name": "edge_cases",
+      "filename": "test_9_2_edge_cases_1759361462852.png",
+      "timestamp": 1759361462852
+    }
+  ],
+  "errors": [
+    "Setup failed: this.page.waitForTimeout is not a function",
+    "Form validation test failed: No element found for selector: #addEntryBtn",
+    "Data validation test failed: No element found for selector: #saveScheduleBtn",
+    "Error recovery test failed: No element found for selector: #saveScheduleBtn",
+    "Edge cases test failed: No element found for selector: #saveScheduleBtn"
+  ]
+}

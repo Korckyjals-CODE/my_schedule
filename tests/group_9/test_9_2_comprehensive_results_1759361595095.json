@@ -1,0 +1,165 @@
+{
+  "testName": "Test 9.2: Input Validation and Error Handling (Comprehensive)",
+  "timestamp": "2025-10-01T23:32:59.669Z",
+  "setup": {
+    "status": "SUCCESS",
+    "message": "Setup completed successfully"
+  },
+  "pageAnalysis": {
+    "status": "SUCCESS",
+    "analysis": {
+      "authSectionVisible": true,
+      "appSectionVisible": false,
+      "loginFormVisible": true,
+      "signupFormVisible": false,
+      "loginElements": {
+        "email": "found",
+        "password": "found",
+        "button": "not found"
+      },
+      "scheduleEditorElements": {
+        "weekdaySelect": "not found",
+        "dateInputs": 1,
+        "timeInputs": 2,
+        "textInputs": 2,
+        "emailInputs": 2
+      },
+      "pageTitle": "Class Schedule Calendar",
+      "currentUrl": "http://localhost:3000/"
+    }
+  },
+  "authenticationValidation": {
+    "error": "No element found for selector: button[onclick=\"handleLogin()\"]"
+  },
+  "scheduleEditorValidation": {
+    "dateValidation": {
+      "status": "FAILED",
+      "message": "Date inputs should reject invalid dates",
+      "validationResults": [
+        {
+          "value": "",
+          "valid": true,
+          "validationMessage": ""
+        },
+        {
+          "value": "",
+          "valid": true,
+          "validationMessage": ""
+        },
+        {
+          "value": "",
+          "valid": true,
+          "validationMessage": ""
+        }
+      ]
+    },
+    "timeValidation": {
+      "status": "FAILED",
+      "message": "Time inputs should reject invalid times",
+      "validationResults": [
+        {
+          "value": "",
+          "valid": true,
+          "validationMessage": ""
+        },
+        {
+          "value": "",
+          "valid": true,
+          "validationMessage": ""
+        }
+      ]
+    },
+    "emailValidation": {
+      "status": "SUCCESS",
+      "message": "Email inputs should reject invalid formats",
+      "validationResults": [
+        {
+          "value": "invalid-email-format",
+          "valid": false,
+          "validationMessage": "Please include an '@' in the email address. 'invalid-email-format' is missing an '@'."
+        },
+        {
+          "value": "invalid-email-format",
+          "valid": false,
+          "validationMessage": "Please include an '@' in the email address. 'invalid-email-format' is missing an '@'."
+        }
+      ]
+    },
+    "requiredFields": {
+      "status": "SUCCESS",
+      "message": "Required fields analysis",
+      "requiredInputs": [
+        {
+          "type": "email",
+          "tagName": "INPUT",
+          "required": true,
+          "value": "invalid-email-format"
+        },
+        {
+          "type": "password",
+          "tagName": "INPUT",
+          "required": true,
+          "value": ""
+        },
+        {
+          "type": "text",
+          "tagName": "INPUT",
+          "required": true,
+          "value": ""
+        },
+        {
+          "type": "email",
+          "tagName": "INPUT",
+          "required": true,
+          "value": "invalid-email-format"
+        },
+        {
+          "type": "password",
+          "tagName": "INPUT",
+          "required": true,
+          "value": ""
+        },
+        {
+          "type": "password",
+          "tagName": "INPUT",
+          "required": true,
+          "value": ""
+        },
+        {
+          "type": "checkbox",
+          "tagName": "INPUT",
+          "required": true,
+          "value": "on"
+        }
+      ]
+    },
+    "error": "Node is either not clickable or not an Element"
+  },
+  "overallResult": "FAILED",
+  "screenshots": [
+    {
+      "name": "initial_load",
+      "filename": "test_9_2_comprehensive_initial_load_1759361586654.png",
+      "timestamp": 1759361586654
+    },
+    {
+      "name": "page_analysis",
+      "filename": "test_9_2_comprehensive_page_analysis_1759361588365.png",
+      "timestamp": 1759361588365
+    },
+    {
+      "name": "authentication_validation",
+      "filename": "test_9_2_comprehensive_authentication_validation_1759361589786.png",
+      "timestamp": 1759361589786
+    },
+    {
+      "name": "schedule_editor_validation",
+      "filename": "test_9_2_comprehensive_schedule_editor_validation_1759361593899.png",
+      "timestamp": 1759361593899
+    }
+  ],
+  "errors": [
+    "Authentication validation test failed: No element found for selector: button[onclick=\"handleLogin()\"]",
+    "Schedule editor validation test failed: Node is either not clickable or not an Element"
+  ]
+}
