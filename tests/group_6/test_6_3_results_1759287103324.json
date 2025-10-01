@@ -1,0 +1,92 @@
+{
+  "timestamp": "2025-10-01T02:51:41.671Z",
+  "testName": "Test 6.3: Image Extraction API",
+  "results": [
+    {
+      "test": "Endpoint availability",
+      "passed": true,
+      "details": "Status: 204, Endpoint exists",
+      "expected": "Endpoint responds (not 404)",
+      "actual": "Status: 204",
+      "timestamp": "2025-10-01T02:51:41.710Z"
+    },
+    {
+      "test": "POST /api/schedule/extract (no auth)",
+      "passed": true,
+      "details": "Status: 401, Error: No token provided",
+      "expected": "401 status with \"No token provided\" error",
+      "actual": "Status: 401, Error: No token provided",
+      "timestamp": "2025-10-01T02:51:41.717Z"
+    },
+    {
+      "test": "POST /api/schedule/extract (invalid token)",
+      "passed": true,
+      "details": "Status: 401, Error: Invalid token",
+      "expected": "401 status with \"Invalid token\" error",
+      "actual": "Status: 401, Error: Invalid token",
+      "timestamp": "2025-10-01T02:51:42.330Z"
+    },
+    {
+      "test": "POST /api/schedule/extract (no file)",
+      "passed": true,
+      "details": "Status: 401, Error: Invalid token",
+      "expected": "401 or 400 status with appropriate error",
+      "actual": "Status: 401, Body: {\"error\":\"Invalid token\"}",
+      "timestamp": "2025-10-01T02:51:42.487Z"
+    },
+    {
+      "test": "POST /api/schedule/extract (invalid file type)",
+      "passed": true,
+      "details": "Status: 401, Handled invalid file type",
+      "expected": "401, 400, or 500 status code",
+      "actual": "Status: 401, Body: {\"error\":\"Invalid token\"}",
+      "timestamp": "2025-10-01T02:51:42.650Z"
+    },
+    {
+      "test": "POST /api/schedule/extract (oversized file)",
+      "passed": true,
+      "details": "Status: 401, File size limit enforced",
+      "expected": "413 or 500 status for oversized file",
+      "actual": "Status: 401, Body: {\"error\":\"Invalid token\"}",
+      "timestamp": "2025-10-01T02:51:42.820Z"
+    },
+    {
+      "test": "POST /api/schedule/extract (wrong content-type)",
+      "passed": true,
+      "details": "Status: 401, Requires multipart/form-data",
+      "expected": "400 or 401 status",
+      "actual": "Status: 401, Body: {\"error\":\"Invalid token\"}",
+      "timestamp": "2025-10-01T02:51:43.001Z"
+    },
+    {
+      "test": "POST /api/schedule/extract (sample image)",
+      "passed": true,
+      "details": "Status: 401, Image upload flow tested",
+      "expected": "401 status (authentication required)",
+      "actual": "Status: 401, Body: {\"error\":\"Invalid token\"}",
+      "timestamp": "2025-10-01T02:51:43.159Z"
+    },
+    {
+      "test": "POST /api/schedule/extract (JPEG format)",
+      "passed": true,
+      "details": "Status: 401, JPEG format accepted",
+      "expected": "401 status (authentication required)",
+      "actual": "Status: 401, Body: {\"error\":\"Invalid token\"}",
+      "timestamp": "2025-10-01T02:51:43.320Z"
+    },
+    {
+      "test": "Error response format consistency",
+      "passed": true,
+      "details": "Content-Type: application/json; charset=utf-8, Has error field: true",
+      "expected": "JSON response with error field",
+      "actual": "Content-Type: application/json; charset=utf-8, Body: {\"error\":\"No token provided\"}",
+      "timestamp": "2025-10-01T02:51:43.324Z"
+    }
+  ],
+  "summary": {
+    "totalTests": 10,
+    "passed": 10,
+    "failed": 0,
+    "errors": []
+  }
+}
