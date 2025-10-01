@@ -1,0 +1,751 @@
+{
+  "testName": "Test 7.2: Accessibility",
+  "timestamp": "2025-10-01T15:58:31.637Z",
+  "setup": {
+    "serverRunning": true,
+    "pageLoaded": true
+  },
+  "keyboardNavigation": {
+    "tabNavigation": {},
+    "focusIndicators": {},
+    "formNavigation": {},
+    "issues": [
+      "Keyboard navigation error: this.page.waitForTimeout is not a function"
+    ]
+  },
+  "ariaLabels": {
+    "formLabels": {
+      "elements": [
+        {
+          "type": "email",
+          "id": "loginEmail",
+          "hasLabel": false,
+          "ariaLabel": null,
+          "ariaLabelledBy": null
+        },
+        {
+          "type": "password",
+          "id": "loginPassword",
+          "hasLabel": false,
+          "ariaLabel": null,
+          "ariaLabelledBy": null
+        },
+        {
+          "type": "text",
+          "id": "signupName",
+          "hasLabel": false,
+          "ariaLabel": null,
+          "ariaLabelledBy": null
+        },
+        {
+          "type": "email",
+          "id": "signupEmail",
+          "hasLabel": false,
+          "ariaLabel": null,
+          "ariaLabelledBy": null
+        },
+        {
+          "type": "password",
+          "id": "signupPassword",
+          "hasLabel": false,
+          "ariaLabel": null,
+          "ariaLabelledBy": null
+        },
+        {
+          "type": "password",
+          "id": "signupConfirmPassword",
+          "hasLabel": false,
+          "ariaLabel": null,
+          "ariaLabelledBy": null
+        },
+        {
+          "type": "checkbox",
+          "id": "signupTerms",
+          "hasLabel": false,
+          "ariaLabel": null,
+          "ariaLabelledBy": null
+        },
+        {
+          "type": "text",
+          "id": "quickSearchInput",
+          "hasLabel": false,
+          "ariaLabel": null,
+          "ariaLabelledBy": null
+        },
+        {
+          "type": "select-one",
+          "id": "editDay",
+          "hasLabel": true,
+          "ariaLabel": null,
+          "ariaLabelledBy": null
+        },
+        {
+          "type": "select-one",
+          "id": "editGrade",
+          "hasLabel": true,
+          "ariaLabel": null,
+          "ariaLabelledBy": null
+        },
+        {
+          "type": "time",
+          "id": "editStartTime",
+          "hasLabel": true,
+          "ariaLabel": null,
+          "ariaLabelledBy": null
+        },
+        {
+          "type": "time",
+          "id": "editEndTime",
+          "hasLabel": true,
+          "ariaLabel": null,
+          "ariaLabelledBy": null
+        },
+        {
+          "type": "select-one",
+          "id": "editSubject",
+          "hasLabel": true,
+          "ariaLabel": null,
+          "ariaLabelledBy": null
+        },
+        {
+          "type": "date",
+          "id": "editSpecificDate",
+          "hasLabel": true,
+          "ariaLabel": null,
+          "ariaLabelledBy": null
+        }
+      ],
+      "properlyLabeled": 6,
+      "totalElements": 14
+    },
+    "buttonRoles": {
+      "buttons": [
+        {
+          "tagName": "BUTTON",
+          "type": "submit",
+          "text": "Sign In",
+          "role": null,
+          "ariaLabel": null
+        },
+        {
+          "tagName": "BUTTON",
+          "type": "submit",
+          "text": "Sign Up",
+          "role": null,
+          "ariaLabel": null
+        },
+        {
+          "tagName": "BUTTON",
+          "type": "submit",
+          "text": "🔍",
+          "role": null,
+          "ariaLabel": null
+        },
+        {
+          "tagName": "BUTTON",
+          "type": "submit",
+          "text": "Sign Out",
+          "role": null,
+          "ariaLabel": null
+        },
+        {
+          "tagName": "BUTTON",
+          "type": "submit",
+          "text": "<",
+          "role": null,
+          "ariaLabel": null
+        },
+        {
+          "tagName": "BUTTON",
+          "type": "submit",
+          "text": ">",
+          "role": null,
+          "ariaLabel": null
+        },
+        {
+          "tagName": "BUTTON",
+          "type": "submit",
+          "text": "Edit Schedule",
+          "role": null,
+          "ariaLabel": null
+        },
+        {
+          "tagName": "BUTTON",
+          "type": "submit",
+          "text": "Search",
+          "role": null,
+          "ariaLabel": null
+        },
+        {
+          "tagName": "BUTTON",
+          "type": "button",
+          "text": "Cancel",
+          "role": null,
+          "ariaLabel": null
+        },
+        {
+          "tagName": "BUTTON",
+          "type": "button",
+          "text": "Save Changes",
+          "role": null,
+          "ariaLabel": null
+        }
+      ],
+      "totalButtons": 10
+    },
+    "modalAccessibility": {
+      "modals": [
+        {
+          "role": null,
+          "ariaModal": null,
+          "ariaLabel": null,
+          "ariaLabelledBy": null
+        }
+      ],
+      "totalModals": 1
+    },
+    "issues": []
+  },
+  "colorContrast": {
+    "textElements": {
+      "elements": [
+        {
+          "tagName": "DIV",
+          "textColor": "rgb(0, 0, 0)",
+          "backgroundColor": "rgb(248, 249, 250)",
+          "hasGoodContrast": true,
+          "textContent": "\n        \n            Welcome to Schedule Editor\n "
+        },
+        {
+          "tagName": "DIV",
+          "textColor": "rgb(0, 0, 0)",
+          "backgroundColor": "rgb(255, 255, 255)",
+          "hasGoodContrast": true,
+          "textContent": "\n            Welcome to Schedule Editor\n          "
+        },
+        {
+          "tagName": "H2",
+          "textColor": "rgb(51, 51, 51)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "hasGoodContrast": false,
+          "textContent": "Welcome to Schedule Editor"
+        },
+        {
+          "tagName": "DIV",
+          "textColor": "rgb(0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "hasGoodContrast": false,
+          "textContent": "\n                Sign In\n                \n        "
+        },
+        {
+          "tagName": "H3",
+          "textColor": "rgb(85, 85, 85)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "hasGoodContrast": false,
+          "textContent": "Sign In"
+        },
+        {
+          "tagName": "BUTTON",
+          "textColor": "rgb(255, 255, 255)",
+          "backgroundColor": "rgb(0, 123, 255)",
+          "hasGoodContrast": true,
+          "textContent": "Sign In"
+        },
+        {
+          "tagName": "P",
+          "textColor": "rgb(102, 102, 102)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "hasGoodContrast": false,
+          "textContent": "Don't have an account? Sign Up"
+        },
+        {
+          "tagName": "A",
+          "textColor": "rgb(0, 123, 255)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "hasGoodContrast": false,
+          "textContent": "Sign Up"
+        },
+        {
+          "tagName": "DIV",
+          "textColor": "rgb(0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "hasGoodContrast": false,
+          "textContent": "\n                Sign Up\n                \n        "
+        },
+        {
+          "tagName": "H3",
+          "textColor": "rgb(85, 85, 85)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "hasGoodContrast": false,
+          "textContent": "Sign Up"
+        },
+        {
+          "tagName": "DIV",
+          "textColor": "rgb(0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "hasGoodContrast": false,
+          "textContent": "\n                    \n                        \n   "
+        },
+        {
+          "tagName": "A",
+          "textColor": "rgb(0, 123, 255)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "hasGoodContrast": false,
+          "textContent": "Terms of Service"
+        },
+        {
+          "tagName": "BUTTON",
+          "textColor": "rgb(255, 255, 255)",
+          "backgroundColor": "rgb(0, 123, 255)",
+          "hasGoodContrast": true,
+          "textContent": "Sign Up"
+        },
+        {
+          "tagName": "P",
+          "textColor": "rgb(102, 102, 102)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "hasGoodContrast": false,
+          "textContent": "Already have an account? Sign In"
+        },
+        {
+          "tagName": "A",
+          "textColor": "rgb(0, 123, 255)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "hasGoodContrast": false,
+          "textContent": "Sign In"
+        },
+        {
+          "tagName": "DIV",
+          "textColor": "rgb(0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "hasGoodContrast": false,
+          "textContent": "\n        \n            Class Schedule Calendar\n    "
+        },
+        {
+          "tagName": "DIV",
+          "textColor": "rgb(0, 0, 0)",
+          "backgroundColor": "rgb(248, 249, 250)",
+          "hasGoodContrast": true,
+          "textContent": "\n            Class Schedule Calendar\n            \n"
+        },
+        {
+          "tagName": "H1",
+          "textColor": "rgb(51, 51, 51)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "hasGoodContrast": false,
+          "textContent": "Class Schedule Calendar"
+        },
+        {
+          "tagName": "DIV",
+          "textColor": "rgb(0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "hasGoodContrast": false,
+          "textContent": "\n                \n                \n               "
+        },
+        {
+          "tagName": "DIV",
+          "textColor": "rgb(0, 0, 0)",
+          "backgroundColor": "rgb(255, 255, 255)",
+          "hasGoodContrast": true,
+          "textContent": "\n                    \n                    🔍\n     "
+        },
+        {
+          "tagName": "BUTTON",
+          "textColor": "rgb(255, 255, 255)",
+          "backgroundColor": "rgb(0, 123, 255)",
+          "hasGoodContrast": true,
+          "textContent": "🔍"
+        },
+        {
+          "tagName": "DIV",
+          "textColor": "rgb(102, 102, 102)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "hasGoodContrast": false,
+          "textContent": "\n                    \n                    Sign Out"
+        },
+        {
+          "tagName": "SPAN",
+          "textColor": "rgb(102, 102, 102)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "hasGoodContrast": false,
+          "textContent": ""
+        },
+        {
+          "tagName": "BUTTON",
+          "textColor": "rgb(255, 255, 255)",
+          "backgroundColor": "rgb(108, 117, 125)",
+          "hasGoodContrast": true,
+          "textContent": "Sign Out"
+        },
+        {
+          "tagName": "DIV",
+          "textColor": "rgb(0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "hasGoodContrast": false,
+          "textContent": "\n            \n                \n                   "
+        },
+        {
+          "tagName": "DIV",
+          "textColor": "rgb(0, 0, 0)",
+          "backgroundColor": "rgb(255, 255, 255)",
+          "hasGoodContrast": true,
+          "textContent": "\n                \n                    <\n          "
+        },
+        {
+          "tagName": "DIV",
+          "textColor": "rgb(0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "hasGoodContrast": false,
+          "textContent": "\n                    <\n                    \n      "
+        },
+        {
+          "tagName": "BUTTON",
+          "textColor": "rgb(255, 255, 255)",
+          "backgroundColor": "rgb(0, 123, 255)",
+          "hasGoodContrast": true,
+          "textContent": "<"
+        },
+        {
+          "tagName": "H2",
+          "textColor": "rgb(0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "hasGoodContrast": false,
+          "textContent": ""
+        },
+        {
+          "tagName": "BUTTON",
+          "textColor": "rgb(255, 255, 255)",
+          "backgroundColor": "rgb(0, 123, 255)",
+          "hasGoodContrast": true,
+          "textContent": ">"
+        },
+        {
+          "tagName": "BUTTON",
+          "textColor": "rgb(255, 255, 255)",
+          "backgroundColor": "rgb(40, 167, 69)",
+          "hasGoodContrast": true,
+          "textContent": "Edit Schedule"
+        },
+        {
+          "tagName": "BUTTON",
+          "textColor": "rgb(255, 255, 255)",
+          "backgroundColor": "rgb(23, 162, 184)",
+          "hasGoodContrast": true,
+          "textContent": "Search"
+        },
+        {
+          "tagName": "DIV",
+          "textColor": "rgb(0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "hasGoodContrast": false,
+          "textContent": "\n                    Sun\n                    Mon\n "
+        },
+        {
+          "tagName": "DIV",
+          "textColor": "rgb(0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "hasGoodContrast": false,
+          "textContent": "Sun"
+        },
+        {
+          "tagName": "DIV",
+          "textColor": "rgb(0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "hasGoodContrast": false,
+          "textContent": "Mon"
+        },
+        {
+          "tagName": "DIV",
+          "textColor": "rgb(0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "hasGoodContrast": false,
+          "textContent": "Tue"
+        },
+        {
+          "tagName": "DIV",
+          "textColor": "rgb(0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "hasGoodContrast": false,
+          "textContent": "Wed"
+        },
+        {
+          "tagName": "DIV",
+          "textColor": "rgb(0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "hasGoodContrast": false,
+          "textContent": "Thu"
+        },
+        {
+          "tagName": "DIV",
+          "textColor": "rgb(0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "hasGoodContrast": false,
+          "textContent": "Fri"
+        },
+        {
+          "tagName": "DIV",
+          "textColor": "rgb(0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "hasGoodContrast": false,
+          "textContent": "Sat"
+        },
+        {
+          "tagName": "DIV",
+          "textColor": "rgb(0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "hasGoodContrast": false,
+          "textContent": ""
+        },
+        {
+          "tagName": "DIV",
+          "textColor": "rgb(0, 0, 0)",
+          "backgroundColor": "rgb(255, 255, 255)",
+          "hasGoodContrast": true,
+          "textContent": "\n                \n                \n            "
+        },
+        {
+          "tagName": "H3",
+          "textColor": "rgb(0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "hasGoodContrast": false,
+          "textContent": ""
+        },
+        {
+          "tagName": "DIV",
+          "textColor": "rgb(0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "hasGoodContrast": false,
+          "textContent": ""
+        },
+        {
+          "tagName": "DIV",
+          "textColor": "rgb(0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0.5)",
+          "hasGoodContrast": true,
+          "textContent": "\n        \n            \n                Edit Event\n"
+        },
+        {
+          "tagName": "DIV",
+          "textColor": "rgb(0, 0, 0)",
+          "backgroundColor": "rgb(255, 255, 255)",
+          "hasGoodContrast": true,
+          "textContent": "\n            \n                Edit Event\n         "
+        },
+        {
+          "tagName": "DIV",
+          "textColor": "rgb(0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "hasGoodContrast": false,
+          "textContent": "\n                Edit Event\n                ×\n    "
+        },
+        {
+          "tagName": "H2",
+          "textColor": "rgb(51, 51, 51)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "hasGoodContrast": false,
+          "textContent": "Edit Event"
+        },
+        {
+          "tagName": "SPAN",
+          "textColor": "rgb(170, 170, 170)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "hasGoodContrast": false,
+          "textContent": "×"
+        },
+        {
+          "tagName": "DIV",
+          "textColor": "rgb(0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "hasGoodContrast": false,
+          "textContent": "\n                \n                    \n           "
+        },
+        {
+          "tagName": "DIV",
+          "textColor": "rgb(0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "hasGoodContrast": false,
+          "textContent": "\n                        Day:\n                    "
+        },
+        {
+          "tagName": "DIV",
+          "textColor": "rgb(0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "hasGoodContrast": false,
+          "textContent": "\n                        Grade:\n                  "
+        },
+        {
+          "tagName": "DIV",
+          "textColor": "rgb(0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "hasGoodContrast": false,
+          "textContent": "\n                        Start Time:\n             "
+        },
+        {
+          "tagName": "DIV",
+          "textColor": "rgb(0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "hasGoodContrast": false,
+          "textContent": "\n                        End Time:\n               "
+        },
+        {
+          "tagName": "DIV",
+          "textColor": "rgb(0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "hasGoodContrast": false,
+          "textContent": "\n                        Subject:\n                "
+        },
+        {
+          "tagName": "DIV",
+          "textColor": "rgb(0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "hasGoodContrast": false,
+          "textContent": "\n                        Specific Date (optional):"
+        },
+        {
+          "tagName": "DIV",
+          "textColor": "rgb(0, 0, 0)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "hasGoodContrast": false,
+          "textContent": "\n                Cancel\n                Save Chang"
+        },
+        {
+          "tagName": "BUTTON",
+          "textColor": "rgb(255, 255, 255)",
+          "backgroundColor": "rgb(108, 117, 125)",
+          "hasGoodContrast": true,
+          "textContent": "Cancel"
+        },
+        {
+          "tagName": "BUTTON",
+          "textColor": "rgb(255, 255, 255)",
+          "backgroundColor": "rgb(0, 123, 255)",
+          "hasGoodContrast": true,
+          "textContent": "Save Changes"
+        }
+      ],
+      "goodContrast": 18,
+      "totalElements": 59
+    },
+    "buttonElements": {
+      "buttons": [
+        {
+          "textColor": "rgb(255, 255, 255)",
+          "backgroundColor": "rgb(0, 123, 255)",
+          "borderColor": "rgb(255, 255, 255)",
+          "textContent": "Sign In"
+        },
+        {
+          "textColor": "rgb(255, 255, 255)",
+          "backgroundColor": "rgb(0, 123, 255)",
+          "borderColor": "rgb(255, 255, 255)",
+          "textContent": "Sign Up"
+        },
+        {
+          "textColor": "rgb(255, 255, 255)",
+          "backgroundColor": "rgb(0, 123, 255)",
+          "borderColor": "rgb(255, 255, 255)",
+          "textContent": "🔍"
+        },
+        {
+          "textColor": "rgb(255, 255, 255)",
+          "backgroundColor": "rgb(108, 117, 125)",
+          "borderColor": "rgb(255, 255, 255)",
+          "textContent": "Sign Out"
+        },
+        {
+          "textColor": "rgb(255, 255, 255)",
+          "backgroundColor": "rgb(0, 123, 255)",
+          "borderColor": "rgb(255, 255, 255)",
+          "textContent": "<"
+        },
+        {
+          "textColor": "rgb(255, 255, 255)",
+          "backgroundColor": "rgb(0, 123, 255)",
+          "borderColor": "rgb(255, 255, 255)",
+          "textContent": ">"
+        },
+        {
+          "textColor": "rgb(255, 255, 255)",
+          "backgroundColor": "rgb(40, 167, 69)",
+          "borderColor": "rgb(255, 255, 255)",
+          "textContent": "Edit Schedule"
+        },
+        {
+          "textColor": "rgb(255, 255, 255)",
+          "backgroundColor": "rgb(23, 162, 184)",
+          "borderColor": "rgb(255, 255, 255)",
+          "textContent": "Search"
+        },
+        {
+          "textColor": "rgb(255, 255, 255)",
+          "backgroundColor": "rgb(108, 117, 125)",
+          "borderColor": "rgb(255, 255, 255)",
+          "textContent": "Cancel"
+        },
+        {
+          "textColor": "rgb(255, 255, 255)",
+          "backgroundColor": "rgb(0, 123, 255)",
+          "borderColor": "rgb(255, 255, 255)",
+          "textContent": "Save Changes"
+        }
+      ]
+    },
+    "errorMessages": {
+      "errors": []
+    },
+    "issues": []
+  },
+  "browserTools": {
+    "lighthouseAudit": {
+      "totalImages": 0,
+      "imagesWithAlt": 0,
+      "totalLinks": 3,
+      "linksWithText": 0,
+      "totalHeadings": 7,
+      "headingStructure": [
+        {
+          "level": 2,
+          "text": "Welcome to Schedule Editor"
+        },
+        {
+          "level": 3,
+          "text": "Sign In"
+        },
+        {
+          "level": 3,
+          "text": "Sign Up"
+        },
+        {
+          "level": 1,
+          "text": "Class Schedule Calendar"
+        },
+        {
+          "level": 2,
+          "text": ""
+        },
+        {
+          "level": 3,
+          "text": ""
+        },
+        {
+          "level": 2,
+          "text": "Edit Event"
+        }
+      ]
+    },
+    "axeResults": {
+      "commonIssues": [
+        "Found 8 form inputs without labels"
+      ]
+    },
+    "issues": []
+  },
+  "overallScore": 38,
+  "issues": [],
+  "recommendations": [
+    "Implement proper keyboard navigation with visible focus indicators",
+    "Add proper ARIA labels to all form elements",
+    "Improve color contrast ratios to meet WCAG guidelines",
+    "Address common accessibility issues: Found 8 form inputs without labels"
+  ]
+}
