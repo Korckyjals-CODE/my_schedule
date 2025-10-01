@@ -1,0 +1,147 @@
+{
+  "timestamp": "2025-10-01T02:44:54.987Z",
+  "testName": "Test 6.2: Search API Endpoints",
+  "results": [
+    {
+      "test": "POST /api/search (no auth)",
+      "passed": true,
+      "details": "Status: 401, Error: No token provided",
+      "expected": "401 status with \"No token provided\" error",
+      "actual": "Status: 401, Error: No token provided",
+      "timestamp": "2025-10-01T02:44:55.042Z"
+    },
+    {
+      "test": "POST /api/search (invalid token)",
+      "passed": true,
+      "details": "Status: 401, Error: Invalid token",
+      "expected": "401 status with \"Invalid token\" error",
+      "actual": "Status: 401, Error: Invalid token",
+      "timestamp": "2025-10-01T02:44:55.598Z"
+    },
+    {
+      "test": "POST /api/search (empty params, invalid token)",
+      "passed": true,
+      "details": "Status: 401",
+      "expected": "401 status (auth checked first)",
+      "actual": "Status: 401",
+      "timestamp": "2025-10-01T02:44:55.801Z"
+    },
+    {
+      "test": "POST /api/search (malformed JSON)",
+      "passed": false,
+      "details": "Status: 500",
+      "expected": "401 or 400 status",
+      "actual": "Status: 500",
+      "timestamp": "2025-10-01T02:44:55.809Z"
+    },
+    {
+      "test": "POST /api/search (invalid param types)",
+      "passed": true,
+      "details": "Status: 401",
+      "expected": "401 status (auth checked first)",
+      "actual": "Status: 401",
+      "timestamp": "2025-10-01T02:44:55.977Z"
+    },
+    {
+      "test": "POST /api/search (with pagination)",
+      "passed": true,
+      "details": "Status: 401",
+      "expected": "401 status",
+      "actual": "Status: 401",
+      "timestamp": "2025-10-01T02:44:56.356Z"
+    },
+    {
+      "test": "POST /api/search (grade filter)",
+      "passed": true,
+      "details": "Status: 401",
+      "expected": "401 status",
+      "actual": "Status: 401",
+      "timestamp": "2025-10-01T02:44:56.543Z"
+    },
+    {
+      "test": "POST /api/search (subject filter)",
+      "passed": true,
+      "details": "Status: 401",
+      "expected": "401 status",
+      "actual": "Status: 401",
+      "timestamp": "2025-10-01T02:44:56.709Z"
+    },
+    {
+      "test": "POST /api/search (day filter)",
+      "passed": true,
+      "details": "Status: 401",
+      "expected": "401 status",
+      "actual": "Status: 401",
+      "timestamp": "2025-10-01T02:44:56.877Z"
+    },
+    {
+      "test": "POST /api/search (time range)",
+      "passed": true,
+      "details": "Status: 401",
+      "expected": "401 status",
+      "actual": "Status: 401",
+      "timestamp": "2025-10-01T02:44:57.054Z"
+    },
+    {
+      "test": "POST /api/search (combined filters)",
+      "passed": true,
+      "details": "Status: 401",
+      "expected": "401 status",
+      "actual": "Status: 401",
+      "timestamp": "2025-10-01T02:44:57.224Z"
+    },
+    {
+      "test": "GET /api/search/analytics (no auth)",
+      "passed": true,
+      "details": "Status: 401, Error: No token provided",
+      "expected": "401 status with \"No token provided\" error",
+      "actual": "Status: 401, Error: No token provided",
+      "timestamp": "2025-10-01T02:44:57.228Z"
+    },
+    {
+      "test": "GET /api/search/analytics (invalid token)",
+      "passed": true,
+      "details": "Status: 401, Error: Invalid token",
+      "expected": "401 status with \"Invalid token\" error",
+      "actual": "Status: 401, Error: Invalid token",
+      "timestamp": "2025-10-01T02:44:57.397Z"
+    },
+    {
+      "test": "POST /api/search response format",
+      "passed": true,
+      "details": "Content-Type: application/json; charset=utf-8",
+      "expected": "application/json; charset=utf-8",
+      "actual": "application/json; charset=utf-8",
+      "timestamp": "2025-10-01T02:44:57.402Z"
+    },
+    {
+      "test": "POST /api/search (large pagination limit)",
+      "passed": true,
+      "details": "Status: 401",
+      "expected": "401 status",
+      "actual": "Status: 401",
+      "timestamp": "2025-10-01T02:44:57.612Z"
+    },
+    {
+      "test": "POST /api/search (special characters)",
+      "passed": true,
+      "details": "Status: 401",
+      "expected": "401 status",
+      "actual": "Status: 401",
+      "timestamp": "2025-10-01T02:44:57.808Z"
+    }
+  ],
+  "summary": {
+    "totalTests": 16,
+    "passed": 15,
+    "failed": 1,
+    "errors": [
+      {
+        "test": "POST /api/search (malformed JSON)",
+        "expected": "401 or 400 status",
+        "actual": "Status: 500",
+        "details": "Status: 500"
+      }
+    ]
+  }
+}
