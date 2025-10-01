@@ -1,0 +1,124 @@
+{
+  "testName": "Test 7.1: Responsive Design",
+  "timestamp": "2025-10-01T14:36:32.044Z",
+  "viewports": {
+    "desktop": {
+      "width": 1920,
+      "height": 1080
+    },
+    "tablet": {
+      "width": 768,
+      "height": 1024
+    },
+    "mobile": {
+      "width": 375,
+      "height": 667
+    }
+  },
+  "results": {
+    "desktop": {
+      "viewport": "1920x1080",
+      "layoutIssues": [
+        "Header not found",
+        "Navigation buttons not found",
+        "Calendar has zero height",
+        "Weekday select not found",
+        "Grade select not found",
+        "Start time input not found",
+        "End time input not found",
+        "Subject input not found"
+      ],
+      "functionalityIssues": [
+        "Month navigation buttons not found",
+        "Calendar days not found",
+        "Search input not found"
+      ],
+      "screenshots": [
+        "test_7_1_desktop_main_1759329401782.png",
+        "test_7_1_desktop_editor_1759329405825.png",
+        "test_7_1_desktop_search_1759329410329.png"
+      ]
+    },
+    "tablet": {
+      "viewport": "768x1024",
+      "layoutIssues": [
+        "Header not found",
+        "Navigation buttons not found",
+        "Calendar has zero height",
+        "Weekday select not found",
+        "Grade select not found",
+        "Start time input not found",
+        "End time input not found",
+        "Subject input not found"
+      ],
+      "functionalityIssues": [
+        "Month navigation buttons not found",
+        "Calendar days not found",
+        "Search input not found"
+      ],
+      "screenshots": [
+        "test_7_1_tablet_main_1759329415369.png",
+        "test_7_1_tablet_editor_1759329419232.png",
+        "test_7_1_tablet_search_1759329423272.png"
+      ]
+    },
+    "mobile": {
+      "viewport": "375x667",
+      "layoutIssues": [
+        "Header not found",
+        "Navigation buttons not found",
+        "Calendar has zero height",
+        "Weekday select not found",
+        "Grade select not found",
+        "Start time input not found",
+        "End time input not found",
+        "Subject input not found"
+      ],
+      "functionalityIssues": [
+        "Month navigation buttons not found",
+        "Calendar days not found",
+        "Search input not found"
+      ],
+      "screenshots": [
+        "test_7_1_mobile_main_1759329428323.png",
+        "test_7_1_mobile_editor_1759329432369.png",
+        "test_7_1_mobile_search_1759329436396.png"
+      ]
+    }
+  },
+  "screenshots": [],
+  "issues": [
+    {
+      "type": "console_error",
+      "message": "Failed to load resource: the server responded with a status of 404 (Not Found)",
+      "timestamp": "2025-10-01T14:36:34.563Z"
+    }
+  ],
+  "touchIssues": [
+    "Button 0 too small for touch (320x42)",
+    "Button 1 too small for touch (0x0)",
+    "Button 2 too small for touch (0x0)",
+    "Button 3 too small for touch (0x0)",
+    "Button 4 too small for touch (0x0)",
+    "Button 5 too small for touch (0x0)",
+    "Button 6 too small for touch (0x0)",
+    "Button 7 too small for touch (0x0)",
+    "Button 8 too small for touch (0x0)",
+    "Button 9 too small for touch (0x0)",
+    "Link 0 too small for touch (56.921875x17)",
+    "Link 1 too small for touch (0x0)",
+    "Link 2 too small for touch (0x0)"
+  ],
+  "orientationScreenshots": {
+    "landscape": "test_7_1_landscape_1759329443473.png",
+    "portrait": "test_7_1_portrait_1759329445920.png"
+  },
+  "zoomResults": {
+    "1": "test_7_1_zoom_1_1759329453152.png",
+    "2": "test_7_1_zoom_2_1759329460798.png",
+    "0.5": "test_7_1_zoom_0.5_1759329448442.png",
+    "0.75": "test_7_1_zoom_0.75_1759329450642.png",
+    "1.25": "test_7_1_zoom_1.25_1759329455717.png",
+    "1.5": "test_7_1_zoom_1.5_1759329458252.png"
+  }
+}
