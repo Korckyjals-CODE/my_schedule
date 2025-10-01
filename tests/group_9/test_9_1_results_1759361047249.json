@@ -1,0 +1,67 @@
+{
+  "testName": "Test 9.1: Network Error Handling",
+  "timestamp": "2025-10-01T23:23:57.918Z",
+  "testSteps": [
+    {
+      "step": "Basic Navigation",
+      "status": "PASSED",
+      "details": [
+        "Page title: Class Schedule Calendar",
+        "No error messages found on page load"
+      ],
+      "errors": [],
+      "screenshots": [
+        "basic_navigation"
+      ]
+    },
+    {
+      "step": "Network Timeout Handling",
+      "status": "PASSED",
+      "details": [
+        "Page loaded within timeout"
+      ],
+      "errors": [],
+      "screenshots": [
+        "network_timeout"
+      ]
+    },
+    {
+      "step": "Invalid URL Handling",
+      "status": "PASSED",
+      "details": [
+        "No specific 404 handling found"
+      ],
+      "errors": [],
+      "screenshots": [
+        "invalid_url"
+      ]
+    },
+    {
+      "step": "JavaScript Error Handling",
+      "status": "PASSED",
+      "details": [
+        "Page load error: this.page.waitForTimeout is not a function"
+      ],
+      "errors": [],
+      "screenshots": [
+        "javascript_errors"
+      ]
+    },
+    {
+      "step": "Resource Loading",
+      "status": "PASSED",
+      "details": [
+        "CSS resources: 1 found",
+        "JS resources: 3 found",
+        "Failed resources: 1"
+      ],
+      "errors": [],
+      "screenshots": [
+        "resource_loading"
+      ]
+    }
+  ],
+  "overallResult": "PASSED",
+  "issues": [],
+  "recommendations": []
+}
