@@ -21,19 +21,37 @@ function showSignUp() {
 }
 
 async function handleLogin() {
+    const loginButton = document.getElementById('loginButton');
+    const emailInput = document.getElementById('loginEmail');
+    const passwordInput = document.getElementById('loginPassword');
+    const loginForm = document.getElementById('loginForm');
+    
     try {
-        const email = document.getElementById('loginEmail').value;
-        const password = document.getElementById('loginPassword').value;
+        // Show loading state
+        UIUtils.setButtonLoading(loginButton, true, 'Signing In...');
+        UIUtils.setFormLoading(loginForm, true);
+        
+        const email = emailInput.value;
+        const password = passwordInput.value;
         
         await supabaseAuth.signIn(email, password);
+        UIUtils.showSuccessMessage('Login successful! Welcome back.');
         showApp();
         loadSchedule();
     } catch (error) {
-        alert('Login failed: ' + error.message);
+        const userMessage = UIUtils.getErrorMessage(error);
+        UIUtils.showErrorMessage(userMessage);
+    } finally {
+        // Reset form state
+        UIUtils.setButtonLoading(loginButton, false);
+        UIUtils.setFormLoading(loginForm, false);
     }
 }
 
 async function handleSignUp() {
+    const signupButton = document.getElementById('signupButton');
+    const signupForm = document.getElementById('signupForm');
+    
     try {
         // Get form values
         const name = document.getElementById('signupName').value.trim();
@@ -44,54 +62,100 @@ async function handleSignUp() {
         
         // Validate form
         if (!name) {
-            alert('Please enter your full name.');
+            UIUtils.showErrorMessage('Please enter your full name.');
             return;
         }
         
         if (!email) {
-            alert('Please enter your email address.');
+            UIUtils.showErrorMessage('Please enter your email address.');
             return;
         }
         
         if (!password) {
-            alert('Please enter a password.');
+            UIUtils.showErrorMessage('Please enter a password.');
             return;
         }
         
         if (password !== confirmPassword) {
-            alert('Passwords do not match. Please try again.');
+            UIUtils.showErrorMessage('Passwords do not match. Please try again.');
             return;
         }
         
         if (password.length < 6) {
-            alert('Password must be at least 6 characters long.');
+            UIUtils.showErrorMessage('Password must be at least 6 characters long.');
             return;
         }
         
         if (!termsAccepted) {
-            alert('Please accept the Terms of Service to continue.');
+            UIUtils.showErrorMessage('Please accept the Terms of Service to continue.');
             return;
         }
         
+        // Show loading state
+        UIUtils.setButtonLoading(signupButton, true, 'Creating Account...');
+        UIUtils.setFormLoading(signupForm, true);
+        
         await supabaseAuth.signUp(email, password);
-        alert('Account created! Please check your email to confirm your account, then sign in.');
+        
+        // Show different message based on environment
+        if (window.appConfig && window.appConfig.DISABLE_EMAIL_CONFIRMATION) {
+            UIUtils.showSuccessMessage('Account created successfully! You can now sign in immediately.');
+        } else {
+            UIUtils.showSuccessMessage('Account created successfully! Please check your email to confirm your account, then sign in.');
+        }
+        
         showLogin();
     } catch (error) {
-        alert('Sign up failed: ' + error.message);
+        const userMessage = UIUtils.getErrorMessage(error);
+        UIUtils.showErrorMessage(userMessage);
+    } finally {
+        // Reset form state
+        UIUtils.setButtonLoading(signupButton, false);
+        UIUtils.setFormLoading(signupForm, false);
     }
 }
 
 async function handleSignOut() {
     try {
         await supabaseAuth.signOut();
+        UIUtils.showSuccessMessage('Signed out successfully.');
         showAuth();
     } catch (error) {
-        alert('Sign out failed: ' + error.message);
+        const userMessage = UIUtils.getErrorMessage(error);
+        UIUtils.showErrorMessage(userMessage);
     }
 }
 
 function showTerms() {
-    alert('Terms of Service:\n\nBy using this application, you agree to:\n\n1. Use the service responsibly and in accordance with applicable laws\n2. Not share your account credentials with others\n3. Respect the privacy of schedule information\n4. Contact support for any issues or concerns\n\nFor the complete terms, please contact the administrator.');
+    const termsMessage = 'Terms of Service:\n\nBy using this application, you agree to:\n\n1. Use the service responsibly and in accordance with applicable laws\n2. Not share your account credentials with others\n3. Respect the privacy of schedule information\n4. Contact support for any issues or concerns\n\nFor the complete terms, please contact the administrator.';
+    
+    // Create a modal for terms display
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    modal.style.display = 'flex';
+    modal.innerHTML = `
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Terms of Service</h2>
+                <span class="close" onclick="this.parentElement.parentElement.parentElement.remove()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <pre style="white-space: pre-wrap; font-family: inherit;">${termsMessage}</pre>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="this.parentElement.parentElement.parentElement.remove()">Close</button>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Close modal when clicking outside
+    modal.addEventListener('click', function(e) {
+        if (e.target === this) {
+            this.remove();
+        }
+    });
 }
 
 function showAuth() {
@@ -339,7 +403,7 @@ function performQuickSearch() {
     const query = document.getElementById('quickSearchInput').value.toLowerCase().trim();
     
     if (!query) {
-        alert('Please enter a search term');
+        UIUtils.showErrorMessage('Please enter a search term');
         return;
     }
     
@@ -489,10 +553,49 @@ function showHighlightNotification(highlightData) {
     }, 5000);
 }
 
+// Show confirmation modal
+function showConfirmModal(message, title = 'Confirm') {
+    return new Promise((resolve) => {
+        const modal = document.createElement('div');
+        modal.className = 'modal';
+        modal.style.display = 'flex';
+        modal.innerHTML = `
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>${title}</h2>
+                </div>
+                <div class="modal-body">
+                    <p>${message}</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="this.parentElement.parentElement.parentElement.remove(); window.confirmModalResolve(false);">Cancel</button>
+                    <button type="button" class="btn btn-primary" onclick="this.parentElement.parentElement.parentElement.remove(); window.confirmModalResolve(true);">Confirm</button>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        // Store resolve function globally for onclick handlers
+        window.confirmModalResolve = resolve;
+        
+        // Close modal when clicking outside
+        modal.addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.remove();
+                window.confirmModalResolve(false);
+            }
+        });
+    });
+}
+
 // Initialize the app when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     initApp();
     setupQuickSearch();
+    
+    // Setup form validation
+    UIUtils.setupFormValidation();
     
     // Apply calendar highlights from search results
     setTimeout(() => {
@@ -526,7 +629,7 @@ async function editEventFromCalendar(dateStr, weekDay, eventId) {
     
     if (!daySchedule || !Array.isArray(daySchedule)) {
         console.error(`Invalid day schedule for ${dateStr && dateStr !== 'null' ? 'specific date' : 'weekday'} schedule:`, daySchedule);
-        alert('Error: Could not find the schedule. Please refresh the page and try again.');
+        UIUtils.showErrorMessage('Error: Could not find the schedule. Please refresh the page and try again.');
         return;
     }
     
@@ -534,7 +637,7 @@ async function editEventFromCalendar(dateStr, weekDay, eventId) {
     const eventParts = eventId.split('-');
     if (eventParts.length < 4) {
         console.error(`Invalid eventId format: ${eventId}`);
-        alert('Error: Invalid event identifier. Please refresh the page and try again.');
+        UIUtils.showErrorMessage('Error: Invalid event identifier. Please refresh the page and try again.');
         return;
     }
     
@@ -548,7 +651,7 @@ async function editEventFromCalendar(dateStr, weekDay, eventId) {
     
     if (!event) {
         console.error(`Event not found with ID: ${eventId}`);
-        alert('Error: Could not find the event to edit. Please refresh the page and try again.');
+        UIUtils.showErrorMessage('Error: Could not find the event to edit. Please refresh the page and try again.');
         return;
     }
     
@@ -618,7 +721,7 @@ async function saveEditedEvent() {
         
         // Validate required fields
         if (!startTime || !endTime || !subject) {
-            alert('Please fill in all required fields.');
+            UIUtils.showErrorMessage('Please fill in all required fields.');
             return;
         }
         
@@ -677,7 +780,8 @@ async function saveEditedEvent() {
         
     } catch (error) {
         console.error('Error saving edited event:', error);
-        alert('Error saving changes. Please try again.');
+        const userMessage = UIUtils.getErrorMessage(error);
+        UIUtils.showErrorMessage(userMessage);
     }
 }
 
@@ -691,7 +795,9 @@ function formatTimeForStorage(timeStr) {
 async function deleteEventFromCalendar(dateStr, weekDay, eventId) {
     console.log('🗑️ Delete function called with:', { dateStr, weekDay, eventId });
     
-    if (!confirm('Are you sure you want to delete this event?')) {
+    // Create a custom confirmation modal instead of using confirm()
+    const confirmed = await showConfirmModal('Are you sure you want to delete this event?', 'Delete Event');
+    if (!confirmed) {
         console.log('❌ User cancelled deletion');
         return;
     }
@@ -706,7 +812,7 @@ async function deleteEventFromCalendar(dateStr, weekDay, eventId) {
     
     if (!daySchedule || !Array.isArray(daySchedule)) {
         console.error('❌ Invalid day schedule:', daySchedule);
-        alert('Error: Invalid schedule data');
+        UIUtils.showErrorMessage('Error: Invalid schedule data');
         return;
     }
     
@@ -714,7 +820,7 @@ async function deleteEventFromCalendar(dateStr, weekDay, eventId) {
     const eventParts = eventId.split('-');
     if (eventParts.length < 4) {
         console.error(`Invalid eventId format: ${eventId}`);
-        alert('Error: Invalid event identifier');
+        UIUtils.showErrorMessage('Error: Invalid event identifier');
         return;
     }
     
@@ -728,7 +834,7 @@ async function deleteEventFromCalendar(dateStr, weekDay, eventId) {
     
     if (index === -1) {
         console.error(`Event not found with ID: ${eventId}`);
-        alert('Error: Could not find the event to delete');
+        UIUtils.showErrorMessage('Error: Could not find the event to delete');
         return;
     }
     
@@ -760,7 +866,8 @@ async function deleteEventFromCalendar(dateStr, weekDay, eventId) {
         console.log('🔄 View refreshed');
     } catch (error) {
         console.error('❌ Error saving schedule:', error);
-        alert('Failed to save changes: ' + error.message);
+        const userMessage = UIUtils.getErrorMessage(error);
+        UIUtils.showErrorMessage(userMessage);
     }
 }
 
@@ -794,7 +901,8 @@ async function saveSchedule() {
         console.log('✅ Schedule saved successfully:', responseData);
     } catch (error) {
         console.error('❌ Error saving schedule:', error);
-        alert('Failed to save changes: ' + error.message);
+        const userMessage = UIUtils.getErrorMessage(error);
+        UIUtils.showErrorMessage(userMessage);
     }
 }
 

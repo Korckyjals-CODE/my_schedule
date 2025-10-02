@@ -96,11 +96,44 @@ app.get('/api/config', (req, res) => {
         // Only expose public configuration (no sensitive keys)
         res.json({
             SUPABASE_URL: process.env.SUPABASE_URL,
-            SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY
+            SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY,
+            DISABLE_EMAIL_CONFIRMATION: process.env.DISABLE_EMAIL_CONFIRMATION === 'true',
+            NODE_ENV: process.env.NODE_ENV
         });
     } catch (error) {
         logger.error('Error providing config:', error);
         res.status(500).json({ error: 'Failed to load configuration' });
+    }
+});
+
+// Development endpoint for auto-confirming users
+app.post('/api/auth/confirm-user', async (req, res) => {
+    try {
+        // Only allow in development mode
+        if (process.env.NODE_ENV !== 'development' || process.env.DISABLE_EMAIL_CONFIRMATION !== 'true') {
+            return res.status(403).json({ error: 'Auto-confirmation only available in development mode' });
+        }
+
+        const { userId } = req.body;
+        if (!userId) {
+            return res.status(400).json({ error: 'User ID is required' });
+        }
+
+        // Use Supabase admin client to confirm user
+        const { data, error } = await supabase.auth.admin.updateUserById(userId, {
+            email_confirm: true
+        });
+
+        if (error) {
+            logger.error('Error confirming user:', error);
+            return res.status(500).json({ error: 'Failed to confirm user' });
+        }
+
+        logger.info(`User ${userId} auto-confirmed in development mode`);
+        res.json({ message: 'User confirmed successfully', user: data.user });
+    } catch (error) {
+        logger.error('Error in auto-confirm endpoint:', error);
+        res.status(500).json({ error: 'Failed to confirm user' });
     }
 });
 

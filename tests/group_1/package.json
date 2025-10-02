@@ -1,0 +1,17 @@
+{
+  "name": "test-1-2-refactoring-verification",
+  "version": "1.0.0",
+  "description": "Automated test suite for Test 1.2 refactoring verification",
+  "main": "test_1_2_hp_refactoring_verification.js",
+  "scripts": {
+    "test": "node test_1_2_hp_refactoring_verification.js",
+    "test:headless": "HEADLESS=true node test_1_2_hp_refactoring_verification.js"
+  },
+  "dependencies": {
+    "puppeteer": "^21.0.0"
+  },
+  "devDependencies": {},
+  "keywords": ["testing", "automation", "refactoring", "verification"],
+  "author": "Test Suite",
+  "license": "MIT"
+}

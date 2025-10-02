@@ -60,7 +60,8 @@ async function handleLogin() {
         showApp();
         loadSchedule();
     } catch (error) {
-        alert('Login failed: ' + error.message);
+        const userMessage = UIUtils.getErrorMessage(error);
+        UIUtils.showErrorMessage(userMessage);
     }
 }
 
@@ -70,10 +71,16 @@ async function handleSignUp() {
         const password = document.getElementById('signupPassword').value;
         
         await supabaseAuth.signUp(email, password);
-        alert('Account created! Please check your email to confirm your account, then sign in.');
+        // Show different message based on environment
+        if (window.appConfig && window.appConfig.DISABLE_EMAIL_CONFIRMATION) {
+            UIUtils.showSuccessMessage('Account created successfully! You can now sign in immediately.');
+        } else {
+            UIUtils.showSuccessMessage('Account created successfully! Please check your email to confirm your account, then sign in.');
+        }
         showLogin();
     } catch (error) {
-        alert('Sign up failed: ' + error.message);
+        const userMessage = UIUtils.getErrorMessage(error);
+        UIUtils.showErrorMessage(userMessage);
     }
 }
 
@@ -82,7 +89,8 @@ async function handleSignOut() {
         await supabaseAuth.signOut();
         showAuth();
     } catch (error) {
-        alert('Sign out failed: ' + error.message);
+        const userMessage = UIUtils.getErrorMessage(error);
+        UIUtils.showErrorMessage(userMessage);
     }
 }
 
@@ -880,7 +888,7 @@ function saveCurrentSearch() {
                             currentFilters.endTime;
     
     if (!hasActiveFilters) {
-        alert('Please set some filters before saving a search.');
+        UIUtils.showErrorMessage('Please set some filters before saving a search.');
         return;
     }
     
@@ -905,7 +913,7 @@ function saveCurrentSearch() {
         // Update UI
         populateSavedSearches();
         
-        alert('Search saved successfully!');
+        UIUtils.showSuccessMessage('Search saved successfully!');
     }
 }
 
@@ -936,7 +944,7 @@ function deleteSavedSearch() {
             populateSavedSearches();
         }
     } else {
-        alert('Please select a saved search to delete.');
+        UIUtils.showErrorMessage('Please select a saved search to delete.');
     }
 }
 
@@ -978,7 +986,7 @@ function toggleExportOptions() {
 
 function exportToCSV() {
     if (currentSearchResults.length === 0) {
-        alert('No results to export. Please perform a search first.');
+        UIUtils.showErrorMessage('No results to export. Please perform a search first.');
         return;
     }
 
@@ -988,7 +996,7 @@ function exportToCSV() {
 
 function exportToExcel() {
     if (currentSearchResults.length === 0) {
-        alert('No results to export. Please perform a search first.');
+        UIUtils.showErrorMessage('No results to export. Please perform a search first.');
         return;
     }
     
@@ -999,7 +1007,7 @@ function exportToExcel() {
 
 function exportToJSON() {
     if (currentSearchResults.length === 0) {
-        alert('No results to export. Please perform a search first.');
+        UIUtils.showErrorMessage('No results to export. Please perform a search first.');
         return;
     }
     
@@ -1009,7 +1017,7 @@ function exportToJSON() {
 
 function exportToPDF() {
     if (currentSearchResults.length === 0) {
-        alert('No results to export. Please perform a search first.');
+        UIUtils.showErrorMessage('No results to export. Please perform a search first.');
         return;
     }
     
@@ -1020,15 +1028,15 @@ function exportToPDF() {
 
 function copyToClipboard() {
     if (currentSearchResults.length === 0) {
-        alert('No results to copy. Please perform a search first.');
+        UIUtils.showErrorMessage('No results to copy. Please perform a search first.');
         return;
     }
     
     const textContent = generateText(currentSearchResults);
     navigator.clipboard.writeText(textContent).then(() => {
-        alert('Results copied to clipboard!');
+        UIUtils.showSuccessMessage('Results copied to clipboard!');
     }).catch(() => {
-        alert('Failed to copy to clipboard. Please try again.');
+        UIUtils.showErrorMessage('Failed to copy to clipboard. Please try again.');
     });
 }
 
@@ -1136,7 +1144,7 @@ async function editEventFromSearch(dateStr, weekDay, index, event) {
     
     if (!eventData) {
         console.error('Event not found:', { dateStr, weekDay, index });
-        alert('Event not found. It may have been deleted.');
+        UIUtils.showErrorMessage('Event not found. It may have been deleted.');
         return;
     }
     
@@ -1175,7 +1183,7 @@ async function deleteEventFromSearch(dateStr, weekDay, index, event) {
     
     if (!daySchedule || !Array.isArray(daySchedule)) {
         console.error('❌ Invalid day schedule:', daySchedule);
-        alert('Error: Invalid schedule data');
+        UIUtils.showErrorMessage('Error: Invalid schedule data');
         return;
     }
     
@@ -1220,7 +1228,8 @@ async function deleteEventFromSearch(dateStr, weekDay, index, event) {
         
     } catch (error) {
         console.error('❌ Error saving schedule:', error);
-        alert('Error saving schedule: ' + error.message);
+        const userMessage = UIUtils.getErrorMessage(error);
+        UIUtils.showErrorMessage(userMessage);
         
         // Revert the change
         daySchedule.splice(index, 0, removedItem[0]);
@@ -1490,7 +1499,7 @@ async function saveSearchEditedEvent() {
         
         // Validate form
         if (!grade || !subject || !startTime || !endTime) {
-            alert('Please fill in all required fields.');
+            UIUtils.showErrorMessage('Please fill in all required fields.');
             return;
         }
         
@@ -1513,7 +1522,7 @@ async function saveSearchEditedEvent() {
         }
         
         if (validationError) {
-            alert(validationError);
+            UIUtils.showErrorMessage(validationError);
             return;
         }
         
@@ -1614,7 +1623,8 @@ async function saveSearchEditedEvent() {
         
     } catch (error) {
         console.error('❌ Error updating event:', error);
-        alert('Error updating event: ' + error.message);
+        const userMessage = UIUtils.getErrorMessage(error);
+        UIUtils.showErrorMessage(userMessage);
     }
 }
 

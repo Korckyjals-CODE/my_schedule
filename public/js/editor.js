@@ -48,7 +48,8 @@ async function handleLogin() {
         showApp();
         loadSchedule();
     } catch (error) {
-        alert('Login failed: ' + error.message);
+        const userMessage = UIUtils.getErrorMessage(error);
+        UIUtils.showErrorMessage(userMessage);
     }
 }
 
@@ -63,40 +64,46 @@ async function handleSignUp() {
         
         // Validate form
         if (!name) {
-            alert('Please enter your full name.');
+            UIUtils.showErrorMessage('Please enter your full name.');
             return;
         }
         
         if (!email) {
-            alert('Please enter your email address.');
+            UIUtils.showErrorMessage('Please enter your email address.');
             return;
         }
         
         if (!password) {
-            alert('Please enter a password.');
+            UIUtils.showErrorMessage('Please enter a password.');
             return;
         }
         
         if (password !== confirmPassword) {
-            alert('Passwords do not match. Please try again.');
+            UIUtils.showErrorMessage('Passwords do not match. Please try again.');
             return;
         }
         
         if (password.length < 6) {
-            alert('Password must be at least 6 characters long.');
+            UIUtils.showErrorMessage('Password must be at least 6 characters long.');
             return;
         }
         
         if (!termsAccepted) {
-            alert('Please accept the Terms of Service to continue.');
+            UIUtils.showErrorMessage('Please accept the Terms of Service to continue.');
             return;
         }
         
         await supabaseAuth.signUp(email, password);
-        alert('Account created! Please check your email to confirm your account, then sign in.');
+        // Show different message based on environment
+        if (window.appConfig && window.appConfig.DISABLE_EMAIL_CONFIRMATION) {
+            UIUtils.showSuccessMessage('Account created successfully! You can now sign in immediately.');
+        } else {
+            UIUtils.showSuccessMessage('Account created successfully! Please check your email to confirm your account, then sign in.');
+        }
         showLogin();
     } catch (error) {
-        alert('Sign up failed: ' + error.message);
+        const userMessage = UIUtils.getErrorMessage(error);
+        UIUtils.showErrorMessage(userMessage);
     }
 }
 
@@ -105,12 +112,41 @@ async function handleSignOut() {
         await supabaseAuth.signOut();
         showAuth();
     } catch (error) {
-        alert('Sign out failed: ' + error.message);
+        const userMessage = UIUtils.getErrorMessage(error);
+        UIUtils.showErrorMessage(userMessage);
     }
 }
 
 function showTerms() {
-    alert('Terms of Service:\n\nBy using this application, you agree to:\n\n1. Use the service responsibly and in accordance with applicable laws\n2. Not share your account credentials with others\n3. Respect the privacy of schedule information\n4. Contact support for any issues or concerns\n\nFor the complete terms, please contact the administrator.');
+    const termsMessage = 'Terms of Service:\n\nBy using this application, you agree to:\n\n1. Use the service responsibly and in accordance with applicable laws\n2. Not share your account credentials with others\n3. Respect the privacy of schedule information\n4. Contact support for any issues or concerns\n\nFor the complete terms, please contact the administrator.';
+    
+    // Create a modal for terms display
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    modal.style.display = 'flex';
+    modal.innerHTML = `
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Terms of Service</h2>
+                <span class="close" onclick="this.parentElement.parentElement.parentElement.remove()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <pre style="white-space: pre-wrap; font-family: inherit;">${termsMessage}</pre>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="this.parentElement.parentElement.parentElement.remove()">Close</button>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Close modal when clicking outside
+    modal.addEventListener('click', function(e) {
+        if (e.target === this) {
+            this.remove();
+        }
+    });
 }
 
 function showAuth() {
@@ -206,7 +242,8 @@ async function saveSchedule() {
         }, 2000);
     } catch (error) {
         console.error('Error saving schedule:', error);
-        alert('Failed to save changes. Please try again.');
+        const userMessage = UIUtils.getErrorMessage(error);
+        UIUtils.showErrorMessage(userMessage);
     }
 }
 
@@ -275,7 +312,7 @@ function updateSpecificSchedule() {
 function addSpecificEntry() {
     const date = document.getElementById('specificDate').value;
     if (!date) {
-        alert('Please select a date first');
+        UIUtils.showErrorMessage('Please select a date first');
         return;
     }
 
@@ -386,7 +423,7 @@ function addRangeEntry() {
     const endDate = document.getElementById('rangeEndDate').value;
     
     if (!startDate || !endDate) {
-        alert('Please select both start and end dates');
+        UIUtils.showErrorMessage('Please select both start and end dates');
         if (addButton) {
             addButton.disabled = false;
             addButton.textContent = 'Add Event to All Weekdays';
@@ -396,7 +433,7 @@ function addRangeEntry() {
     
     // Validate date range
     if (new Date(startDate) > new Date(endDate)) {
-        alert('Start date must be before or equal to end date');
+        UIUtils.showErrorMessage('Start date must be before or equal to end date');
         if (addButton) {
             addButton.disabled = false;
             addButton.textContent = 'Add Event to All Weekdays';
@@ -407,7 +444,7 @@ function addRangeEntry() {
     const weekdays = getWeekdaysInRange(startDate, endDate);
     
     if (weekdays.length === 0) {
-        alert('No weekdays found in the selected date range');
+        UIUtils.showErrorMessage('No weekdays found in the selected date range');
         if (addButton) {
             addButton.disabled = false;
             addButton.textContent = 'Add Event to All Weekdays';
@@ -423,7 +460,7 @@ function addRangeEntry() {
     
     // Validate time
     if (startTime >= endTime) {
-        alert('Start time must be before end time');
+        UIUtils.showErrorMessage('Start time must be before end time');
         if (addButton) {
             addButton.disabled = false;
             addButton.textContent = 'Add Event to All Weekdays';
@@ -524,7 +561,7 @@ function addRangeEntry() {
                 addedDates.push(dateStr);
             }
         }
-        alert(`Event added to ${addedCount} dates: ${addedDates.join(', ')}\n\nSkipped ${skippedCount} dates where identical events already exist: ${skippedDates.join(', ')}`);
+        UIUtils.showSuccessMessage(`Event added to ${addedCount} dates: ${addedDates.join(', ')}\n\nSkipped ${skippedCount} dates where identical events already exist: ${skippedDates.join(', ')}`);
     } else {
         const addedDates = [];
         for (let i = 0; i <= daysDiff; i++) {
@@ -536,7 +573,7 @@ function addRangeEntry() {
                 addedDates.push(dateStr);
             }
         }
-        alert(`Event added to ${addedCount} dates: ${addedDates.join(', ')}`);
+        UIUtils.showSuccessMessage(`Event added to ${addedCount} dates: ${addedDates.join(', ')}`);
     }
 }
 
@@ -545,20 +582,20 @@ function showRangeEventForm() {
     const endDate = document.getElementById('rangeEndDate').value;
     
     if (!startDate || !endDate) {
-        alert('Please select both start and end dates first');
+        UIUtils.showErrorMessage('Please select both start and end dates first');
         return;
     }
     
     // Validate date range
     if (new Date(startDate) > new Date(endDate)) {
-        alert('Start date must be before or equal to end date');
+        UIUtils.showErrorMessage('Start date must be before or equal to end date');
         return;
     }
     
     const weekdays = getWeekdaysInRange(startDate, endDate);
     
     if (weekdays.length === 0) {
-        alert('No weekdays found in the selected date range');
+        UIUtils.showErrorMessage('No weekdays found in the selected date range');
         return;
     }
     
@@ -767,7 +804,7 @@ function initImportTab() {
 
 	extractBtn.addEventListener('click', async () => {
 		if (!fileInput.files || !fileInput.files[0]) {
-			alert('Please choose a schedule image first.');
+			UIUtils.showErrorMessage('Please choose a schedule image first.');
 			return;
 		}
 		const img = fileInput.files[0];
@@ -810,7 +847,7 @@ async function extractScheduleFromImage() {
     const preview = document.getElementById('imagePreview');
     
     if (!fileInput.files || !fileInput.files[0]) {
-        alert('Please choose a schedule image first.');
+        UIUtils.showErrorMessage('Please choose a schedule image first.');
         return;
     }
     
