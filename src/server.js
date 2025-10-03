@@ -137,6 +137,113 @@ app.post('/api/auth/confirm-user', async (req, res) => {
     }
 });
 
+// Test user management endpoints (development only)
+app.post('/api/test/create-user', async (req, res) => {
+    try {
+        // Only allow in development mode
+        if (process.env.NODE_ENV !== 'development') {
+            return res.status(403).json({ error: 'Test user creation only available in development mode' });
+        }
+
+        const { email, password } = req.body;
+        if (!email || !password) {
+            return res.status(400).json({ error: 'Email and password are required' });
+        }
+
+        // Create user using Supabase admin client
+        const { data, error } = await supabase.auth.admin.createUser({
+            email: email,
+            password: password,
+            email_confirm: process.env.DISABLE_EMAIL_CONFIRMATION === 'true'
+        });
+
+        if (error) {
+            logger.error('Error creating test user:', error);
+            return res.status(500).json({ error: 'Failed to create test user' });
+        }
+
+        logger.info(`Test user created: ${email}`);
+        res.json({ message: 'Test user created successfully', user: data.user });
+    } catch (error) {
+        logger.error('Error in test user creation endpoint:', error);
+        res.status(500).json({ error: 'Failed to create test user' });
+    }
+});
+
+app.post('/api/test/cleanup-users', async (req, res) => {
+    try {
+        // Only allow in development mode
+        if (process.env.NODE_ENV !== 'development') {
+            return res.status(403).json({ error: 'Test user cleanup only available in development mode' });
+        }
+
+        // Get all users with test email patterns
+        const { data: users, error: listError } = await supabase.auth.admin.listUsers();
+        
+        if (listError) {
+            logger.error('Error listing users:', listError);
+            return res.status(500).json({ error: 'Failed to list users' });
+        }
+
+        // Filter test users (users with test email patterns)
+        const testUsers = users.users.filter(user => 
+            user.email && (
+                user.email.includes('test_') ||
+                user.email.includes('@testdomain.com') ||
+                user.email.includes('cleanup_test_') ||
+                user.email.includes('dev_mode_test_')
+            )
+        );
+
+        let cleanedCount = 0;
+        const errors = [];
+
+        // Delete test users
+        for (const user of testUsers) {
+            try {
+                const { error: deleteError } = await supabase.auth.admin.deleteUser(user.id);
+                if (deleteError) {
+                    errors.push(`Failed to delete user ${user.email}: ${deleteError.message}`);
+                } else {
+                    cleanedCount++;
+                    logger.info(`Test user deleted: ${user.email}`);
+                }
+            } catch (error) {
+                errors.push(`Error deleting user ${user.email}: ${error.message}`);
+            }
+        }
+
+        logger.info(`Test user cleanup completed: ${cleanedCount} users deleted`);
+        res.json({ 
+            message: 'Test user cleanup completed', 
+            cleanedUsers: cleanedCount,
+            errors: errors
+        });
+    } catch (error) {
+        logger.error('Error in test user cleanup endpoint:', error);
+        res.status(500).json({ error: 'Failed to cleanup test users' });
+    }
+});
+
+app.get('/api/test/environment', (req, res) => {
+    try {
+        // Only allow in development mode
+        if (process.env.NODE_ENV !== 'development') {
+            return res.status(403).json({ error: 'Test environment info only available in development mode' });
+        }
+
+        res.json({
+            nodeEnv: process.env.NODE_ENV,
+            disableEmailConfirmation: process.env.DISABLE_EMAIL_CONFIRMATION === 'true',
+            hasSupabaseConfig: !!(process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY),
+            timestamp: new Date().toISOString()
+        });
+    } catch (error) {
+        logger.error('Error in test environment endpoint:', error);
+        res.status(500).json({ error: 'Failed to get test environment info' });
+    }
+});
+
 app.get('/api/schedule', authenticateUser, async (req, res) => {
     try {
         const { data: schedules, error } = await supabase
