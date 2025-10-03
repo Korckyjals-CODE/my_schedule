@@ -2,6 +2,16 @@
 
 This automated test suite verifies that all **high-priority** refactoring requirements from Test 1.2 have been properly implemented.
 
+## Available Test Suites
+
+### High Priority Tests (HP)
+- **`test_1_2_hp_refactoring_verification.js`** - Full functional testing (7 tests)
+- **`test_1_2_hp_simplified_verification.js`** - Static code analysis (6 tests)
+
+### Medium Priority Tests (MP)  
+- **`test_1_2_mp_refactoring_verification.js`** - Full functional testing (5 tests)
+- **`test_1_2_mp_simplified_verification.js`** - Static code analysis (5 tests)
+
 ## What This Test Suite Covers
 
 ### High Priority Tests (from refactoring requirements):
@@ -30,6 +40,38 @@ This automated test suite verifies that all **high-priority** refactoring requir
    - Tests error message styling (colors, borders, padding)
    - Verifies dismiss button functionality
    - Confirms loading spinner animations
+
+6. **Environment Variables Check**
+   - Verifies NODE_ENV=development is set
+   - Confirms DISABLE_EMAIL_CONFIRMATION=true
+   - Tests that configuration is properly loaded
+
+### Medium Priority Tests (from refactoring requirements):
+
+1. **Enhanced Error Handling**
+   - Tests specific error message mapping
+   - Verifies user-friendly error descriptions
+   - Confirms actionable error guidance
+
+2. **Form Validation Improvements**
+   - Tests real-time validation feedback
+   - Verifies custom validation messages
+   - Confirms visual indicators for validation states
+
+3. **CSS Styling for Error States**
+   - Tests CSS classes for error states
+   - Verifies consistent error message styling
+   - Confirms loading state animations
+
+4. **Loading State Animations**
+   - Tests visual feedback during authentication
+   - Verifies button and form loading states
+   - Confirms loading animations work correctly
+
+5. **Error Message Accessibility**
+   - Tests accessibility features for error messages
+   - Verifies proper ARIA labels and roles
+   - Confirms color contrast and usability
 
 ## Prerequisites
 
@@ -66,6 +108,28 @@ node test_1_2_hp_refactoring_verification.js
 ```bash
 cd tests/group_1
 node test_1_2_hp_simplified_verification.js
+```
+
+## Medium-Priority Tests
+
+For testing medium-priority refactoring requirements:
+
+### Option 5: Medium Priority Tests (Full)
+```bash
+cd tests/group_1
+node test_1_2_mp_refactoring_verification.js
+```
+
+### Option 6: Medium Priority Tests (Simplified)
+```bash
+cd tests/group_1
+node test_1_2_mp_simplified_verification.js
+```
+
+### Option 7: Medium Priority Tests (Batch)
+```cmd
+cd tests/group_1
+run_mp_tests.bat
 ```
 
 ## Test Output
